@@ -30,6 +30,25 @@ public class UserReceive implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("UserReceive{");
+        sb.append("receiveId=").append(receiveId);
+        sb.append(", userId=").append(userId);
+        sb.append(", contact='").append(contact).append('\'');
+        sb.append(", tel='").append(tel).append('\'');
+        sb.append(", receiveProvince='").append(receiveProvince).append('\'');
+        sb.append(", receiveCity='").append(receiveCity).append('\'');
+        sb.append(", receiveCounty='").append(receiveCounty).append('\'');
+        sb.append(", receiveAddress='").append(receiveAddress).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", isdefault=").append(isdefault);
+        sb.append(", delState=").append(delState);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getReceiveId() {
         return receiveId;
     }

@@ -18,6 +18,19 @@ public class Admin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Admin{");
+        sb.append("adminId=").append(adminId);
+        sb.append(", adminName='").append(adminName).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", delState=").append(delState);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getAdminId() {
         return adminId;
     }

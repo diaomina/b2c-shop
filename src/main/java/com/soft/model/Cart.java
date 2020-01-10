@@ -20,6 +20,20 @@ public class Cart implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Cart{");
+        sb.append("cartId=").append(cartId);
+        sb.append(", userId=").append(userId);
+        sb.append(", goodsId=").append(goodsId);
+        sb.append(", quantity=").append(quantity);
+        sb.append(", isBuy=").append(isBuy);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getCartId() {
         return cartId;
     }

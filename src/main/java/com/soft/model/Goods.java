@@ -30,6 +30,25 @@ public class Goods implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Goods{");
+        sb.append("goodsId=").append(goodsId);
+        sb.append(", categoryId=").append(categoryId);
+        sb.append(", goodsName='").append(goodsName).append('\'');
+        sb.append(", image='").append(image).append('\'');
+        sb.append(", price=").append(price);
+        sb.append(", quantity=").append(quantity);
+        sb.append(", delState=").append(delState);
+        sb.append(", simpleDescribe='").append(simpleDescribe).append('\'');
+        sb.append(", isMarketable=").append(isMarketable);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", adminId=").append(adminId);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getGoodsId() {
         return goodsId;
     }

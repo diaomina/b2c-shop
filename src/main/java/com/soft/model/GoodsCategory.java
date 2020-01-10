@@ -22,6 +22,21 @@ public class GoodsCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("GoodsCategory{");
+        sb.append("categoryId=").append(categoryId);
+        sb.append(", parentId=").append(parentId);
+        sb.append(", categoryName='").append(categoryName).append('\'');
+        sb.append(", state=").append(state);
+        sb.append(", simpleDescribe='").append(simpleDescribe).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", adminId=").append(adminId);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getCategoryId() {
         return categoryId;
     }

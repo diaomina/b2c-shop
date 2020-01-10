@@ -24,6 +24,22 @@ public class Ad implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Ad{");
+        sb.append("adId=").append(adId);
+        sb.append(", image='").append(image).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", url='").append(url).append('\'');
+        sb.append(", state=").append(state);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", delState=").append(delState);
+        sb.append(", adminId=").append(adminId);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getAdId() {
         return adId;
     }

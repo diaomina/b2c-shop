@@ -28,6 +28,24 @@ public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Order{");
+        sb.append("orderId=").append(orderId);
+        sb.append(", orderNumber='").append(orderNumber).append('\'');
+        sb.append(", userId=").append(userId);
+        sb.append(", totalAmount=").append(totalAmount);
+        sb.append(", receiveId=").append(receiveId);
+        sb.append(", sendTime=").append(sendTime);
+        sb.append(", logisticsState=").append(logisticsState);
+        sb.append(", delState=").append(delState);
+        sb.append(", payState=").append(payState);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getOrderId() {
         return orderId;
     }

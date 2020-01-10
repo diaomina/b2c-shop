@@ -30,6 +30,25 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("User{");
+        sb.append("userId=").append(userId);
+        sb.append(", userName='").append(userName).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append(", userAmount=").append(userAmount);
+        sb.append(", sex='").append(sex).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", province='").append(province).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", country='").append(country).append('\'');
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
+        sb.append(", state=").append(state);
+        sb.append('}');
+        return sb.toString();
+    }
+
     public Integer getUserId() {
         return userId;
     }
