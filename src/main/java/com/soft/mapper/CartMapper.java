@@ -2,7 +2,6 @@ package com.soft.mapper;
 
 import com.soft.model.Cart;
 import com.soft.model.CartExample;
-import com.soft.model.CartKey;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +10,7 @@ public interface CartMapper {
 
     int deleteByExample(CartExample example);
 
-    int deleteByPrimaryKey(CartKey key);
+    int deleteByPrimaryKey(Integer cartId);
 
     int insert(Cart record);
 
@@ -19,7 +18,7 @@ public interface CartMapper {
 
     List<Cart> selectByExample(CartExample example);
 
-    Cart selectByPrimaryKey(CartKey key);
+    Cart selectByPrimaryKey(Integer cartId);
 
     int updateByExampleSelective(@Param("record") Cart record, @Param("example") CartExample example);
 

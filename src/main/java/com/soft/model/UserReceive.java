@@ -1,8 +1,9 @@
 package com.soft.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class UserReceive {
+public class UserReceive implements Serializable {
     private Integer receiveId;
 
     private Integer userId;
@@ -26,6 +27,8 @@ public class UserReceive {
     private Byte isdefault;
 
     private Byte delState;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getReceiveId() {
         return receiveId;

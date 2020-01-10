@@ -3,8 +3,8 @@
 <mapper namespace="com.soft.mapper.CartMapper" >
   <resultMap id="BaseResultMap" type="com.soft.model.Cart" >
     <id column="cart_id" property="cartId" jdbcType="INTEGER" />
-    <id column="goods_id" property="goodsId" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="INTEGER" />
     <result column="quantity" property="quantity" jdbcType="INTEGER" />
     <result column="is_buy" property="isBuy" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -69,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    cart_id, goods_id, user_id, quantity, is_buy, create_time, update_time
+    cart_id, user_id, goods_id, quantity, is_buy, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.soft.model.CartExample" >
     select
@@ -85,17 +85,15 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.soft.model.CartKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from t_cart
     where cart_id = #{cartId,jdbcType=INTEGER}
-      and goods_id = #{goodsId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.soft.model.CartKey" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_cart
     where cart_id = #{cartId,jdbcType=INTEGER}
-      and goods_id = #{goodsId,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.soft.model.CartExample" >
     delete from t_cart
@@ -104,10 +102,10 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.soft.model.Cart" >
-    insert into t_cart (cart_id, goods_id, user_id, 
+    insert into t_cart (cart_id, user_id, goods_id, 
       quantity, is_buy, create_time, 
       update_time)
-    values (#{cartId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+    values (#{cartId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, 
       #{quantity,jdbcType=INTEGER}, #{isBuy,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -117,11 +115,11 @@
       <if test="cartId != null" >
         cart_id,
       </if>
-      <if test="goodsId != null" >
-        goods_id,
-      </if>
       <if test="userId != null" >
         user_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
       </if>
       <if test="quantity != null" >
         quantity,
@@ -140,11 +138,11 @@
       <if test="cartId != null" >
         #{cartId,jdbcType=INTEGER},
       </if>
-      <if test="goodsId != null" >
-        #{goodsId,jdbcType=INTEGER},
-      </if>
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=INTEGER},
       </if>
       <if test="quantity != null" >
         #{quantity,jdbcType=INTEGER},
@@ -172,11 +170,11 @@
       <if test="record.cartId != null" >
         cart_id = #{record.cartId,jdbcType=INTEGER},
       </if>
-      <if test="record.goodsId != null" >
-        goods_id = #{record.goodsId,jdbcType=INTEGER},
-      </if>
       <if test="record.userId != null" >
         user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.goodsId != null" >
+        goods_id = #{record.goodsId,jdbcType=INTEGER},
       </if>
       <if test="record.quantity != null" >
         quantity = #{record.quantity,jdbcType=INTEGER},
@@ -198,8 +196,8 @@
   <update id="updateByExample" parameterType="map" >
     update t_cart
     set cart_id = #{record.cartId,jdbcType=INTEGER},
-      goods_id = #{record.goodsId,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
+      goods_id = #{record.goodsId,jdbcType=INTEGER},
       quantity = #{record.quantity,jdbcType=INTEGER},
       is_buy = #{record.isBuy,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -213,6 +211,9 @@
     <set >
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=INTEGER},
       </if>
       <if test="quantity != null" >
         quantity = #{quantity,jdbcType=INTEGER},
@@ -228,16 +229,15 @@
       </if>
     </set>
     where cart_id = #{cartId,jdbcType=INTEGER}
-      and goods_id = #{goodsId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.soft.model.Cart" >
     update t_cart
     set user_id = #{userId,jdbcType=INTEGER},
+      goods_id = #{goodsId,jdbcType=INTEGER},
       quantity = #{quantity,jdbcType=INTEGER},
       is_buy = #{isBuy,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where cart_id = #{cartId,jdbcType=INTEGER}
-      and goods_id = #{goodsId,jdbcType=INTEGER}
   </update>
 </mapper>

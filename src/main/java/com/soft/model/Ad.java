@@ -1,8 +1,9 @@
 package com.soft.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Ad {
+public class Ad implements Serializable {
     private Integer adId;
 
     private String image;
@@ -20,6 +21,8 @@ public class Ad {
     private Byte delState;
 
     private Integer adminId;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getAdId() {
         return adId;

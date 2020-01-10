@@ -1,8 +1,9 @@
 package com.soft.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Admin {
+public class Admin implements Serializable {
     private Integer adminId;
 
     private String adminName;
@@ -14,6 +15,8 @@ public class Admin {
     private Date updateTime;
 
     private Byte delState;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getAdminId() {
         return adminId;

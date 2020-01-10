@@ -1,8 +1,9 @@
 package com.soft.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class GoodsCategory {
+public class GoodsCategory implements Serializable {
     private Integer categoryId;
 
     private Integer parentId;
@@ -18,6 +19,8 @@ public class GoodsCategory {
     private Date updateTime;
 
     private Integer adminId;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getCategoryId() {
         return categoryId;

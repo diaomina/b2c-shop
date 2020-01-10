@@ -1,8 +1,9 @@
 package com.soft.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class OrderChild {
+public class OrderChild implements Serializable {
     private Integer orderChildId;
 
     private String orderNumber;
@@ -14,6 +15,8 @@ public class OrderChild {
     private Date createTime;
 
     private Date updateTime;
+
+    private static final long serialVersionUID = 1L;
 
     public Integer getOrderChildId() {
         return orderChildId;
