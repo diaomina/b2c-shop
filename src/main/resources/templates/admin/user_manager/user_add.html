@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<!-- 插入公共模板 _meta -->
+<head th:insert="../templates/admin/common/_meta :: common_meta"></head>
+<body>
+
+<article class="cl pd-20">
+	<form th:action="@{doUserAdd}" method="post" class="form form-horizontal" id="form-user-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="userName" name="userName">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="password" class="input-text" value="" placeholder="" id="password" name="password">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input type="radio" id="sex-1" name="sex" value="男">
+					<label for="sex-1">男</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-2" name="sex" value="女">
+					<label for="sex-2">女</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-3" name="sex" value="保密">
+					<label for="sex-3">保密</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select class="select" size="1" id="province" name="province" style="width:180px"></select>
+					<select class="select" size="1" id="city" name="city" style="width:180px"></select>
+					<select class="select" size="1" id="country" name="country" style="width:180px"></select>
+				</span>
+				<div id="show"></div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+
+<!-- 插入公共模版 _footer -->
+<div th:replace="../templates/admin/common/_footer :: common_footer"></div>
+
+<!-- 引入城市三级联动js -->
+<script type="text/javascript" src="../../my/area.js"></script>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	/**
+	 * 表单校验
+	 */
+	$("#form-user-add").validate({
+		rules:{
+			userName:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			password:{
+				required:true,
+				minlength:6,
+				maxlength:16
+			},
+			sex:{
+				required:true,
+			},
+			phone:{
+				required:true,
+				isMobile:true,
+			},
+			province:{
+				required:true,
+			},
+			city:{
+				required:true,
+			},
+			country:{
+				required:true,
+			},
+			
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit();
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.msg("添加成功,请刷新!",{icon: 6,time:1000});
+			parent.layer.close(index);
+
+		}
+	});
+
+
+	/**
+	 * 城市三级联动
+	 * */
+	_init_area();	//初始化
+	var Gid  = document.getElementById ;
+	var showArea = function(){
+		Gid('show').innerHTML = "<h3>省" + Gid('province').value + " - 市" +
+				Gid('city').value + " - 县/区" +
+				Gid('country').value + "</h3>"
+	}
+	Gid('country').setAttribute('onchange','showArea()');
+
+
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

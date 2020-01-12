@@ -5,6 +5,7 @@ import com.soft.model.Admin;
 import com.soft.model.AdminExample;
 import com.soft.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @Date 2020/1/11 18:59
  * @Version 1.0
  **/
+@Service
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
