@@ -5,16 +5,12 @@ import com.soft.model.User;
 import com.soft.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.function.DoubleToIntFunction;
 
 /**
  * @ClassName UserManagerAction
@@ -30,6 +26,7 @@ public class UserManagerAction {
     @Autowired
     private UserService userService;
 
+
     /**
      * @Description 跳转到用户管理主界面
      * @Param []
@@ -43,6 +40,7 @@ public class UserManagerAction {
         return new ModelAndView("admin/user_manager/user_main","users",users);
     }
 
+
     /**
      * @Description 跳转到用户添加界面
      * @Param []
@@ -55,20 +53,87 @@ public class UserManagerAction {
         return "admin/user_manager/user_add";
     }
 
+
     /**
-     * @Description
-     * @Param []
-     * @Return java.lang.String
+     * @Description 用户添加
+     * @Param [user]
+     * @Return com.alibaba.fastjson.JSONObject
      * @Author ljy
      * @Date 2020/1/12 20:01
      **/
     @RequestMapping("/doUserAdd")
-    public void doUserAdd(User user) {
-        System.out.println(user.toString());
-        user.setCreateTime(new Date());
-        user.setUpdateTime(new Date());
-        userService.createUser(user);
+    @ResponseBody
+    public JSONObject doUserAdd(User user) {
+        JSONObject jsonObject = new JSONObject();
+        User dbUser = userService.loadByUserName(user.getUserName());
+        // 判断用户名是否已存在
+        if(dbUser != null) {
+            // 存在
+            jsonObject.put("flag","exist");
+        } else {
+            // 不存在
+            user.setCreateTime(new Date());
+            user.setUpdateTime(new Date());
+            // 判断添加是否成功
+            if(userService.createUser(user) > 0) {
+                jsonObject.put("flag","true");
+            } else {
+                jsonObject.put("flag","false");
+            }
+        }
+        return jsonObject;
     }
+
+
+    /**
+     * @Description 跳转到用户修改界面
+     * @Param [userId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/13 19:04
+     **/
+    @RequestMapping("/goUserEdit")
+    public ModelAndView goUserEdit(Integer userId){
+        User user = userService.loadByUserId(userId);
+        return new ModelAndView("admin/user_manager/user_edit", "user", user);
+    }
+
+
+    /**
+     * @Description 用户修改
+     * @Param [user]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/13 23:30
+     **/
+    @RequestMapping("/doUserEdit")
+    @ResponseBody
+    public JSONObject doUserEdit(User user){
+        JSONObject jsonObject = new JSONObject();
+        User dbUser = userService.loadByUserId(user.getUserId());
+        // 判断用户名是否已存在
+        if(dbUser.getUserName().equals(user.getUserName())){
+            jsonObject.put("flag","exist");
+            return jsonObject;
+        }
+        // 更新状态
+        dbUser.setUserName(user.getUserName());
+        dbUser.setUserAmount(user.getUserAmount());
+        dbUser.setSex(user.getSex());
+        dbUser.setPhone(user.getPhone());
+        dbUser.setProvince(user.getProvince());
+        dbUser.setCity(user.getCity());
+        dbUser.setCountry(user.getCountry());
+        dbUser.setUpdateTime(new Date());
+        // 判断修改是否成功
+        if(userService.updateUser(dbUser) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
 
     /**
      * @Description 用户 启用/停用
@@ -83,8 +148,7 @@ public class UserManagerAction {
         JSONObject jsonObject = new JSONObject();
         // 查询此用户
         User user = userService.loadByUserId(userId);
-        //启用
-        // 停用
+        // 启用
         if("start".equals(state)) {
             user.setState((byte) 1);
         }
@@ -98,11 +162,45 @@ public class UserManagerAction {
         } else {
             jsonObject.put("flag", "false");
         }
-        //将userId返回界面
-        jsonObject.put("userId", userId);
         return jsonObject;
     }
 
 
+    /**
+     * @Description 跳转到用户修改密码界面
+     * @Param [userId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/13 23:39
+     **/
+    @RequestMapping("/goUserChangePassword")
+    public ModelAndView goUserChangePassword(Integer userId){
+        return new ModelAndView("admin/user_manager/user_change_password","user",userService.loadByUserId(userId));
+    }
+
+
+    /**
+     * @Description 用户修改密码
+     * @Param [user]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/13 23:34
+     **/
+    @RequestMapping("/doUserChangePassword")
+    @ResponseBody
+    public JSONObject doUserChangePassword(User user){
+        System.out.println(user.toString());
+        JSONObject jsonObject = new JSONObject();
+        User dbUser = userService.loadByUserId(user.getUserId());
+        dbUser.setPassword(user.getPassword());
+        dbUser.setUpdateTime(new Date());
+        // 判断更新结果
+        if (userService.updateUser(user) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
 
 }

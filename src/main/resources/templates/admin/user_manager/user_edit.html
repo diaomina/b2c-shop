@@ -5,17 +5,17 @@
 <body>
 
 <article class="cl pd-20">
-	<form th:action="@{doUserAdd}" method="post" class="form form-horizontal" id="form-user-add">
+	<form th:action="@{doUserEdit}" method="post" class="form form-horizontal" id="form-user-edit">
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="userName" name="userName">
+				<input type="text" class="input-text" th:value="${user.userName}" placeholder="" id="userName" name="userName">
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>密码：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>账户余额（单位/分）：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="password" class="input-text" value="" placeholder="" id="password" name="password">
+				<input type="text" class="input-text" th:value="${user.userAmount}" placeholder="" id="userAmount" name="userAmount">
 			</div>
 		</div>
 		<div class="row cl">
@@ -38,7 +38,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" value="" placeholder="" id="phone" name="phone">
+				<input type="text" class="input-text" th:value="${user.phone}" placeholder="" id="phone" name="phone">
 			</div>
 		</div>
 		<div class="row cl">
@@ -54,6 +54,7 @@
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="hidden" th:value="${user.userId}">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
 				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
 			</div>
@@ -84,17 +85,15 @@ $(function(){
 	/**
 	 * 表单校验
 	 */
-	$("#form-user-add").validate({
+	$("#form-user-edit").validate({
 		rules:{
 			userName:{
 				required:true,
 				minlength:2,
 				maxlength:16
 			},
-			password:{
+			userAmount:{
 				required:true,
-				minlength:6,
-				maxlength:16
 			},
 			sex:{
 				required:true,
@@ -123,20 +122,22 @@ $(function(){
 				success: function (result) {
 					if(result.flag == "true"){
 						var index = parent.layer.getFrameIndex(window.name);
-						parent.layer.msg("添加成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.msg("修改成功,请刷新!",{icon: 6,time:1000});
 						parent.layer.close(index);
 					}
 					if(result.flag == "exist"){
 						layer.msg("用户名已存在!",{icon: 5,time:1000});
 					}
 					if(result.flag == "false"){
-						layer.msg("添加失败!",{icon: 2,time:1000});
+						layer.msg("修改失败!",{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {
 					layer.msg('请求异常!',{icon: 2,time:1000})
 				}
 			});
+
+
 		}
 	});
 
