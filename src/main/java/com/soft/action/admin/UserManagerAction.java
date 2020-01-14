@@ -110,13 +110,8 @@ public class UserManagerAction {
     @ResponseBody
     public JSONObject doUserEdit(User user){
         JSONObject jsonObject = new JSONObject();
-        User dbUser = userService.loadByUserId(user.getUserId());
-        // 判断用户名是否已存在
-        if(dbUser.getUserName().equals(user.getUserName())){
-            jsonObject.put("flag","exist");
-            return jsonObject;
-        }
         // 更新状态
+        User dbUser = userService.loadByUserId(user.getUserId());
         dbUser.setUserName(user.getUserName());
         dbUser.setUserAmount(user.getUserAmount());
         dbUser.setSex(user.getSex());

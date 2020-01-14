@@ -9,7 +9,7 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" th:value="${user.userName}" placeholder="" id="userName" name="userName">
+				<input type="text" class="input-text" th:value="${user.userName}" placeholder="" id="userName" name="userName" disabled>
 			</div>
 		</div>
 		<div class="row cl">
@@ -22,15 +22,15 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<div class="radio-box">
-					<input type="radio" id="sex-1" name="sex" value="男">
+					<input type="radio" id="sex-1" name="sex" value="男" th:field="${user.sex}">
 					<label for="sex-1">男</label>
 				</div>
 				<div class="radio-box">
-					<input type="radio" id="sex-2" name="sex" value="女">
+					<input type="radio" id="sex-2" name="sex" value="女" th:field="${user.sex}">
 					<label for="sex-2">女</label>
 				</div>
 				<div class="radio-box">
-					<input type="radio" id="sex-3" name="sex" value="保密">
+					<input type="radio" id="sex-3" name="sex" value="保密" th:field="${user.sex}">
 					<label for="sex-3">保密</label>
 				</div>
 			</div>
@@ -44,17 +44,19 @@
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地址：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<span class="select-box">
+				<span class="select-box" >
 					<select class="select" size="1" id="province" name="province" style="width:180px"></select>
 					<select class="select" size="1" id="city" name="city" style="width:180px"></select>
 					<select class="select" size="1" id="country" name="country" style="width:180px"></select>
 				</span>
-				<div id="show"></div>
 			</div>
 		</div>
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
-				<input type="hidden" th:value="${user.userId}">
+				<input type="hidden" id="old_province" th:value="${user.province}">
+				<input type="hidden" id="old_city" th:value="${user.city}">
+				<input type="hidden" id="old_country" th:value="${user.country}">
+				<input type="hidden" name="userId" th:value="${user.userId}">
 				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
 				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
 			</div>
@@ -111,7 +113,6 @@ $(function(){
 			country:{
 				required:true,
 			},
-			
 		},
 		onkeyup:false,
 		focusCleanup:true,
@@ -124,9 +125,6 @@ $(function(){
 						var index = parent.layer.getFrameIndex(window.name);
 						parent.layer.msg("修改成功,请刷新!",{icon: 6,time:1000});
 						parent.layer.close(index);
-					}
-					if(result.flag == "exist"){
-						layer.msg("用户名已存在!",{icon: 5,time:1000});
 					}
 					if(result.flag == "false"){
 						layer.msg("修改失败!",{icon: 2,time:1000});
@@ -145,16 +143,13 @@ $(function(){
 	/**
 	 * 城市三级联动
 	 * */
-	_init_area();	//初始化
-	var Gid  = document.getElementById ;
-	var showArea = function(){
-		Gid('show').innerHTML = "<h3>省" + Gid('province').value + " - 市" +
-				Gid('city').value + " - 县/区" +
-				Gid('country').value + "</h3>"
-	}
-	Gid('country').setAttribute('onchange','showArea()');
-
-
+	// 获取用户原始数据
+	var old_province = $("#old_province").val();
+	var old_city = $("#old_city").val();
+	var old_country = $("#old_country").val();
+	// 默认值初始化
+	opt0 = [old_province,old_city,old_country];//初始值
+	_init_area();
 });
 </script> 
 <!--/请在上方写此页面业务相关的脚本-->

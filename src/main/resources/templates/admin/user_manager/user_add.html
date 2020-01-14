@@ -22,7 +22,7 @@
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
 			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 				<div class="radio-box">
-					<input type="radio" id="sex-1" name="sex" value="男">
+					<input type="radio" id="sex-1" name="sex" value="男" checked>
 					<label for="sex-1">男</label>
 				</div>
 				<div class="radio-box">
@@ -145,14 +145,6 @@ $(function(){
 	 * 城市三级联动
 	 * */
 	_init_area();	//初始化
-	var Gid  = document.getElementById ;
-	var showArea = function(){
-		Gid('show').innerHTML = "<h3>省" + Gid('province').value + " - 市" +
-				Gid('city').value + " - 县/区" +
-				Gid('country').value + "</h3>"
-	}
-	Gid('country').setAttribute('onchange','showArea()');
-
 
 });
 </script> 
