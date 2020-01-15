@@ -98,4 +98,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
+    /**
+     * @Description 用户-批量停用
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/14 17:18
+     */
+    @Override
+    public int stopBatchUser(List<Integer> list) {
+        return userMapper.stopBatchByPrimaryKey(list);
+    }
+
 }

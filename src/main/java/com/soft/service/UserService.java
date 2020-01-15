@@ -61,4 +61,12 @@ public interface UserService {
      **/
     int updateUser(User user);
 
+    /**
+     * @Description 用户-批量停用
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/14 17:18
+     **/
+    int stopBatchUser(List<Integer> list);
 }

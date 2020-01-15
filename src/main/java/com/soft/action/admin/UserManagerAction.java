@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -131,37 +132,6 @@ public class UserManagerAction {
 
 
     /**
-     * @Description 用户 启用/停用
-     * @Param [userId, state]
-     * @Return com.alibaba.fastjson.JSONObject
-     * @Author ljy
-     * @Date 2020/1/13 2:15
-     **/
-    @RequestMapping("/doUserState")
-    @ResponseBody
-    public JSONObject doUserState(Integer userId, String state){
-        JSONObject jsonObject = new JSONObject();
-        // 查询此用户
-        User user = userService.loadByUserId(userId);
-        // 启用
-        if("start".equals(state)) {
-            user.setState((byte) 1);
-        }
-        // 停用
-        if("stop".equals(state)) {
-            user.setState((byte) 0);
-        }
-        // 判断更新结果
-        if (userService.updateUser(user) > 0) {
-            jsonObject.put("flag", "true");
-        } else {
-            jsonObject.put("flag", "false");
-        }
-        return jsonObject;
-    }
-
-
-    /**
      * @Description 跳转到用户修改密码界面
      * @Param [userId]
      * @Return org.springframework.web.servlet.ModelAndView
@@ -197,5 +167,63 @@ public class UserManagerAction {
         }
         return jsonObject;
     }
+
+
+    /**
+     * @Description 用户 启用/停用
+     * @Param [userId, state]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/13 2:15
+     **/
+    @RequestMapping("/doUserState")
+    @ResponseBody
+    public JSONObject doUserState(Integer userId, String state){
+        JSONObject jsonObject = new JSONObject();
+        // 查询此用户
+        User user = userService.loadByUserId(userId);
+        // 启用
+        if("start".equals(state)) {
+            user.setState((byte) 1);
+        }
+        // 停用
+        if("stop".equals(state)) {
+            user.setState((byte) 0);
+        }
+        // 判断更新结果
+        if (userService.updateUser(user) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 用户 批量停用
+     * @Param []
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/14 17:22
+     **/
+    @RequestMapping("/stopBatchUser")
+    @ResponseBody
+    public JSONObject stopBatchUser(Integer[] userIds) {
+        JSONObject jsonObject = new JSONObject();
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer userId : userIds) {
+            list.add(userId);
+        }
+        int recordNumber = userService.stopBatchUser(list);
+        if(recordNumber == list.size()){
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+            jsonObject.put("number", list.size() - recordNumber);
+        }
+        return jsonObject;
+    }
+
 
 }

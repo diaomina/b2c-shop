@@ -30,4 +30,13 @@ public interface UserMapper {
     int updateByPrimaryKeySelective(User record);
 
     int updateByPrimaryKey(User record);
+
+    /**
+     * @Description 批量停用
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/14 17:16
+     **/
+    int stopBatchByPrimaryKey(@Param("list") List<Integer> list);
 }

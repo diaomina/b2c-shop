@@ -23,7 +23,7 @@
 			</div>
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
-					<a href="javascript:;" onclick="user_del()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量停用</a>
+					<a href="javascript:;" onclick="user_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量停用</a>
 					<a href="javascript:;" onclick="user_add('添加用户','goUserAdd','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加用户</a>
 				</span>
 				<span class="r">共有数据：<strong th:text="${users.size()}"></strong> 条</span>
@@ -32,7 +32,7 @@
 				<table class="table table-border table-bordered table-hover table-bg table-sort">
 					<thead>
 						<tr class="text-c">
-							<th width="25"><input type="checkbox" name="" value=""></th>
+							<th width="25"><input type="checkbox" ></th>
 							<th width="40">序号</th>
 							<th width="100">用户名</th>
 							<th width="80">账户余额（单位/分）</th>
@@ -88,10 +88,36 @@
 	function user_add(title,url,w,h){
 		layer_show(title,url,w,h);
 	}
-	/*用户-查看*/
-	function member_show(title,url,id,w,h){
-		layer_show(title,url,w,h);
+
+	/*用户-批量停用*/
+	function user_stopBatch() {
+		var obj = document.getElementsByName("userId");
+		var userIds = [];
+		for(i in obj) {
+			if(obj[i].checked){
+				userIds.push(obj[i].value);
+			}
+		}
+		console.log(userIds);
+		layer.confirm('确认要停用吗？',function(index){
+			$.ajax({
+				type: "GET",
+				dateType: "json",
+				url: "stopBatchUser"+"?userIds="+userIds,
+				success: function (result) {
+					if(result.flag = "true") {
+						layer.msg('停用成功,请刷新!',{icon: 6,time:1000});
+					} else {
+						layer.msg('失败,含有'+result.number+'个停用失败!',{icon: 2,time:1000});
+					}
+				},
+				error: function (err) {
+					layer.msg('请求异常!',{icon: 2,time:1000})
+				}
+			});
+		});
 	}
+
 	/*用户-停用*/
 	function user_stop(obj,userId,state){
 		layer.confirm('确认要停用吗？',function(index){
@@ -139,43 +165,20 @@
 			});
 		});
 	}
+
 	/*用户-编辑*/
 	function user_edit(title,url,userId,w,h){
 		url = url + "?userId=" + userId;
 		layer_show(title,url,w,h);
 	}
+
 	/*密码-修改*/
 	function change_password(title,url,userId,w,h){
 		url = url + "?userId=" + userId;
 		layer_show(title,url,w,h);
 	}
-	/*用户-删除*/
-	function user_del(obj,id){
-		layer.confirm('确认要删除吗？',function(index){
-			/**
-			 $.ajax({
-			type: "GET",
-			url: "test.json",
-			data: {username:$("#username").val(), content:$("#content").val()},
-			dataType: "json",
-			success: function(data){
-				$('#resText').empty();   //清空resText里面的所有内容
-				var html = '';
-				$.each(data, function(commentIndex, comment){
-					html += '<div class="comment"><h6>' + comment['username']
-							+ ':</h6><p class="para"' + comment['content']
-							+ '</p></div>';
-				});
-				$('#resText').html(html);
-			}
-		});
-			 **/
-			$(obj).parents("tr").remove();
-			layer.msg('已删除!',{icon:1,time:1000});
-		});
-	}
 
-
+	/* 表格配置 */
 	$(function(){
 		$('.table-sort').dataTable({
 			"aaSorting": [[ 1, "asc" ]],//默认第几个排序
@@ -186,17 +189,7 @@
 			]
 		});
 
-		/**
-		$('.table-sort tbody').on( 'click', 'tr', function () {
-			if ( $(this).hasClass('selected') ) {
-				$(this).removeClass('selected');
-			}
-			else {
-				table.$('tr.selected').removeClass('selected');
-				$(this).addClass('selected');
-			}
-		});
-		 */
+
 	});
 
 </script>
