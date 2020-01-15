@@ -1,6 +1,7 @@
 package com.soft.service;
 
 import com.soft.model.GoodsCategory;
+import com.soft.model.User;
 
 import java.util.List;
 
@@ -28,6 +29,15 @@ public interface GoodsCategoryService {
      * @Date 2020/1/11 19:12
      **/
     GoodsCategory loadByCategoryId(Integer categoryId);
+
+    /**
+     * @Description 根据商品种类名称查找
+     * @Param [categoryName]
+     * @Return com.soft.model.GoodsCategory
+     * @Author ljy
+     * @Date 2020/1/15 22:07
+     **/
+    GoodsCategory loadByCategoryName(String categoryName);
 
     /**
      * @Description 添加商品种类

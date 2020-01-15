@@ -2,6 +2,7 @@ package com.soft.service.impl;
 
 import com.soft.mapper.GoodsCategoryMapper;
 import com.soft.model.GoodsCategory;
+import com.soft.model.GoodsCategoryExample;
 import com.soft.service.GoodsCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,25 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
     @Override
     public GoodsCategory loadByCategoryId(Integer categoryId) {
         return goodsCategoryMapper.selectByPrimaryKey(categoryId);
+    }
+
+    /**
+     * @Description 根据商品种类名称查找
+     * @Param [categoryName]
+     * @Return com.soft.model.GoodsCategory
+     * @Author ljy
+     * @Date 2020/1/15 22:07
+     */
+    @Override
+    public GoodsCategory loadByCategoryName(String categoryName) {
+        GoodsCategoryExample goodsCategoryExample = new GoodsCategoryExample();
+        GoodsCategoryExample.Criteria criteria = goodsCategoryExample.createCriteria();
+        criteria.andCategoryNameEqualTo(categoryName);
+        List<GoodsCategory> goodsCategoryList = goodsCategoryMapper.selectByExample(goodsCategoryExample);
+        if(goodsCategoryList != null && goodsCategoryList.size() > 0){
+            return goodsCategoryList.get(0);
+        }
+        return null;
     }
 
     /**
