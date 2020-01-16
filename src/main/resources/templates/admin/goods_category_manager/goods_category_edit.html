@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<!-- 插入公共模板 _meta -->
+<head th:insert="../templates/admin/common/_meta :: common_meta"></head>
+<body>
+
+<article class="cl pd-20">
+	<form th:action="@{doGoodsCategoryEdit}" method="post" class="form form-horizontal" id="form-goodsCategory-edit">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>种类名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" id="categoryName" name="categoryName" th:value="${goodsCategory.categoryName}" class="input-text" placeholder="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>父种类名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select class="select" size="1" name="parentId">
+						<option value="0">顶层种类</option>
+						<option th:each="goodsCategory,var : ${goodsCategoryList}" th:value="${goodsCategory.categoryId}"  th:field="${goodsCategory.parentId}" th:text="${goodsCategory.categoryName}" ></option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">简要描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="simpleDescribe" th:text="${goodsCategory.simpleDescribe}" cols="" rows="" class="textarea"  placeholder="说点什么..."></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="hidden" name="categoryId" th:value="${goodsCategory.categoryId}">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+
+<!-- 插入公共模版 _footer -->
+<div th:replace="../templates/admin/common/_footer :: common_footer"></div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	/**
+	 * 表单校验
+	 */
+	$("#form-goodsCategory-edit").validate({
+		rules:{
+			categoryName:{
+				required:true
+			},
+			parentId:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				dateType: "json",
+				success: function (result) {
+					if(result.flag == "true"){
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.msg("编辑成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.close(index);
+					}
+					if(result.flag == "false"){
+						layer.msg("编辑失败!",{icon: 2,time:1000});
+					}
+				},
+				error: function (err) {
+					layer.msg('请求异常!',{icon: 2,time:1000})
+				}
+			});
+		}
+	});
+
+
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

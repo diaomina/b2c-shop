@@ -123,11 +123,11 @@ $(function(){
 				success: function (result) {
 					if(result.flag == "true"){
 						var index = parent.layer.getFrameIndex(window.name);
-						parent.layer.msg("修改成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.msg("编辑成功,请刷新!",{icon: 6,time:1000});
 						parent.layer.close(index);
 					}
 					if(result.flag == "false"){
-						layer.msg("修改失败!",{icon: 2,time:1000});
+						layer.msg("编辑失败!",{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {

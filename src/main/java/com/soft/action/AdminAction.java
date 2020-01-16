@@ -1,11 +1,15 @@
-package com.soft.action.admin;
+package com.soft.action;
 
+import com.alibaba.fastjson.JSONObject;
+import com.soft.common.util.Md5;
 import com.soft.model.Admin;
 import com.soft.service.AdminService;
-import com.sun.istack.internal.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName AdminAction
@@ -15,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Version 1.0
  **/
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/adminAction")
 public class AdminAction {
 
     @Autowired
@@ -35,14 +39,29 @@ public class AdminAction {
 
     /**
      * @Description 管理员登陆
-     * @Param [admin]
-     * @Return java.lang.String
+     * @Param [admin, session]
+     * @Return com.alibaba.fastjson.JSONObject
      * @Author ljy
-     * @Date 2020/1/12 14:32
+     * @Date 2020/1/16 15:20
      **/
     @RequestMapping("/doLogin")
-    public String doLogin(@NotNull Admin admin) {
-        return "forward:admin/goIndex";
+    @ResponseBody
+    public JSONObject doLogin(Admin admin, HttpSession session) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        Admin dbAdmin = adminService.loadByUserName(admin.getAdminName());
+        // 判断管理员是否存在
+        if(dbAdmin != null){
+            // 校验密码
+            if(Md5.verify(admin.getPassword(), dbAdmin.getPassword())){
+                session.setAttribute("admin", dbAdmin);
+                jsonObject.put("flag","true");
+            } else {
+                jsonObject.put("flag","falseByPassword");
+            }
+        } else {
+            jsonObject.put("flag","falseByAdminName");
+        }
+        return jsonObject;
     }
 
     /**
