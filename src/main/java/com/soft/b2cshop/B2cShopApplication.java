@@ -5,6 +5,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+/**
+ * @Description 启动类
+ * @Author ljy
+ * @Date 2020/1/16 20:39
+ **/
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.soft"})
 @MapperScan(basePackages = "com.soft.mapper")  // 扫描mapper
