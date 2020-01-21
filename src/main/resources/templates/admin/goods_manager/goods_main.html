@@ -17,7 +17,7 @@
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 					<a href="javascript:;" onclick="user_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量停用</a>
-					<a href="javascript:;" onclick="user_add('添加用户','goUserAdd','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加用户</a>
+					<a href="javascript:;" onclick="goods_add('添加商品','goGoodsAdd','','510')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加用户</a>
 				</span>
 				<span class="r">共有数据：<strong th:text="${users.size()}"></strong> 条</span>
 			</div>
@@ -77,8 +77,8 @@
 <script type="text/javascript" src="../../lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript" th:inline="none">
 
-	/*用户-添加*/
-	function user_add(title,url,w,h){
+	/*商品-添加*/
+	function goods_add(title,url,w,h){
 		layer_show(title,url,w,h);
 	}
 
