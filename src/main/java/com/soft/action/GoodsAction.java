@@ -223,4 +223,27 @@ public class GoodsAction {
         return jsonObject;
     }
 
+
+    /**
+     * @Description 商品删除
+     * @Param [goodsId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/27 19:28
+     **/
+    @RequestMapping("/doGoodsDelete")
+    @ResponseBody
+    public JSONObject doGoodsDelete(Integer goodsId) {
+        JSONObject jsonObject = new JSONObject();
+        Goods goods = goodsService.loadByGoodsId(goodsId);
+        goods.setDelState((byte) 1);
+        // 判断删除是否成功
+        if(goodsService.updateGoods(goods) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
 }
