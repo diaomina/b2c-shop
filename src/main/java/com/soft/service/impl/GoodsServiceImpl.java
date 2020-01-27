@@ -98,4 +98,16 @@ public class GoodsServiceImpl implements GoodsService {
     public int updateGoods(Goods goods) {
         return goodsMapper.updateByPrimaryKeySelective(goods);
     }
+
+    /**
+     * @Description 商品-批量下架
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/27 19:49
+     */
+    @Override
+    public int stopBatchGoods(List<Integer> list) {
+        return goodsMapper.stopBatchByPrimaryKey(list);
+    }
 }

@@ -16,7 +16,7 @@
 		<article class="cl pd-20">
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
-					<a href="javascript:;" onclick="user_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量停用</a>
+					<a href="javascript:;" onclick="goods_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量下架</a>
 					<a href="javascript:;" onclick="goods_add('添加商品','goGoodsAdd','','650')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加商品</a>
 				</span>
 				<span class="r">共有数据：<strong th:text="${goodsVOList.size()}"></strong> 条</span>
@@ -110,26 +110,26 @@
 		});
 	}
 
-	/*商品-批量停用*/
+	/*商品-批量下架*/
 	function goods_stopBatch() {
-		var obj = document.getElementsByName("userId");
-		var userIds = [];
+		var obj = document.getElementsByName("goodsId");
+		var goodsIds = [];
 		for(i in obj) {
 			if(obj[i].checked){
-				userIds.push(obj[i].value);
+				goodsIds.push(obj[i].value);
 			}
 		}
-		console.log(userIds);
-		layer.confirm('确认要停用吗？',function(index){
+		console.log(goodsIds);
+		layer.confirm('确认要下架吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "stopBatchUser"+"?userIds="+userIds,
+				url: "stopBatchGoods"+"?goodsIds="+goodsIds,
 				success: function (result) {
 					if(result.flag = "true") {
-						layer.msg('停用成功,请刷新!',{icon: 6,time:1000});
+						layer.msg('下架成功,请刷新!',{icon: 6,time:1000});
 					} else {
-						layer.msg('失败,含有'+result.number+'个停用失败!',{icon: 2,time:1000});
+						layer.msg('失败,含有'+result.number+'个下架失败!',{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {

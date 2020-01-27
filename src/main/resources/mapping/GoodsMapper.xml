@@ -320,4 +320,19 @@
       admin_id = #{adminId,jdbcType=INTEGER}
     where goods_id = #{goodsId,jdbcType=INTEGER}
   </update>
+  <!-- 批量下架 -->
+  <update id="stopBatchByPrimaryKey" parameterType="java.util.List">
+    UPDATE t_goods
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="is_marketable = case" suffix="end,">
+        <foreach collection="list" item="goodsId" index="index">
+          when goods_id=#{goodsId,jdbcType=INTEGER} then 0
+        </foreach>
+      </trim>
+    </trim>
+    where goods_id in
+    <foreach collection="list" item="goodsId" index="index" open="(" close=")" separator=",">
+      #{goodsId,jdbcType=INTEGER}
+    </foreach>
+  </update>
 </mapper>

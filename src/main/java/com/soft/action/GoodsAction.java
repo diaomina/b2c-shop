@@ -132,37 +132,6 @@ public class GoodsAction {
 
 
     /**
-     * @Description 商品 上架/下架
-     * @Param [goodsId, state]
-     * @Return com.alibaba.fastjson.JSONObject
-     * @Author ljy
-     * @Date 2020/1/27 18:57
-     **/
-    @RequestMapping("/doGoodsIsMarketable")
-    @ResponseBody
-    public JSONObject doGoodsIsMarketable(Integer goodsId, String state) {
-        JSONObject jsonObject = new JSONObject();
-        // 查询此商品
-        Goods goods = goodsService.loadByGoodsId(goodsId);
-        // 上架
-        if("start".equals(state)) {
-            goods.setIsMarketable((byte) 1);
-        }
-        // 下架
-        if("stop".equals(state)) {
-            goods.setIsMarketable((byte) 0);
-        }
-        // 判断更新结果
-        if (goodsService.updateGoods(goods) > 0) {
-            jsonObject.put("flag", "true");
-        } else {
-            jsonObject.put("flag", "false");
-        }
-        return jsonObject;
-    }
-
-
-    /**
      * @Description 跳转到商品修改界面
      * @Param [goodsId]
      * @Return org.springframework.web.servlet.ModelAndView
@@ -245,5 +214,63 @@ public class GoodsAction {
         }
         return jsonObject;
     }
+
+
+    /**
+     * @Description 商品 上架/下架
+     * @Param [goodsId, state]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/27 18:57
+     **/
+    @RequestMapping("/doGoodsIsMarketable")
+    @ResponseBody
+    public JSONObject doGoodsIsMarketable(Integer goodsId, String state) {
+        JSONObject jsonObject = new JSONObject();
+        // 查询此商品
+        Goods goods = goodsService.loadByGoodsId(goodsId);
+        // 上架
+        if("start".equals(state)) {
+            goods.setIsMarketable((byte) 1);
+        }
+        // 下架
+        if("stop".equals(state)) {
+            goods.setIsMarketable((byte) 0);
+        }
+        // 判断更新结果
+        if (goodsService.updateGoods(goods) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 商品 批量下架
+     * @Param [goodsIds]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/27 19:55
+     **/
+    @RequestMapping("/stopBatchGoods")
+    @ResponseBody
+    public JSONObject stopBatchGoods(Integer[] goodsIds) {
+        JSONObject jsonObject = new JSONObject();
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer goodsId : goodsIds) {
+            list.add(goodsId);
+        }
+        int recordNumber = goodsService.stopBatchGoods(list);
+        if(recordNumber == list.size()){
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+            jsonObject.put("number", list.size() - recordNumber);
+        }
+        return jsonObject;
+    }
+
 
 }

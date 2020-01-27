@@ -27,4 +27,13 @@ public interface GoodsMapper {
     int updateByPrimaryKeySelective(Goods record);
 
     int updateByPrimaryKey(Goods record);
+
+    /**
+     * @Description 批量下架
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/27 19:48
+     **/
+    int stopBatchByPrimaryKey(@Param("list") List<Integer> list);
 }

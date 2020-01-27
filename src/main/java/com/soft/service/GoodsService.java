@@ -67,4 +67,13 @@ public interface GoodsService {
      **/
     int updateGoods(Goods goods);
 
+    /**
+     * @Description 商品-批量下架
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/27 19:49
+     **/
+    int stopBatchGoods(List<Integer> list);
+
 }
