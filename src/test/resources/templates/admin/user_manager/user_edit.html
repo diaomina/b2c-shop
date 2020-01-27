@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<!-- 插入公共模板 _meta -->
+<head th:insert="../templates/admin/common/_meta :: common_meta"></head>
+<body>
+
+<article class="cl pd-20">
+	<form th:action="@{doUserEdit}" method="post" class="form form-horizontal" id="form-user-edit">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>用户名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="${user.userName}" placeholder="" id="userName" name="userName" disabled>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>账户余额（单位/分）：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="${user.userAmount}" placeholder="" id="userAmount" name="userAmount">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="radio-box">
+					<input type="radio" id="sex-1" name="sex" value="男" th:field="${user.sex}">
+					<label for="sex-1">男</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-2" name="sex" value="女" th:field="${user.sex}">
+					<label for="sex-2">女</label>
+				</div>
+				<div class="radio-box">
+					<input type="radio" id="sex-3" name="sex" value="保密" th:field="${user.sex}">
+					<label for="sex-3">保密</label>
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="${user.phone}" placeholder="" id="phone" name="phone">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box" >
+					<select class="select" size="1" id="province" name="province" style="width:180px"></select>
+					<select class="select" size="1" id="city" name="city" style="width:180px"></select>
+					<select class="select" size="1" id="country" name="country" style="width:180px"></select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="hidden" id="old_province" th:value="${user.province}">
+				<input type="hidden" id="old_city" th:value="${user.city}">
+				<input type="hidden" id="old_country" th:value="${user.country}">
+				<input type="hidden" name="userId" th:value="${user.userId}">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+
+<!-- 插入公共模版 _footer -->
+<div th:replace="../templates/admin/common/_footer :: common_footer"></div>
+
+<!-- 引入城市三级联动js -->
+<script type="text/javascript" src="../../my/area.js"></script>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	/**
+	 * 表单校验
+	 */
+	$("#form-user-edit").validate({
+		rules:{
+			userName:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			userAmount:{
+				required:true,
+			},
+			sex:{
+				required:true,
+			},
+			phone:{
+				required:true,
+				isMobile:true,
+			},
+			province:{
+				required:true,
+			},
+			city:{
+				required:true,
+			},
+			country:{
+				required:true,
+			},
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				dateType: "json",
+				success: function (result) {
+					if(result.flag == "true"){
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.msg("编辑成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.close(index);
+					}
+					if(result.flag == "false"){
+						layer.msg("编辑失败!",{icon: 2,time:1000});
+					}
+				},
+				error: function (err) {
+					layer.msg('请求异常!',{icon: 2,time:1000})
+				}
+			});
+
+
+		}
+	});
+
+
+	/**
+	 * 城市三级联动
+	 * */
+	// 获取用户原始数据
+	var old_province = $("#old_province").val();
+	var old_city = $("#old_city").val();
+	var old_country = $("#old_country").val();
+	// 默认值初始化
+	opt0 = [old_province,old_city,old_country];//初始值
+	_init_area();
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -36,11 +36,16 @@
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>商品图片：</label>
-			<div class="formControls col-xs-8 col-sm-9"> <span class="btn-upload form-group">
-				<input class="input-text upload-url" type="text" readonly nullmsg="请添加图片！" style="width:200px">
-				<a href="#" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 添加图片</a>
-				<input type="file" id="goodsImage" multiple name="goodsImage" class="input-file">
-				</span> </div>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="btn-upload form-group">
+					<a href="#" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 添加图片</a>
+					<input type="file" id="goodsImage" multiple name="goodsImage" class="input-file">
+				</span>
+				<div>
+					<!-- 显示图像预览 -->
+					<img style="width: 160px;height: 180px;" id="goods-img">
+				</div>
+			</div>
 		</div>
 		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>简要描述：</label>
@@ -129,6 +134,12 @@ $(function(){
 		}
 	});
 
+	$(function(){
+		//上传图像预览
+		$('#goodsImage').on('change',function() {
+			$('#goods-img').attr('src', window.URL.createObjectURL(this.files[0]));
+		});
+	});
 
 });
 </script> 

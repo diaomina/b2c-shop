@@ -320,4 +320,20 @@
       state = #{state,jdbcType=TINYINT}
     where user_id = #{userId,jdbcType=INTEGER}
   </update>
+  <!-- 批量停用 -->
+  <update id="stopBatchByPrimaryKey" parameterType="java.util.List">
+    UPDATE t_user
+    <trim prefix="set" suffixOverrides=",">
+        <trim prefix="state = case" suffix="end,">
+          <foreach collection="list" item="userId" index="index">
+            when user_id=#{userId,jdbcType=INTEGER} then 0
+          </foreach>
+        </trim>
+    </trim>
+    where user_id in
+    <foreach collection="list" item="userId" index="index" open="(" close=")" separator=",">
+        #{userId,jdbcType=INTEGER}
+    </foreach>
+  </update>
+
 </mapper>

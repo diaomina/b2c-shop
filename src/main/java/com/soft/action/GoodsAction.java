@@ -1,8 +1,12 @@
 package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
+import com.soft.common.util.FileUtil;
+import com.soft.common.vo.GoodsVO;
 import com.soft.model.Admin;
 import com.soft.model.Goods;
+import com.soft.model.User;
+import com.soft.service.AdminService;
 import com.soft.service.GoodsCategoryService;
 import com.soft.service.GoodsService;
 import org.apache.commons.io.FilenameUtils;
@@ -16,7 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,6 +42,9 @@ public class GoodsAction {
     @Autowired
     private GoodsCategoryService goodsCategoryService;
 
+    @Autowired
+    private AdminService adminService;
+
     /**
      * @Description 跳转到商品管理主页
      * @Param []
@@ -45,7 +54,28 @@ public class GoodsAction {
      **/
     @RequestMapping("/goGoodsMain")
     public ModelAndView goGoodsMain(){
-        return new ModelAndView("admin/goods_manager/goods_main", "goodsList", goodsService.findAllListGoods());
+        List<Goods> goodsList = goodsService.findAllListGoods();
+        List<GoodsVO> goodsVOList = new ArrayList<GoodsVO>();
+        for(Goods goods : goodsList) {
+            // 判断商品是否删除
+            if (goods.getDelState() == 2) {
+                // 封装GoodsVO
+                GoodsVO goodsVO = new GoodsVO();
+                goodsVO.setGoodsId(goods.getGoodsId());
+                goodsVO.setGoodsName(goods.getGoodsName());
+                goodsVO.setCategoryName(goodsCategoryService.loadByCategoryId(goods.getCategoryId()).getCategoryName());
+                goodsVO.setImage(goods.getImage());
+                goodsVO.setPrice(goods.getPrice());
+                goodsVO.setQuantity(goods.getQuantity());
+                goodsVO.setSimpleDescribe(goods.getSimpleDescribe());
+                goodsVO.setIsMarketable(goods.getIsMarketable());
+                goodsVO.setCreateTime(goods.getCreateTime());
+                goodsVO.setUpdateTime(goods.getUpdateTime());
+                goodsVO.setAdminName(adminService.loadByAdminId(goods.getAdminId()).getAdminName());
+                goodsVOList.add(goodsVO);
+            }
+        }
+        return new ModelAndView("admin/goods_manager/goods_main", "goodsVOList", goodsVOList);
     }
 
 
@@ -71,24 +101,121 @@ public class GoodsAction {
      **/
     @RequestMapping("/doGoodsAdd")
     @ResponseBody
-    public JSONObject doGoodsAdd(Goods goods, MultipartFile goodsImage, HttpServletRequest request) throws IOException {
+    public JSONObject doGoodsAdd(Goods goods, MultipartFile goodsImage, HttpServletRequest request) throws Exception {
         JSONObject jsonObject = new JSONObject();
         //使用UUID给图片重命名，并去掉四个“-”
         String name = UUID.randomUUID().toString().replaceAll("-", "");
         //获取文件的扩展名
         String ext = FilenameUtils.getExtension(goodsImage.getOriginalFilename());
+        // 商品图片名称
+        String goodsImageName = name + "." + ext;
         //设置图片上传路径
-        String url = request.getSession().getServletContext().getRealPath("/upload");
-        //以绝对路径保存重名命后的图片
-        goodsImage.transferTo(new File(url+"/"+name + "." + ext));
+        String url = request.getSession().getServletContext().getRealPath("/static/upload");
+        System.out.println("图片名称：" + goodsImageName);
+        System.out.println("上传路径：" + url);
+        FileUtil.uploadFile(goodsImage.getBytes(), url, goodsImageName);
+
         //把图片存储路径保存到数据库
-        goods.setImage("upload/"+name + "." + ext);
+        goods.setImage("/static/upload/" + goodsImageName);
         goods.setCreateTime(new Date());
         goods.setUpdateTime(new Date());
         Admin admin = (Admin) request.getSession().getAttribute("admin");
         goods.setAdminId(admin.getAdminId());
         // 判断添加是否成功
         if(goodsService.createGoods(goods) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 商品 上架/下架
+     * @Param [goodsId, state]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/27 18:57
+     **/
+    @RequestMapping("/doGoodsIsMarketable")
+    @ResponseBody
+    public JSONObject doGoodsIsMarketable(Integer goodsId, String state) {
+        JSONObject jsonObject = new JSONObject();
+        // 查询此商品
+        Goods goods = goodsService.loadByGoodsId(goodsId);
+        // 上架
+        if("start".equals(state)) {
+            goods.setIsMarketable((byte) 1);
+        }
+        // 下架
+        if("stop".equals(state)) {
+            goods.setIsMarketable((byte) 0);
+        }
+        // 判断更新结果
+        if (goodsService.updateGoods(goods) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 跳转到商品修改界面
+     * @Param [goodsId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/27 17:18
+     **/
+    @RequestMapping("goGoodsEdit")
+    public ModelAndView goGoodsEdit(Integer goodsId) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("admin/goods_manager/goods_edit");
+        mv.addObject("goods", goodsService.loadByGoodsId(goodsId));
+        mv.addObject("goodsCategoryList", goodsCategoryService.findAllListGoodsCategory());
+        return mv;
+    }
+
+
+    /**
+     * @Description 商品修改
+     * @Param [goods, goodsImage, request]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/27 17:41
+     **/
+    @RequestMapping("/doGoodsEdit")
+    @ResponseBody
+    public JSONObject doGoodsEdit(Goods goods, MultipartFile goodsImage, HttpServletRequest request) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        Goods dbGoods = goodsService.loadByGoodsId(goods.getGoodsId());
+        // 判断是否更新了图片
+        if(goodsImage != null) {
+            //使用UUID给图片重命名，并去掉四个“-”
+            String name = UUID.randomUUID().toString().replaceAll("-", "");
+            //获取文件的扩展名
+            String ext = FilenameUtils.getExtension(goodsImage.getOriginalFilename());
+            // 商品图片名称
+            String goodsImageName = name + "." + ext;
+            //设置图片上传路径
+            String url = request.getSession().getServletContext().getRealPath("/static/upload");
+            System.out.println("图片名称：" + goodsImageName);
+            System.out.println("上传路径：" + url);
+            FileUtil.uploadFile(goodsImage.getBytes(), url, goodsImageName);
+            dbGoods.setImage("/static/upload/" + goodsImageName);
+        }
+
+        dbGoods.setGoodsName(goods.getGoodsName());
+        dbGoods.setCategoryId(goods.getCategoryId());
+        dbGoods.setPrice(goods.getPrice());
+        dbGoods.setQuantity(goods.getQuantity());
+        dbGoods.setSimpleDescribe(goods.getSimpleDescribe());
+        dbGoods.setUpdateTime(new Date());
+
+        // 判断修改是否成功
+        if(goodsService.updateGoods(dbGoods) > 0) {
             jsonObject.put("flag","true");
         } else {
             jsonObject.put("flag","false");
