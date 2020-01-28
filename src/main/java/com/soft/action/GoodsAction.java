@@ -330,26 +330,6 @@ public class GoodsAction {
             }
         }
 
-        ////////////////////////// 测试 ///////////////////////////
-        System.out.println("所有顶级种类：");
-        for(GoodsCategory goodsCategory : parentCategoryList) {
-            System.out.println(goodsCategory.toString());
-        }
-        System.out.println("\n所有非顶级种类：");
-        for(GoodsCategory goodsCategory : goodsCategoryList) {
-            System.out.println(goodsCategory.toString());
-        }
-
-        System.out.println("");
-        for (CategoryVO categoryVO : categoryVOList) {
-            System.out.println("父种类：==>" + categoryVO.getParentCategoryName());
-            System.out.println("子种类：==>");
-            for(GoodsCategory goodsCategory : categoryVO.getCategoryList()) {
-                System.out.println(goodsCategory.toString());
-            }
-        }
-
-        ////////////////////////// 测试 ///////////////////////////
 
 
         ModelAndView mv = new ModelAndView();
@@ -357,6 +337,19 @@ public class GoodsAction {
         mv.addObject("categoryVOList", categoryVOList);
         mv.addObject("goodsList", goodsList);
         return mv;
+    }
+
+
+    /**
+     * @Description 跳转到商品详情
+     * @Param [goodsId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/28 23:46
+     **/
+    @RequestMapping("/goGoodsDetail")
+    public ModelAndView goGoodsDetail(Integer goodsId) {
+        return new ModelAndView("user/goods_detail", "goods", goodsService.loadByGoodsId(goodsId));
     }
 
 

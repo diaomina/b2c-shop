@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>导航栏</title>
+</head>
+<body>
+
+<th:block th:fragment="common_headNav">
+    <!--导航开始-->
+    <div class="headNav">
+        <div class="navCon w1020">
+            <!-- 商品种类 start -->
+            <div class="navCon-cate fl navCon_on">
+                <div class="navCon-cate-title"> <a href="#">全部商品分类</a></div>
+                <div class="cateMenu hide">
+                    <ul>
+                        <li style="border-top: none;" th:each="categoryVO : ${categoryVOList}">
+                            <div class="cate-tag"> <strong><a href="#" th:text="${categoryVO.parentCategoryName}"></a></strong></div>
+                            <div class="list-item hide">
+                                <ul class="itemleft">
+                                    <dl>
+                                        <dt th:text="${categoryVO.parentCategoryName}"></dt>
+                                        <dd th:each="category : ${categoryVO.categoryList}">
+                                            <a href="#" th:text="${category.categoryName}"></a>
+                                        </dd>
+                                    </dl>
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li><div class="float-list-dnav"></div></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 商品种类 end -->
+
+            <div class="navCon-menu fl">
+                <ul>
+                    <li><a class="curMenu" href="index.html">商城首页</a></li>
+                    <li><a href="tplist.html">特色产品</a></li>
+                    <li><a href="tplist.html">VIP专区</a></li>
+                    <li><a href="#">服务支持</a></li>
+                    <li><a href="newslist.html">相关资讯</a></li>
+                    <li><a href="about.html">关于本亲</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--导航结束-->
+</th:block>
+
+</body>
+</html>

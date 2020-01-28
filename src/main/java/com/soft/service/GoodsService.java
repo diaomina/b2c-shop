@@ -32,6 +32,15 @@ public interface GoodsService {
     List<Goods> findListByGoodsName(String goodsName);
 
     /**
+     * @Description 根据 category_id 查询商品
+     * @Param [categoryId]
+     * @Return java.util.List<com.soft.model.Goods>
+     * @Author ljy
+     * @Date 2020/1/28 22:16
+     **/
+    List<Goods> findListByCategoryId(Integer categoryId);
+
+    /**
      * @Description 根据 goods_id 查询商品
      * @Param [gooodsId]
      * @Return com.soft.model.Goods

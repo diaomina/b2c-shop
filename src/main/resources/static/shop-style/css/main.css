@@ -95,7 +95,7 @@ ul{ list-style:none;}
 .szmc { float:left; padding-left:10px; }
 #wrap .dmgg { width:230px; height:83px; margin:auto; padding-top:15px; padding-bottom:16px; }
 #wrap2 .dmgg { width:230px; height:83px; margin:auto; padding-top:15px; padding-bottom:16px; }
-.con2_yc { width:960px; height:305px; float:right; padding-top:12px;}
+.con2_yc { width:1198px; height:305px; float:right; padding-top:12px;}
 
 
 .con_sy .con2_rl { width:1200px; height:415px; margin:auto; clear:both; }
@@ -133,7 +133,7 @@ ul{ list-style:none;}
 
 
 /*内页开始*/
-.con_ny { width:1000px; height:auto; overflow:hidden;  margin:auto; padding-bottom:10px; }
+.con_ny { width:1020px; height:auto; overflow:hidden;  margin:auto; padding-bottom:10px; }
 .con_ny .con_dqwz { width:970px; height:36px; line-height:36px; border-bottom:1px solid #acc90b; background:url(../images/dq.jpg); background-position:left; background-repeat:no-repeat; font-family:"微软雅黑"; font-size:15px; color:#4b8400; padding-left:30px; margin-top:10px;}
 .con_ny .con_dqwz a { color:#4b8400;}
 .con_ny .tplist1 { width:317px; height:290px; float:left; border:1px solid #e6dcdc; margin-top:20px; margin-left:20px; }
@@ -141,7 +141,7 @@ ul{ list-style:none;}
 .con_ny .con_dqwz a:hover{ color:#64b322;}
 .con_ny .tplist1 .tplist_yy { width:296px; height:15px; background:url(../images/chanpin_yy.jpg); margin:auto;}
 .con_ny .tplist1 .tplist_mc { width:317px; height:35px; line-height:35px; overflow:hidden; font-family:"微软雅黑"; font-size:15px; text-align:center;}
-.yuanjia { float:left;text-decoration:line-through; padding-left:15px;}
+.yuanjia { float:left; padding-left:15px;}
 .tejia { float:right; padding-right:15px; color:#F00; font-size:17px;}
 .con_ny .fy { width:1000px; height:70px; line-height:70px; clear:both; text-align:center; font-size:14px; padding-top:5px; font-family:"微软雅黑";}
 
