@@ -2,9 +2,11 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.FileUtil;
+import com.soft.common.vo.CategoryVO;
 import com.soft.common.vo.GoodsVO;
 import com.soft.model.Admin;
 import com.soft.model.Goods;
+import com.soft.model.GoodsCategory;
 import com.soft.model.User;
 import com.soft.service.AdminService;
 import com.soft.service.GoodsCategoryService;
@@ -12,6 +14,7 @@ import com.soft.service.GoodsService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName GoodsAction
@@ -270,6 +271,92 @@ public class GoodsAction {
             jsonObject.put("number", list.size() - recordNumber);
         }
         return jsonObject;
+    }
+
+
+    /**
+     * @Description 跳转到商城首页
+     * @Param []
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/28 13:40
+     **/
+    @RequestMapping("/goIndex")
+    public ModelAndView goIndex() {
+        // 所有种类
+        List<GoodsCategory> goodsCategoryList = goodsCategoryService.findAllListGoodsCategory();
+        // 顶层种类
+        List<GoodsCategory> parentCategoryList = new ArrayList<GoodsCategory>();
+        // 获取所有顶层种类
+        for(GoodsCategory g : goodsCategoryList) {
+            // 判断是否启用
+            if(g.getState() != 1) {
+                // 已启用
+                continue;
+            }
+            // 判断是否为顶层种类
+            if(g.getParentId() == 0) {
+                // 是
+                parentCategoryList.add(g);
+            }
+        }
+        // 获取所有非顶层种类,此时goodsCategoryList内是所有非顶层种类
+        goodsCategoryList.removeAll(parentCategoryList);
+
+
+        List<CategoryVO> categoryVOList = new ArrayList<CategoryVO>();
+        // 封装CategoryVO
+        for(GoodsCategory pg : parentCategoryList) {
+            CategoryVO categoryVO = new CategoryVO();
+            List<GoodsCategory> categoryList = new ArrayList<GoodsCategory>();
+            for(GoodsCategory cg : goodsCategoryList) {
+                if(pg.getCategoryId() == cg.getParentId()) {
+                    categoryList.add(cg);
+                }
+            }
+            categoryVO.setParentCategoryName(pg.getCategoryName());
+            categoryVO.setCategoryList(categoryList);
+            categoryVOList.add(categoryVO);
+        }
+
+        List<Goods> goodsList = new ArrayList<Goods>();
+        for(Goods goods : goodsService.findAllListGoods()) {
+            // 判断是否删除
+            if (goods.getDelState() == 2) {
+                // 判断是否上架
+                if (goods.getIsMarketable() == 1) {
+                    goodsList.add(goods);
+                }
+            }
+        }
+
+        ////////////////////////// 测试 ///////////////////////////
+        System.out.println("所有顶级种类：");
+        for(GoodsCategory goodsCategory : parentCategoryList) {
+            System.out.println(goodsCategory.toString());
+        }
+        System.out.println("\n所有非顶级种类：");
+        for(GoodsCategory goodsCategory : goodsCategoryList) {
+            System.out.println(goodsCategory.toString());
+        }
+
+        System.out.println("");
+        for (CategoryVO categoryVO : categoryVOList) {
+            System.out.println("父种类：==>" + categoryVO.getParentCategoryName());
+            System.out.println("子种类：==>");
+            for(GoodsCategory goodsCategory : categoryVO.getCategoryList()) {
+                System.out.println(goodsCategory.toString());
+            }
+        }
+
+        ////////////////////////// 测试 ///////////////////////////
+
+
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("user/index");
+        mv.addObject("categoryVOList", categoryVOList);
+        mv.addObject("goodsList", goodsList);
+        return mv;
     }
 
 

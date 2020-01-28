@@ -5,7 +5,7 @@ import java.util.Date;
 
 /**
  * @ClassName GoodsCategoryVO
- * @Description 用于商品种类信息展示
+ * @Description 用于后台商品种类管理的信息展示
  * @Author ljy
  * @Date 2020/1/15 19:54
  * @Version 1.0

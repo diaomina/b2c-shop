@@ -1,0 +1,83 @@
+package com.soft.service.impl;
+
+import com.soft.mapper.OrderMapper;
+import com.soft.model.Order;
+import com.soft.service.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * @ClassName OrderServiceImpl
+ * @Description OrderService实现类
+ * @Author ljy
+ * @Date 2020/1/28 13:43
+ * @Version 1.0
+ **/
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderMapper orderMapper;
+
+    /**
+     * @Description 查询所有订单
+     * @Param []
+     * @Return java.util.List<com.soft.model.Order>
+     * @Author ljy
+     * @Date 2020/1/11 20:50
+     **/
+    @Override
+    public List<Order> findAllList() {
+        return orderMapper.selectByExample(null);
+    }
+
+    /**
+     * @Description 根据 order_id 查询订单
+     * @Param [orderId]
+     * @Return com.soft.model.Order
+     * @Author ljy
+     * @Date 2020/1/11 20:50
+     */
+    @Override
+    public Order loadByOrderId(Integer orderId) {
+        return orderMapper.selectByPrimaryKey(orderId);
+    }
+
+    /**
+     * @Description 创建订单
+     * @Param [order]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/11 20:51
+     */
+    @Override
+    public int createOrder(Order order) {
+        return orderMapper.insertSelective(order);
+    }
+
+    /**
+     * @Description 删除订单
+     * @Param [orderId]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/11 20:52
+     */
+    @Override
+    public int delOrder(Integer orderId) {
+        return orderMapper.deleteByPrimaryKey(orderId);
+    }
+
+    /**
+     * @Description 更新订单
+     * @Param [order]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/1/11 20:53
+     */
+    @Override
+    public int updateOrder(Order order) {
+        return orderMapper.updateByPrimaryKeySelective(order);
+    }
+}

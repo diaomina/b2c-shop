@@ -7,10 +7,10 @@
     <aside class="Hui-aside">
         <div class="menu_dropdown bk_2">
             <dl id="menu-article">
-                <dt><i class="Hui-iconfont">&#xe616;</i> 资讯管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+                <dt><i class="Hui-iconfont">&#xe616;</i> 订单管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
                 <dd>
                     <ul>
-                        <li><a href="article-list.html" title="资讯管理">资讯管理</a></li>
+                        <li><a th:href="@{/orderAction/goOrderMain}" title="订单列表">订单列表</a></li>
                     </ul>
                 </dd>
             </dl>
@@ -28,7 +28,6 @@
                     <ul>
                         <li><a th:href="@{/goodsCategoryAction/goGoodsCategoryMain}" title="种类列表">种类列表</a></li>
                         <li><a th:href="@{/goodsAction/goGoodsMain}" title="商品列表">商品列表</a></li>
-                        <li><a href="product-list.html" title="产品管理">产品管理</a></li>
                     </ul>
                 </dd>
             </dl>
@@ -46,12 +45,6 @@
                 <dd style="display: block;">
                     <ul>
                         <li><a th:href="@{/userAction/goUserMain}" title="用户列表">用户列表</a></li>
-                        <li><a href="member-del.html" title="删除的会员">删除的会员</a></li>
-                        <li><a href="member-level.html" title="等级管理">等级管理</a></li>
-                        <li><a href="member-scoreoperation.html" title="积分管理">积分管理</a></li>
-                        <li><a href="member-record-browse.html" title="浏览记录">浏览记录</a></li>
-                        <li><a href="member-record-download.html" title="下载记录">下载记录</a></li>
-                        <li><a href="member-record-share.html" title="分享记录">分享记录</a></li>
                     </ul>
                 </dd>
             </dl>
