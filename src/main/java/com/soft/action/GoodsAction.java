@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -282,7 +283,7 @@ public class GoodsAction {
      * @Date 2020/1/28 13:40
      **/
     @RequestMapping("/goIndex")
-    public ModelAndView goIndex() {
+    public ModelAndView goIndex(HttpSession session) {
         // 所有种类
         List<GoodsCategory> goodsCategoryList = goodsCategoryService.findAllListGoodsCategory();
         // 顶层种类
@@ -330,7 +331,8 @@ public class GoodsAction {
             }
         }
 
-
+        // 将商品种类导航信息保存到session，以供其他界面调用
+        session.setAttribute("categoryVOList", categoryVOList);
 
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user/index");
@@ -348,8 +350,13 @@ public class GoodsAction {
      * @Date 2020/1/28 23:46
      **/
     @RequestMapping("/goGoodsDetail")
-    public ModelAndView goGoodsDetail(Integer goodsId) {
-        return new ModelAndView("user/goods_detail", "goods", goodsService.loadByGoodsId(goodsId));
+    public ModelAndView goGoodsDetail(Integer goodsId, HttpSession session) {
+        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("user/goods_detail");
+        mv.addObject("categoryVOList", categoryVOList);
+        mv.addObject("goods", goodsService.loadByGoodsId(goodsId));
+        return mv;
     }
 
 

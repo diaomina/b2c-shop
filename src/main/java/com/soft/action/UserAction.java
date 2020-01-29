@@ -2,6 +2,7 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.Md5;
+import com.soft.common.vo.CategoryVO;
 import com.soft.model.User;
 import com.soft.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -227,5 +229,38 @@ public class UserAction {
         return jsonObject;
     }
 
+
+    /**
+     * @Description 跳转到用户登录界面
+     * @Param []
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/29 18:56
+     **/
+    @RequestMapping("/goLogin")
+    public ModelAndView goLogin(HttpSession session) {
+        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("user/login");
+        mv.addObject("categoryVOList", categoryVOList);
+        return mv;
+    }
+
+
+    /**
+     * @Description 跳转到用户注册界面
+     * @Param []
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/29 18:56
+     **/
+    @RequestMapping("/goRegist")
+    public ModelAndView goRegist(HttpSession session) {
+        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("user/regist");
+        mv.addObject("categoryVOList", categoryVOList);
+        return mv;
+    }
 
 }
