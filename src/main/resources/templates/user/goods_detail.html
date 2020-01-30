@@ -59,8 +59,10 @@
                     <input id="jia" value="+" type="button" style="background: url('../shop-style/images/jia.jpg'); width:19px; height:19px;">
                 </span>
                 <span class="jrsc_2" style="padding-left:20px;">
-                    <input type="hidden" id="goodsId" th:value="${goods.goodsId}" />
-                    <a href="javascript:;"><img onclick="cart_add();" src="../shop-style/images/dinggou.jpg" width="170" height="34" /></a>
+                    <div id="submit">
+                        <input type="hidden" id="goodsId" th:value="${goods.goodsId}" />
+                        <a href="javascript:;"><img src="../shop-style/images/dinggou.jpg" width="170" height="34" /></a>
+                    </div>
                 </span>
             </div>
         </div>
@@ -99,15 +101,13 @@
             }
             $("#goodsNum").val(Number(goodsNum) + 1);
         });
-    });
 
-    /*
-    // 立即订购
-    function cart_add() {
-            var goodsId = $("#goodsId").val();
+
+        // 立即订购
+        $("#submit").click(function () {
             var goodsNum = $("#goodsNum").val();
             var quantity = $("#quantity").val();
-            if(goodsNum &lt; 1) {
+            if(goodsNum < 1) {
                 layer.msg('订购数量最少为1件!',{icon: 2,time:1000});
                 return;
             }
@@ -115,14 +115,16 @@
                 layer.msg('订购数量不得超出库存数量!',{icon: 2,time:1000});
                 return;
             }
+
             $.ajax({
+                url: "/cartAction/doCartAdd",
+                cache: false,
                 type: "GET",
                 dateType: "json",
-                url: "doCartAdd",
-                date:{goodsId:goodsId, goodsNum:goodsNum},
+                async: true,
+                data:{goodsId:$("#goodsId").val(), goodsNum:$("#goodsNum").val()},
                 success: function (result) {
                     if(result.flag = "true") {
-                        $(obj).parents("tr").remove();
                         layer.msg('已加入购物车!',{icon:1,time:1000});
                     } else {
                         layer.msg('订购失败!',{icon: 2,time:1000});
@@ -131,12 +133,11 @@
                 error: function (err) {
                     layer.msg('请求异常!',{icon: 2,time:1000})
                 }
-        });
-    }
-    */
+            });
+        })
 
 
-
+    });
 </script>
 
 </body>

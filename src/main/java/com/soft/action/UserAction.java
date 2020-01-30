@@ -257,8 +257,6 @@ public class UserAction {
     @RequestMapping("/doLogin")
     @ResponseBody
     public JSONObject doLogin(User user, HttpSession session) throws Exception {
-        System.out.println("----- doLogin");
-        System.out.println(user);
         JSONObject jsonObject = new JSONObject();
         User dbUser = userService.loadByUserName(user.getUserName());
         // 判断用户是否存在
