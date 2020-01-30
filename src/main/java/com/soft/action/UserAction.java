@@ -248,6 +248,36 @@ public class UserAction {
 
 
     /**
+     * @Description 用户登录
+     * @Param [user, session]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/29 20:32
+     **/
+    @RequestMapping("/doLogin")
+    @ResponseBody
+    public JSONObject doLogin(User user, HttpSession session) throws Exception {
+        System.out.println("----- doLogin");
+        System.out.println(user);
+        JSONObject jsonObject = new JSONObject();
+        User dbUser = userService.loadByUserName(user.getUserName());
+        // 判断用户是否存在
+        if(dbUser != null){
+            // 校验密码
+            if(Md5.verify(user.getPassword(), dbUser.getPassword())){
+                session.setAttribute("user", dbUser);
+                jsonObject.put("flag","true");
+            } else {
+                jsonObject.put("flag","falseByPassword");
+            }
+        } else {
+            jsonObject.put("flag","falseByUserName");
+        }
+        return jsonObject;
+    }
+
+
+    /**
      * @Description 跳转到用户注册界面
      * @Param []
      * @Return org.springframework.web.servlet.ModelAndView
