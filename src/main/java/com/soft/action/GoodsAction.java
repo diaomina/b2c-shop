@@ -336,7 +336,6 @@ public class GoodsAction {
 
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user/index");
-        mv.addObject("categoryVOList", categoryVOList);
         mv.addObject("goodsList", goodsList);
         return mv;
     }
@@ -351,10 +350,8 @@ public class GoodsAction {
      **/
     @RequestMapping("/goGoodsDetail")
     public ModelAndView goGoodsDetail(Integer goodsId, HttpSession session) {
-        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user/goods_detail");
-        mv.addObject("categoryVOList", categoryVOList);
         mv.addObject("goods", goodsService.loadByGoodsId(goodsId));
         return mv;
     }

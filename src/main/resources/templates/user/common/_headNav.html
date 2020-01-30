@@ -15,7 +15,7 @@
                 <div class="navCon-cate-title"> <a href="#">全部商品分类</a></div>
                 <div class="cateMenu hide">
                     <ul>
-                        <li style="border-top: none;" th:each="categoryVO : ${categoryVOList}">
+                        <li style="border-top: none;" th:each="categoryVO : ${session.categoryVOList}">
                             <div class="cate-tag"> <strong><a href="#" th:text="${categoryVO.parentCategoryName}"></a></strong></div>
                             <div class="list-item hide">
                                 <ul class="itemleft">
@@ -38,7 +38,7 @@
             <div class="navCon-menu fl">
                 <ul>
                     <li><a class="curMenu" href="index.html">商城首页</a></li>
-                    <li><a href="tplist.html">特色产品</a></li>
+                    <li><a th:href="@{/cartAction/goCartMain}">购物车</a></li>
                     <li><a href="tplist.html">VIP专区</a></li>
                     <li><a href="#">服务支持</a></li>
                     <li><a href="newslist.html">相关资讯</a></li>

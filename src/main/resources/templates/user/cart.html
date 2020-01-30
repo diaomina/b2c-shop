@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物车</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+</head>
+<script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+<script type="text/javascript" src="../shop-style/js/index.js"></script>
+<script src="../shop-style/script/global.js" type="text/javascript"></script>
+<script src="../shop-style/script/head.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+<link rel="stylesheet" type="text/css" href="../shop-style/css/style.css" />
+<link rel="stylesheet" href="../shop-style/style/base.css" />
+<link rel="stylesheet" href="../shop-style/style/head.css" />
+
+<link rel="stylesheet" type="text/css" href="../shop-style/css/cart/cart-style.css"/>
+<script type="text/javascript" src="../shop-style/js/cart.js"></script>
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <div class="con_dqwz">您的当前位置：<a href="index.html">首页</a> >> 购物车</div>
+    <!-- 购物车 start -->
+    <div class="catbox">
+        <table id="cartTable">
+            <thead>
+            <tr>
+                <th><label><input class="check-all check" type="checkbox">&nbsp;&nbsp;全选</label></th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="on" th:each="cartVO : ${cartVOList}">
+                <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+                <td class="goods">
+                    <img th:src="|@{'' + ${cartVO.goods.image} + ''}|" alt="">
+                    <span th:text="${cartVO.goods.goodsName}"></span>
+                    <span th:text="${cartVO.goods.simpleDescribe}"></span>
+                </td>
+                <td class="price" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
+                <td class="count">
+                    <span class="reduce">-</span>
+                    <input class="count-input" type="text" th:value="${cartVO.quantity}">
+                    <span class="add">+</span>
+                </td>
+                <td class="subtotal" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
+                <td class="operation">
+                    <input type="hidden" id="cartId" th:value="${cartVO.cartId}" />
+                    <span id="delete" class="delete">删除</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="foot" id="foot">
+            <label class="fl select-all"><input type="checkbox" class="check-all check">&nbsp;&nbsp;全选</label>
+            <a class="fl delete" id="deleteAll" href="javascript:;">删除</a>
+            <div class="fr closing" onclick="getTotal();">结 算</div>
+            <input type="hidden" id="cartTotalPrice">
+            <div class="fr total">合计：￥<span id="priceTotal"></span></div>
+            <div class="fr selected" id="selected">已选商品<span id="selectedTotal">4</span>件<span class="arrow up">︽</span><span class="arrow down">︾</span></div>
+            <div class="selected-view">
+                <div id="selectedViewList" class="clearfix"><div><img src="http://www.jq22.com/demo/jquery-guc20151105/images/1.jpg"><span class="del" index="0">取消选择</span></div><div><img src="http://www.jq22.com/demo/jquery-guc20151105/images/2.jpg"><span class="del" index="1">取消选择</span></div><div><img src="http://www.jq22.com/demo/jquery-guc20151105/images/3.jpg"><span class="del" index="2">取消选择</span></div><div><img src="http://www.jq22.com/demo/jquery-guc20151105/images/4.jpg"><span class="del" index="3">取消选择</span></div></div>
+                <span class="arrow">◆<span>◆</span></span> </div>
+        </div>
+    </div>
+    <!-- 购物车 end -->
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _goods_list -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../shop-style/js/jq.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        // 删除
+        $("#delete").click(function () {
+            $.ajax({
+                url: "/cartAction/doGoodsDelete",
+                cache: false,
+                type: "GET",
+                dateType: "json",
+                async: true,
+                data:{goodsId:$("#goodsId").val()},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        layer.msg('已加入购物车!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('订购失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+        })
+
+        // 立即订购
+        $("#submit").click(function () {
+            var goodsNum = $("#goodsNum").val();
+            var quantity = $("#quantity").val();
+            if(goodsNum < 1) {
+                layer.msg('订购数量最少为1件!',{icon: 2,time:1000});
+                return;
+            }
+            if(goodsNum > quantity) {
+                layer.msg('订购数量不得超出库存数量!',{icon: 2,time:1000});
+                return;
+            }
+
+            $.ajax({
+                url: "/cartAction/doCartAdd",
+                cache: false,
+                type: "GET",
+                dateType: "json",
+                async: true,
+                data:{goodsId:$("#goodsId").val(), goodsNum:$("#goodsNum").val()},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        layer.msg('已加入购物车!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('订购失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+        })
+
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,16 +1,24 @@
 package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
+import com.soft.common.vo.CartVO;
+import com.soft.common.vo.CategoryVO;
 import com.soft.model.Cart;
+import com.soft.model.Goods;
 import com.soft.model.User;
 import com.soft.service.CartService;
+import com.soft.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName CartAction
@@ -25,6 +33,43 @@ public class CartAction {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private GoodsService goodsService;
+
+
+    /**
+     * @Description 跳转到我的购物车
+     * @Param [session]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/1/30 16:49
+     **/
+    @RequestMapping("/goCartMain")
+    public ModelAndView goCartMain(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        List<CartVO> cartVOList = new ArrayList<CartVO>();
+        for (Cart cart : cartService.findListByUserId(user.getUserId())) {
+            if (cart.getIsBuy() == 2) {
+                Goods goods = goodsService.loadByGoodsId(cart.getGoodsId());
+                // 判断商品是否失效，失效则置空
+                if(goods.getDelState() == 1 || goods.getIsMarketable() == 0) {
+                    goods = null;
+                }
+                // 封装cartVO
+                CartVO cartVO = new CartVO();
+                cartVO.setCartId(cart.getCartId());
+                cartVO.setUserId(cart.getUserId());
+                cartVO.setQuantity(cart.getQuantity());
+                cartVO.setGoods(goods);
+                cartVOList.add(cartVO);
+            }
+        }
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("user/cart");
+        mv.addObject("cartVOList", cartVOList);
+        return mv;
+    }
 
 
     /**
