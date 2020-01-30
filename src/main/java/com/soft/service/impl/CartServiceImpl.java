@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
-     * @Description 删除购物车 ,标记为 已购买
+     * @Description 删除购物车
      * @Param [cartId]
      * @Return int
      * @Author ljy
@@ -54,9 +54,7 @@ public class CartServiceImpl implements CartService {
      */
     @Override
     public int delCart(Integer cartId) {
-        Cart cart = cartMapper.selectByPrimaryKey(cartId);
-        cart.setIsBuy((byte) 1);
-        return cartMapper.updateByPrimaryKeySelective(cart);
+        return cartMapper.deleteByPrimaryKey(cartId);
     }
 
     /**

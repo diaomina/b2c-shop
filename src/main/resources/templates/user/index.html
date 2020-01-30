@@ -29,7 +29,6 @@
 
 <!--中部 start-->
 <div class="con_ny">
-    <div class="con_dqwz">您的当前位置：<a href="index.html">首页</a> >> 特色产品</div>
     <!-- 商品列表 start -->
     <div class="tplist1" th:each="goods : ${goodsList}">
         <div class="tplist1_1"><a th:href="|@{'goGoodsDetail?goodsId=' + ${goods.goodsId}}|"><img th:src="${goods.image}" width="296" height="185" /></a></div>

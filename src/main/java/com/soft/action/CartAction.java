@@ -100,4 +100,25 @@ public class CartAction {
         return jsonObject;
     }
 
+
+    /**
+     * @Description 删除
+     * @Param [cartId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/1/30 21:15
+     **/
+    @RequestMapping("/doCartDelete")
+    @ResponseBody
+    public JSONObject doCartDelete(Integer cartId) {
+        JSONObject jsonObject = new JSONObject();
+        // 判断删除结果
+        if (cartService.delCart(cartId) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
 }

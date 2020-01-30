@@ -29,7 +29,7 @@
 
 <!--中部 start-->
 <div class="con_ny">
-    <div class="con_dqwz">您的当前位置：<a href="index.html">首页</a> >> 购物车</div>
+    <div class="con_dqwz">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 购物车</div>
     <!-- 购物车 start -->
     <div class="catbox">
         <table id="cartTable">
@@ -59,8 +59,7 @@
                 </td>
                 <td class="subtotal" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
                 <td class="operation">
-                    <input type="hidden" id="cartId" th:value="${cartVO.cartId}" />
-                    <span id="delete" class="delete">删除</span>
+                    <span class="delete"><a href="javascript:;" th:onclick="|cart_del(this,${cartVO.cartId})|">删除</a></span>
                 </td>
             </tr>
             </tbody>
@@ -88,65 +87,35 @@
 
 <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="../shop-style/js/jq.js"></script>
+<script type="text/javascript">
 
+    /* 删除 */
+    function cart_del(obj,cartId){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                url: "/cartAction/doCartDelete",
+                cache: false,
+                type: "GET",
+                dateType: "json",
+                async: true,
+                data:{cartId:cartId},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('删除失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+        });
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
-
-        // 删除
-        $("#delete").click(function () {
-            $.ajax({
-                url: "/cartAction/doGoodsDelete",
-                cache: false,
-                type: "GET",
-                dateType: "json",
-                async: true,
-                data:{goodsId:$("#goodsId").val()},
-                success: function (result) {
-                    if(result.flag = "true") {
-                        layer.msg('已加入购物车!',{icon:1,time:1000});
-                    } else {
-                        layer.msg('订购失败!',{icon: 2,time:1000});
-                    }
-                },
-                error: function (err) {
-                    layer.msg('请求异常!',{icon: 2,time:1000})
-                }
-            });
-        })
-
-        // 立即订购
-        $("#submit").click(function () {
-            var goodsNum = $("#goodsNum").val();
-            var quantity = $("#quantity").val();
-            if(goodsNum < 1) {
-                layer.msg('订购数量最少为1件!',{icon: 2,time:1000});
-                return;
-            }
-            if(goodsNum > quantity) {
-                layer.msg('订购数量不得超出库存数量!',{icon: 2,time:1000});
-                return;
-            }
-
-            $.ajax({
-                url: "/cartAction/doCartAdd",
-                cache: false,
-                type: "GET",
-                dateType: "json",
-                async: true,
-                data:{goodsId:$("#goodsId").val(), goodsNum:$("#goodsNum").val()},
-                success: function (result) {
-                    if(result.flag = "true") {
-                        layer.msg('已加入购物车!',{icon:1,time:1000});
-                    } else {
-                        layer.msg('订购失败!',{icon: 2,time:1000});
-                    }
-                },
-                error: function (err) {
-                    layer.msg('请求异常!',{icon: 2,time:1000})
-                }
-            });
-        })
-
 
     });
 </script>
