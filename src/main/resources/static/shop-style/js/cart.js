@@ -58,12 +58,6 @@ window.onload = function () {
 			var span = tr.getElementsByTagName('span')[1]; //-号
 			//写入HTML
 			subtotal.innerHTML = (parseInt(countInput.value) * parseFloat(price.innerHTML)).toFixed(2);
-			//如果数目只有一个，把-号去掉
-			if (countInput.value == 1) {
-				span.innerHTML = '';
-			}else{
-				span.innerHTML = '-';
-			}
 		}
 
 		// 点击选择框
@@ -123,7 +117,7 @@ window.onload = function () {
 						}
 						break;
 					case 'delete': //点击了删除
-						var conf = confirm('确定删除此商品吗？');
+						var conf = layer.confirm('确定删除此商品吗？');
 						if (conf) {
 							this.parentNode.removeChild(this);
 						}
@@ -147,7 +141,7 @@ window.onload = function () {
 		// 点击全部删除
 		deleteAll.onclick = function () {
 			if (selectedTotal.innerHTML != 0) {
-				var con = confirm('确定删除所选商品吗？'); //弹出确认框
+				var con = layer.confirm('确定删除所选商品吗？'); //弹出确认框
 				if (con) {
 					for (var i = 0; i < tr.length; i++) {
 						// 如果被选中，就删除相应的行
@@ -158,7 +152,7 @@ window.onload = function () {
 					}
 				}
 			} else {
-				alert('请选择商品！');
+				layer.alert('请选择商品！');
 			}
 			getTotal(); //更新总数
 		}
