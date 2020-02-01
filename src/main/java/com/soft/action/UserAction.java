@@ -293,7 +293,9 @@ public class UserAction {
     @RequestMapping("/goUserCenter")
     public ModelAndView goUserCenter(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        return new ModelAndView("user/user_center/user_info", "user", user);
+        // 从数据库中拉取最新的数据，否则在用户中心-我的信息中修改数据后，界面刷新后显示的依旧是session中保存的数据
+        User dbUser = userService.loadByUserId(user.getUserId());
+        return new ModelAndView("user/user_center/user_info", "user", dbUser);
     }
 
 }
