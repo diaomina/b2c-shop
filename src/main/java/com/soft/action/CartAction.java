@@ -2,7 +2,6 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.vo.CartVO;
-import com.soft.common.vo.CategoryVO;
 import com.soft.model.Cart;
 import com.soft.model.Goods;
 import com.soft.model.User;
@@ -10,7 +9,6 @@ import com.soft.service.CartService;
 import com.soft.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;

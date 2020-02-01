@@ -2,7 +2,6 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.Md5;
-import com.soft.common.vo.CategoryVO;
 import com.soft.model.User;
 import com.soft.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -239,11 +238,7 @@ public class UserAction {
      **/
     @RequestMapping("/goLogin")
     public ModelAndView goLogin(HttpSession session) {
-        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("user/login");
-        mv.addObject("categoryVOList", categoryVOList);
-        return mv;
+        return new ModelAndView("user/login");
     }
 
 
@@ -284,11 +279,21 @@ public class UserAction {
      **/
     @RequestMapping("/goRegist")
     public ModelAndView goRegist(HttpSession session) {
-        List<CategoryVO> categoryVOList = (List<CategoryVO>) session.getAttribute("categoryVOList");
-        ModelAndView mv = new ModelAndView();
-        mv.setViewName("user/regist");
-        mv.addObject("categoryVOList", categoryVOList);
-        return mv;
+        return new ModelAndView("user/regist");
+    }
+
+
+    /**
+     * @Description 跳转到用户中心
+     * @Param [session]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/1 14:34
+     **/
+    @RequestMapping("/goUserCenter")
+    public ModelAndView goUserCenter(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        return new ModelAndView("user/user_center/user_info", "user", user);
     }
 
 }
