@@ -17,7 +17,7 @@
                         </th:block>
                         <th:block th:if="${session.user} ne null">
                             <a th:href="@{/userAction/goUserCenter}" th:text="|[ ${session.user.userName} ]|"></a>
-                            <a th:href="@{/userAction/goLogout}" th:text="[退出登录]"></a>
+                            <a th:href="@{/userAction/doLogout}" th:text="[退出登录]"></a>
                         </th:block>
                     </span>
                     <span class="yh_zx">

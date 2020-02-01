@@ -284,7 +284,7 @@ public class UserAction {
 
 
     /**
-     * @Description 跳转到用户中心
+     * @Description 用户中心-跳转到我的信息界面界面
      * @Param [session]
      * @Return org.springframework.web.servlet.ModelAndView
      * @Author ljy
@@ -296,6 +296,19 @@ public class UserAction {
         // 从数据库中拉取最新的数据，否则在用户中心-我的信息中修改数据后，界面刷新后显示的依旧是session中保存的数据
         User dbUser = userService.loadByUserId(user.getUserId());
         return new ModelAndView("user/user_center/user_info", "user", dbUser);
+    }
+
+
+    /**
+     * @Description 用户中心-跳转到修改密码界面
+     * @Param []
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/1 16:56
+     **/
+    @RequestMapping("/goChangePassword")
+    public ModelAndView goChangePassword() {
+        return new ModelAndView("user/user_center/change_password");
     }
 
 }
