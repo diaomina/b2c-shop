@@ -253,7 +253,7 @@ ul{ list-style:none;}
 .denglu_sm{ width:304px; height:65px; margin:auto; line-height:28px; border-top:1px dashed #CCCCCC; margin-top:15px; padding-top:5px;}
 .denglu_hmzc { width:129px; height:35px; margin:auto; background:#eaebed; border:1px solid #e4e4e4; font-family:"微软雅黑"; font-size:14px; line-height:35px; text-align:center;}
 .denglu_nr2 .denglu_hmzc a { width:129px; height:35px; display:block; }
-.danye_right .hyzx_yc { width:770px; height:337px; margin:auto;  clear:both; margin-top:20px;  }
+.danye_right .hyzx_yc { width:770px; height:auto; margin:auto;  clear:both; margin-top:20px;  }
 .hyzx_yc .tjcp_jl { width:750px; height:300px; margin: auto;}
 .tjcp_tp3 { width:153px; height:280px; float:left; padding-top:13px; padding-left:28px;}
 .tjcp_tp3_1 { width:153px; height:166px; }
