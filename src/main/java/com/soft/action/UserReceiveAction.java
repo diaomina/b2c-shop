@@ -126,7 +126,27 @@ public class UserReceiveAction {
     }
 
 
-
+    /**
+     * @Description 地址删除
+     * @Param [receiveId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/3 15:48
+     **/
+    @RequestMapping("/doUserReceiveDelete")
+    @ResponseBody
+    public JSONObject doUserReceiveDelete(Integer receiveId) {
+        JSONObject jsonObject = new JSONObject();
+        UserReceive userReceive = userReceiveService.loadById(receiveId);
+        userReceive.setDelState((byte) 1);
+        // 判断更新结果
+        if (userReceiveService.updateUserReceive(userReceive) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
 
 
     /**
