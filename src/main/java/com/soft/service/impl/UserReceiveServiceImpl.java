@@ -1,6 +1,7 @@
 package com.soft.service.impl;
 
 import com.soft.mapper.UserReceiveMapper;
+import com.soft.model.User;
 import com.soft.model.UserReceive;
 import com.soft.model.UserReceiveExample;
 import com.soft.service.UserReceiveService;
@@ -84,6 +85,30 @@ public class UserReceiveServiceImpl implements UserReceiveService {
      */
     @Override
     public int updateUserReceive(UserReceive userReceive) {
+        return userReceiveMapper.updateByPrimaryKeySelective(userReceive);
+    }
+
+    /**
+     * @Description 设置为默认地址
+     * @Param [receiveId]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/3 13:56
+     */
+    @Override
+    public int setDefault(Integer receiveId) {
+        // 查询以前的默认地址，将其修改为非默认
+        UserReceiveExample userReceiveExample = new UserReceiveExample();
+        UserReceiveExample.Criteria criteria = userReceiveExample.createCriteria();
+        criteria.andIsdefaultEqualTo((byte) 1);
+        List<UserReceive> userReceiveList = userReceiveMapper.selectByExample(userReceiveExample);
+        for (UserReceive userReceive : userReceiveList) {
+            userReceive.setIsdefault((byte) 0);
+            userReceiveMapper.updateByPrimaryKeySelective(userReceive);
+        }
+        // 将新的地址设置为默认地址
+        UserReceive userReceive = userReceiveMapper.selectByPrimaryKey(receiveId);
+        userReceive.setIsdefault((byte) 1);
         return userReceiveMapper.updateByPrimaryKeySelective(userReceive);
     }
 }

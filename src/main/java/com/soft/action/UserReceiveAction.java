@@ -13,6 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @ClassName UserReceiveAction
@@ -39,7 +41,16 @@ public class UserReceiveAction {
     @RequestMapping("/goUserReceiveMain")
     public ModelAndView goUserReceiveMain(HttpSession session) {
         User user = (User) session.getAttribute("user");
-        return new ModelAndView("user/user_center/user_receive/user_receive_main", "userReceiveList", userReceiveService.findListByUserId(user.getUserId()));
+        List<UserReceive> userReceiveList = userReceiveService.findListByUserId(user.getUserId());
+        // 过滤已删除的地址
+        Iterator<UserReceive> iterator = userReceiveList.iterator();
+        while(iterator.hasNext()) {
+            UserReceive userReceive = iterator.next();
+            if(userReceive.getDelState() == 1) {
+                iterator.remove();
+            }
+        }
+        return new ModelAndView("user/user_center/user_receive/user_receive_main", "userReceiveList", userReceiveList);
     }
 
 
@@ -79,4 +90,62 @@ public class UserReceiveAction {
         return jsonObject;
     }
 
+
+    /**
+     * @Description 跳转到地址编辑界面
+     * @Param [receiveId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/3 15:21
+     **/
+    @RequestMapping("/goUserReceiveEdit")
+    public ModelAndView goUserReceiveEdit(Integer receiveId) {
+        return new ModelAndView("user/user_center/user_receive/user_receive_edit", "userReceive", userReceiveService.loadById(receiveId));
+    }
+
+    @RequestMapping("/doUserReceiveEdit")
+    @ResponseBody
+    public JSONObject doUserReceiveEdit(UserReceive userReceive) {
+        JSONObject jsonObject = new JSONObject();
+        UserReceive dbUserReceive = userReceiveService.loadById(userReceive.getReceiveId());
+        dbUserReceive.setContact(userReceive.getContact());
+        dbUserReceive.setTel(userReceive.getTel());
+        dbUserReceive.setReceiveProvince(userReceive.getReceiveProvince());
+        dbUserReceive.setReceiveCity(userReceive.getReceiveCity());
+        dbUserReceive.setReceiveCounty(userReceive.getReceiveCounty());
+        dbUserReceive.setReceiveAddress(userReceive.getReceiveAddress());
+        dbUserReceive.setUpdateTime(new Date());
+
+        // 判断更新结果
+        if (userReceiveService.updateUserReceive(dbUserReceive) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+
+
+
+    /**
+     * @Description 设为默认地址
+     * @Param [receiveId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/3 15:08
+     **/
+    @RequestMapping("/doDefault")
+    @ResponseBody
+    public JSONObject doDefault(Integer receiveId) {
+        JSONObject jsonObject = new JSONObject();
+        // 判断设置结果
+        if (userReceiveService.setDefault(receiveId) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
 }

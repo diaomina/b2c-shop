@@ -55,4 +55,13 @@ public interface UserReceiveService {
      * @Date 2020/1/11 23:49
      **/
     int updateUserReceive(UserReceive userReceive);
+
+    /**
+     * @Description 设置为默认地址
+     * @Param [receiveId]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/3 13:56
+     **/
+    int setDefault(Integer receiveId);
 }

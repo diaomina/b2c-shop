@@ -73,7 +73,7 @@
                                 <span class="label label-success radius" th:if="${userReceive.isdefault == 1}">默认地址</span>
                             </td>
                             <td class="td-manage">
-                                <a style="text-decoration:none" th:onClick="|receive_isdefault(this,${userReceive.receiveId},'start')|" href="javascript:;" title="设为默认地址"><i class="Hui-iconfont">&#xe6e1;</i></a>
+                                <a style="text-decoration:none" th:onClick="|receive_isdefault(${userReceive.receiveId})|" href="javascript:;" title="设为默认地址"><i class="Hui-iconfont">&#xe6e1;</i></a>
                                 <a style="text-decoration:none" class="ml-5" th:onclick="|receive_edit('编辑','goUserReceiveEdit',${userReceive.receiveId},'','510')|" title="编辑" href="javascript:;" ><i class="Hui-iconfont">&#xe6df;</i></a>
                                 <a title="删除" href="javascript:;" th:onclick="|receive_del(this,${userReceive.receiveId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
@@ -104,6 +104,59 @@
     function receive_add(title,url,w,h){
         layer_show(title,url,w,h);
     }
+
+    /*地址-编辑*/
+    function receive_edit(title,url,receiveId,w,h){
+        url = url + "?receiveId=" + receiveId;
+        layer_show(title,url,w,h);
+    }
+
+    /*地址-删除*/
+    function receive_del(obj,receiveId){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: "GET",
+                dateType: "json",
+                url: "/userReceiveAction/doUserReceiveDelete",
+                data:{receiveId:receiveId},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('删除失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+
+        });
+    }
+
+    /*设为默认地址*/
+    function receive_isdefault(receiveId) {
+        $.ajax({
+            url: "/userReceiveAction/doDefault",
+            cache: false,
+            type: "GET",
+            dateType: "json",
+            async: true,
+            data:{receiveId:receiveId},
+            success: function (result) {
+                if(result.flag = "true") {
+                    layer.msg('设置成功，请刷新!',{icon:1,time:1000});
+                } else {
+                    layer.msg('设置失败!',{icon: 2,time:1000});
+                }
+            },
+            error: function (err) {
+                layer.msg('请求异常!',{icon: 2,time:1000})
+            }
+        });
+    }
+
 </script>
 
 </body>
