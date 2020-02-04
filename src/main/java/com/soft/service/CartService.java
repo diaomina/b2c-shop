@@ -21,6 +21,15 @@ public interface CartService {
     List<Cart> findListByUserId(Integer userId);
 
     /**
+     * @Description 根据购物车id查询
+     * @Param [cartId]
+     * @Return com.soft.model.Cart
+     * @Author ljy
+     * @Date 2020/2/3 18:00
+     **/
+    Cart loadByCartId(Integer cartId);
+
+    /**
      * @Description 添加购物车
      * @Param [cart]
      * @Return int

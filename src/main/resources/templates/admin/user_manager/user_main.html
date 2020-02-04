@@ -49,7 +49,6 @@
 						<tr class="text-c" th:each="user,var : ${users}">
 							<td><input type="checkbox" th:value="${user.userId}" name="userId"></td>
 							<td th:text="${var.count}"></td>
-							<!--<td><u th:text="${user.userName}" style="cursor:pointer" class="text-primary" onclick="member_show('张三','member-show.html','10001','360','400')"></u></td>-->
 							<td th:text="${user.userName}"></td>
 							<td th:text="${user.userAmount}"></td>
 							<td th:text="${user.sex}"></td>

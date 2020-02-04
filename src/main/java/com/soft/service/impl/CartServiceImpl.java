@@ -34,6 +34,19 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
+     * @param cartId
+     * @Description 根据购物车id查询
+     * @Param [cartId]
+     * @Return com.soft.model.Cart
+     * @Author ljy
+     * @Date 2020/2/3 18:00
+     */
+    @Override
+    public Cart loadByCartId(Integer cartId) {
+        return cartMapper.selectByPrimaryKey(cartId);
+    }
+
+    /**
      * @Description 添加购物车
      * @Param [cart]
      * @Return int

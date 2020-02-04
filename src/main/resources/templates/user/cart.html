@@ -45,7 +45,9 @@
             </thead>
             <tbody>
             <tr class="on" th:each="cartVO : ${cartVOList}" th:if="${cartVO.goods} ne null">
-                <td class="checkbox"><input class="check-one check" type="checkbox"></td>
+                <td class="checkbox">
+                    <input class="check-one check" type="checkbox" th:value="${cartVO.cartId}" name="cartId">
+                </td>
                 <td class="goods">
                     <img th:src="|@{'' + ${cartVO.goods.image} + ''}|" alt="">
                     <span th:text="${cartVO.goods.goodsName}"></span>
@@ -67,7 +69,7 @@
         <div class="foot" id="foot">
             <label class="fl select-all"><input type="checkbox" class="check-all check">&nbsp;&nbsp;全选</label>
             <a class="fl delete" id="deleteAll" href="javascript:;">删除</a>
-            <div class="fr closing" >结 算</div>
+            <div class="fr closing" onclick="order_add()">结 算</div>
             <input type="hidden" id="cartTotalPrice">
             <div class="fr total">合计：￥<span id="priceTotal"></span></div>
             <div class="fr selected" id="selected">已选商品<span id="selectedTotal">4</span>件<span class="arrow up">︽</span><span class="arrow down">︾</span></div>
@@ -117,7 +119,16 @@
     }
 
     /* 结算 */
-
+    function order_add() {
+        var obj = document.getElementsByName("cartId");
+        var cartIds = [];
+        for(i in obj) {
+            if(obj[i].checked){
+                cartIds.push(obj[i].value);
+            }
+        }
+        window.location.href="/orderAction/goOrderAdd?cartIds=" + cartIds;
+    }
 
 
 </script>
