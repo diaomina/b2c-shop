@@ -78,64 +78,48 @@
                     <caption style="display: none">统一下单订单信息区域</caption>
                     <thead>
                     <tr>
-                        <th class="s-title">店铺宝贝<hr/></th>
+                        <th class="s-title">商品详情<hr/></th>
                         <th class="s-price">单价(元)<hr/></th>
                         <th class="s-amount">数量<hr/></th>
                         <th class="s-total">小计(元)<hr/></th>
                     </tr>
                     </thead>
-
-
-
                     <tbody data-spm="3" class="J_Shop" data-tbcbid="0" data-outorderid="47285539868"  data-isb2c="false" data-postMode="2" data-sellerid="1704508670">
                     <tr class="first"><td colspan="5"></td></tr>
 
-                    <tr class="item" data-lineid="19614514619:31175333266:35612993875" data-pointRate="0">
+                    <tr th:each="cartVO : ${cartVOList}" class="item" data-lineid="19614514619:31175333266:35612993875" data-pointRate="0">
                         <td class="s-title">
-                            <a href="#" target="_blank" title="Huawei/华为 G520新款双卡双待安卓系统智能手机4.5寸四核手手机" class="J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5">
-                                <img src="http://img03.taobaocdn.com/bao/uploaded/i3/18670026332876589/T1A4icFbNeXXXXXXXX_!!0-item_pic.jpg_60x60.jpg" class="itempic"><span class="title J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5">Huawei/华为 G520新款双卡双待安卓系统智能手机4.5寸四核手手机</span></a>
-
+                            <a th:href="|@{'/goodsAction/goGoodsDetail?goodsId=' + ${cartVO.goods.goodsId}}|" target="_blank" th:title="${cartVO.goods.goodsName}" class="J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5">
+                                <img th:src="|@{'' + ${cartVO.goods.image} + ''}|" class="itempic">
+                                <span class="title J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5" th:text="${cartVO.goods.goodsName}"></span>
+                            </a>
                             <div class="props">
-                                <span>机身颜色: 黑 </span>
-                                <span>手机套餐: 套餐二 </span>
-                                <span>机身内存: 4G </span>
-                                <span>版本: 中国大陆 </span>
+                                <span th:text="${cartVO.goods.simpleDescribe}"></span>
                             </div>
                             <a title="消费者保障服务，卖家承诺商品如实描述" href="#" target="_blank">
                                 <img src="http://img03.taobaocdn.com/tps/i3/T1bnR4XEBhXXcQVo..-14-16.png"/>
                             </a>
-                            <div>
-                                <span style="color:gray;">卖家承诺72小时内发货</span>
-                            </div>
                         </td>
                         <td class="s-price">
-
-  <span class='price '>
- <em class="style-normal-small-black J_ItemPrice"  >630.00</em>
-  </span>
+                            <span class='price '>
+                                <em class="style-normal-small-black J_ItemPrice" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></em>
+                            </span>
                             <input type="hidden" name="costprice" value="630.00" class="J_CostPrice" />
                         </td>
                         <td class="s-amount" data-point-url="">
-                            <input type="hidden" class="J_Quantity" value="1" name="19614514619_31175333266_35612993875_quantity"/>1
-
+                            <input type="hidden" class="J_Quantity" th:value="${cartVO.quantity}" th:text="${cartVO.quantity}" name="quantity"/>
                         </td>
-                        <td class="s-total">
-
-   <span class='price '>
- <em class="style-normal-bold-red J_ItemTotal "  >630.00</em>
-  </span>
+                        <td class="s-total" style="text-align:center;">
+                            <span class='price '>
+                                <em class="style-normal-bold-red J_ItemTotal " th:text="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"></em>
+                            </span>
                             <input id="furniture_service_list_b_47285539868" type="hidden" name="furniture_service_list_b_47285539868"/>
                         </td>
                     </tr>
-
-
-
                     <tr class="item-service">
                         <td colspan="5" class="servicearea" style="display: none"></td>
                     </tr>
-
                     <tr class="blue-line" style="height: 2px;"><td colspan="5"></td></tr>
-
                     </tbody>
                     <tfoot>
                     <tr>

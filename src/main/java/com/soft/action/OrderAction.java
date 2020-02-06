@@ -2,11 +2,10 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.OrderNumberUtil;
-import com.soft.model.Cart;
-import com.soft.model.Order;
-import com.soft.model.User;
-import com.soft.model.UserReceive;
+import com.soft.common.vo.CartVO;
+import com.soft.model.*;
 import com.soft.service.CartService;
+import com.soft.service.GoodsService;
 import com.soft.service.OrderService;
 import com.soft.service.UserReceiveService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,9 @@ public class OrderAction {
     @Autowired
     private UserReceiveService userReceiveService;
 
+    @Autowired
+    private GoodsService goodsService;
+
 
 
     @RequestMapping("/goOrderMain")
@@ -59,18 +61,32 @@ public class OrderAction {
     @RequestMapping("/goOrderAdd")
     public ModelAndView goOrderAdd(Integer[] cartIds, HttpSession session) {
         // 获取购物车中商品信息
-        List<Cart> cartList = new ArrayList<Cart>();
+        List<CartVO> cartVOList = new ArrayList<CartVO>();
         for (Integer cartId : cartIds) {
             Cart cart = cartService.loadByCartId(cartId);
-            cartList.add(cart);
+            if (cart.getIsBuy() == 2) {
+                Goods goods = goodsService.loadByGoodsId(cart.getGoodsId());
+                // 判断商品是否失效，失效则置空
+                if(goods.getDelState() == 1 || goods.getIsMarketable() == 0) {
+                    goods = null;
+                }
+                // 封装cartVO
+                CartVO cartVO = new CartVO();
+                cartVO.setCartId(cart.getCartId());
+                cartVO.setUserId(cart.getUserId());
+                cartVO.setQuantity(cart.getQuantity());
+                cartVO.setGoods(goods);
+                cartVOList.add(cartVO);
+            }
         }
+
         // 获取用户地址簿
         User user = (User) session.getAttribute("user");
         List<UserReceive> userReceiveList = userReceiveService.findListByUserId(user.getUserId());
 
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user/my_order/order_add");
-        mv.addObject("cartList", cartList);
+        mv.addObject("cartVOList", cartVOList);
         mv.addObject("userReceiveList", userReceiveList);
         return mv;
     }
