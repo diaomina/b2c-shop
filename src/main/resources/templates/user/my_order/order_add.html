@@ -19,10 +19,6 @@
     <link rel="stylesheet" type="text/css" href="../shop-style/css/style.css"/>
     <link rel="stylesheet" href="../shop-style/style/base.css"/>
     <link rel="stylesheet" href="../shop-style/style/head.css"/>
-
-
-
-
 </head>
 
 
@@ -38,12 +34,11 @@
 <div class="con_ny">
     <!-- 订单确认 start -->
     <div id="content" class="grid-c">
-
-        <div id="address" class="address" style="margin-top: 20px;" data-spm="2">
-            <form name="addrForm" id="addrForm" action="#">
+        <form id="J_Form" name="J_Form" th:action="@{/orderAction/OrderAdd}" method="post">
+            <div id="address" class="address" style="margin-top: 20px;" data-spm="2">
                 <h3>确认收货地址
                     <span class="manage-address">
-                        <a href="http://member1.taobao.com/member/fresh/deliver_address.htm" target="_blank" title="管理我的收货地址"
+                        <a th:href="@{/userReceiveAction/goUserReceiveMain}" target="_blank" title="管理我的收货地址"
                             class="J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.7">管理收货地址</a>
                     </span>
                 </h3>
@@ -64,9 +59,8 @@
                 <div class="address-bar">
                     <a href="#" class="new J_MakePoint" id="J_NewAddressBtn">使用新地址</a>
                 </div>
-            </form>
         </div>
-        <form id="J_Form" name="J_Form" action="/auction/order/unity_order_confirm.htm" method="post">
+
             <div>
                 <h3 class="dib">确认订单信息</h3>
                 <table cellspacing="0" cellpadding="0" class="order-table" id="J_OrderTable" summary="统一下单订单信息区域">
@@ -99,10 +93,9 @@
                             <span class='price '>
                                 <em class="style-normal-small-black J_ItemPrice" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></em>
                             </span>
-                            <input type="hidden" name="costprice" value="630.00" class="J_CostPrice" />
                         </td>
                         <td class="s-amount" data-point-url="">
-                            <input type="hidden" class="J_Quantity" th:value="${cartVO.quantity}" th:text="${cartVO.quantity}" name="quantity"/>
+                            <input type="hidden" class="J_Quantity" th:text="${cartVO.quantity}" name="quantity"/>
                         </td>
                         <td class="s-total" style="text-align:center;">
                             <span class='price'>
@@ -110,6 +103,8 @@
                             </span>
                             <input type="hidden" name="subtotal" th:value="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"/>
                         </td>
+                        <!-- 提交订单时需要 -->
+                        <input type="hidden" th:value="${cartVO.cartId}" name="cartId">
                     </tr>
                     <tr class="item-service">
                         <td colspan="5" class="servicearea" style="display: none"></td>
@@ -125,8 +120,7 @@
                                         <div class="box" style="font-size: 20px;">
                                             <div class="bd">
                                                 <div class="point-in">
-                                                    <em class="t">
-                                                        实付款：</em>
+                                                    <em class="t">实付款：</em>
                                                     <span class='price g_price '>
                                                         <span>&yen;</span>
                                                         <em class="style-large-bold-red"  id="J_ActualFee"  ></em>
@@ -168,6 +162,27 @@
         }
         $("#J_ActualFee").text(price);
 
+        /* 提交订单 */
+        $("#J_Go").click(function () {
+            // 获取订单商品信息
+            var obj = document.getElementsByName("cartId");
+            var cartIds = [];
+            for(i in obj) {
+                cartIds.push(obj[i].value);
+            }
+            // 获取收货地址
+            var receiveId;
+            var obj1 = document.getElementsByName("receiveId");
+            for(var i=0; i<obj1.length; i++) {
+                if(obj1[i].checked) {
+                    receiveId = obj1[i].value;
+                }
+            }
+            // 获取订单总金额(以分为单位)
+            var totalAmount = (parseFloat(price)*100);
+            // 提交
+            window.location.href="/orderAction/doOrderAdd?receiveId=" + receiveId + "&cartIds=" + cartIds + "&totalAmount=" + parseInt(totalAmount);
+        })
 
     });
 </script>

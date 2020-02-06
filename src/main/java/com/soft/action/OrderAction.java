@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.OrderNumberUtil;
 import com.soft.common.vo.CartVO;
 import com.soft.model.*;
-import com.soft.service.CartService;
-import com.soft.service.GoodsService;
-import com.soft.service.OrderService;
-import com.soft.service.UserReceiveService;
+import com.soft.service.*;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +30,9 @@ public class OrderAction {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderChildService orderChildService;
 
     @Autowired
     private CartService cartService;
@@ -100,28 +101,43 @@ public class OrderAction {
      * @Date 2020/2/3 17:56
      **/
     @RequestMapping("/doOrderAdd")
-    @ResponseBody
-    public JSONObject doOrderAdd(Integer[] cartIds) {
-        JSONObject jsonObject = new JSONObject();
-        List<Cart> cartList = new ArrayList<Cart>();
-        for (Integer cartId : cartIds) {
-            Cart cart = cartService.loadByCartId(cartId);
-            cartList.add(cart);
-        }
-
-        // 创建订单
-        Order order = new Order();
+    public ModelAndView doOrderAdd(Integer[] cartIds, Order order, HttpSession session) {
         // 生成不重复订单号
         String orderNumber = OrderNumberUtil.getOrderNumber();
+        order.setOrderNumber(orderNumber);
+        // 获取用户id
+        User user = (User) session.getAttribute("user");
+        order.setUserId(user.getUserId());
+        // 获取时间
+        order.setCreateTime(new Date());
+        order.setUpdateTime(new Date());
 
-
-        // 判断添加结果
-        if (orderService.createOrder(order) > 0) {
-            jsonObject.put("flag", "true");
-        } else {
-            jsonObject.put("flag", "false");
+        // 获取购物车列表
+        List<Cart> cartList = new ArrayList<Cart>();
+        for (Integer cartId : cartIds) {
+            if(cartId != null) {
+                Cart cart = cartService.loadByCartId(cartId);
+                cartList.add(cart);
+            }
         }
-        return jsonObject;
+
+        for (Cart cart : cartList) {
+            // 生成子订单
+            OrderChild orderChild = new OrderChild();
+            orderChild.setOrderNumber(orderNumber);
+            orderChild.setGoodsId(cart.getGoodsId());
+            orderChild.setQuantity(cart.getQuantity());
+            orderChild.setCreateTime(new Date());
+            orderChild.setUpdateTime(new Date());
+            orderChildService.createOrderChild(orderChild);
+            // 将购物车内商品信息更新为已购买
+            cart.setIsBuy((byte) 1);
+            cartService.updateCart(cart);
+        }
+
+        int flag = orderService.createOrder(order);
+        System.out.println(flag);
+        return new ModelAndView("");
     }
 
 }
