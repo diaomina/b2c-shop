@@ -52,7 +52,7 @@
                         <s class="J_Marker marker"></s>
                         <span class="marker-tip">寄送至</span>
                         <div class="address-info">
-                            <input class="J_MakePoint" name="receiveId" type="radio" checked="checked" value="${userReceive.receiveId}" >
+                            <input class="J_MakePoint" name="receiveId" type="radio" th:value="${userReceive.receiveId}" th:attr="checked=${userReceive.isdefault == 00000001?true:false}">
                             <label class="user-address">
                                 <th:block th:text="|${userReceive.receiveProvince} ${userReceive.receiveCity} ${userReceive.receiveCounty}      ${userReceive.receiveAddress} (${userReceive.contact} 收)|"></th:block>
                                 <em th:text="${userReceive.tel}"></em>
@@ -61,14 +61,9 @@
                         </div>
                     </li>
                 </ul>
-                <ul id="J_MoreAddress" class="address-list hidden">
-
-                </ul>
-
                 <div class="address-bar">
                     <a href="#" class="new J_MakePoint" id="J_NewAddressBtn">使用新地址</a>
                 </div>
-
             </form>
         </div>
         <form id="J_Form" name="J_Form" action="/auction/order/unity_order_confirm.htm" method="post">
@@ -110,10 +105,10 @@
                             <input type="hidden" class="J_Quantity" th:value="${cartVO.quantity}" th:text="${cartVO.quantity}" name="quantity"/>
                         </td>
                         <td class="s-total" style="text-align:center;">
-                            <span class='price '>
+                            <span class='price'>
                                 <em class="style-normal-bold-red J_ItemTotal " th:text="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"></em>
                             </span>
-                            <input id="furniture_service_list_b_47285539868" type="hidden" name="furniture_service_list_b_47285539868"/>
+                            <input type="hidden" name="subtotal" th:value="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"/>
                         </td>
                     </tr>
                     <tr class="item-service">
@@ -124,50 +119,31 @@
                     <tfoot>
                     <tr>
                         <td colspan="5">
-
                             <div class="order-go" data-spm="4">
                                 <div class="J_AddressConfirm address-confirm">
                                     <div class="kd-popup pop-back" style="margin-bottom: 40px;">
-                                        <div class="box">
+                                        <div class="box" style="font-size: 20px;">
                                             <div class="bd">
                                                 <div class="point-in">
-
-                                                    <em class="t">实付款：</em>  <span class='price g_price '>
- <span>&yen;</span><em class="style-large-bold-red"  id="J_ActualFee"  >630.00</em>
-  </span>
+                                                    <em class="t">
+                                                        实付款：</em>
+                                                    <span class='price g_price '>
+                                                        <span>&yen;</span>
+                                                        <em class="style-large-bold-red"  id="J_ActualFee"  ></em>
+                                                    </span>
                                                 </div>
-
-                                                <ul >
-                                                    <li><em>寄送至:</em><span id="J_AddrConfirm" style="word-break: break-all;">
-   湖北省 恩施土家族苗族自治州 恩施市 湖北民族学院（信息工程学院）  男生宿舍楼235栋1234202
-   </span></li>
-                                                    <li><em>收货人:</em><span id="J_AddrNameConfirm">某某某 18124317260 </span></li>
-                                                </ul>
                                             </div>
                                         </div>
-                                        <a href="#"
-                                           class="back J_MakePoint" target="_top"
-                                           data-point-url="">返回购物车</a>
+                                        <a th:href="@{/cartAction/goCartMain}" class="back J_MakePoint" target="_top" data-point-url="">返回购物车</a>
                                         <a id="J_Go" class=" btn-go"  data-point-url=""  tabindex="0" title="点击此按钮，提交订单。">提交订单<b class="dpl-button"></b></a>
                                     </div>
                                 </div>
-
-                                <div class="J_confirmError confirm-error">
-                                    <div class="msg J_shopPointError" style="display: none;"><p class="error">积分点数必须为大于0的整数</p></div>
-                                </div>
-
                             </div>
                         </td>
                     </tr>
                     </tfoot>
                 </table>
             </div>
-
-            <input type="hidden" id="J_useSelfCarry" name="useSelfCarry" value="false" />
-            <input type="hidden" id="J_selfCarryStationId" name="selfCarryStationId" value="0" />
-            <input type="hidden" id="J_useMDZT" name="useMDZT" value="false" />
-            <input type="hidden" name="useNewSplit" value="true" />
-            <input type="hidden" id="J_sellerIds" name="allSellIds" value="1704508670" />
         </form>
     </div>
     <!-- 订单确认 end -->
@@ -184,6 +160,14 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        /* 计算实付款 */
+        var obj = document.getElementsByName("subtotal");
+        var price = 0.00;
+        for(var i=0; i<obj.length; i++) {
+            price = parseFloat(price) + parseFloat(obj[i].value);
+        }
+        $("#J_ActualFee").text(price);
+
 
     });
 </script>
