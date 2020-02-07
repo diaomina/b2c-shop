@@ -142,7 +142,7 @@ public class OrderAction {
 
         int flag = orderService.createOrder(order);
         System.out.println(flag);
-        return "forward:/orderAction/goOrderState?state=pay&code=1";
+        return "redirect:/orderAction/goOrderState?state=pay&code=1";
     }
 
 
