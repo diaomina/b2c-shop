@@ -2,6 +2,7 @@ package com.soft.service.impl;
 
 import com.soft.mapper.OrderMapper;
 import com.soft.model.Order;
+import com.soft.model.OrderExample;
 import com.soft.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> findAllList() {
         return orderMapper.selectByExample(null);
+    }
+
+    /**
+     * @Description 根据 user_id 查询订单
+     * @Param [userId]
+     * @Return java.util.List<com.soft.model.Order>
+     * @Author ljy
+     * @Date 2020/2/7 13:05
+     */
+    @Override
+    public List<Order> findListByUserId(Integer userId) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        return orderMapper.selectByExample(orderExample);
     }
 
     /**

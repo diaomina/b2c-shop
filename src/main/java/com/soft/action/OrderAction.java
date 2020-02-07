@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -138,6 +139,44 @@ public class OrderAction {
         int flag = orderService.createOrder(order);
         System.out.println(flag);
         return new ModelAndView("");
+    }
+
+
+    /**
+     * @Description 跳转到不同状态的订单界面
+     * @Param [state, code, session]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/7 13:21
+     **/
+    @RequestMapping("/goOrderState")
+    public ModelAndView goOrderState(String state, Integer code, HttpSession session) {
+        ModelAndView mv = new ModelAndView();
+        User user = (User) session.getAttribute("user");
+        List<Order> orderList = orderService.findListByUserId(user.getUserId());
+        Iterator<Order> iterator = orderList.iterator();
+        while(iterator.hasNext()) {
+            // 判断订单是否删除，删除则直接跳出本次循环
+            if(iterator.next().getDelState() == 1) {
+                continue;
+            }
+            // 根据支付状态
+            if("pay".equals(state)) {
+                // 获取未付款订单 code:1
+                if(iterator.next().getPayState() != code.byteValue()) {
+                    iterator.remove();
+                }
+            }
+            // 根据物流状态
+            if("logistics".equals(state)) {
+                if(iterator.next().getLogisticsState() != code.byteValue()) {
+                    iterator.remove();
+                }
+            }
+        }
+        System.out.println("订单列表：");
+        System.out.println(orderList.toString());
+        return null;
     }
 
 }

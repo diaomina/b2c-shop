@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>我的订单左侧导航栏</title>
+</head>
+<body>
+<th:block th:fragment="common_user_center_left">
+    <div class="danye_left">
+        <div class="danye_left">
+            <div class="danye_left1">我的订单</div>
+            <div class="danye_left2_1"><a th:href="@{/orderAction/goOrderState?state=pay&code=1}">待付款订单</a></div>
+            <div class="danye_left2_1"><a th:href="@{/orderAction/goOrderState?state=logistics&code=1}">待发货订单</a></div>
+            <div class="danye_left2_1"><a th:href="@{/orderAction/goOrderState?state=logistics&code=2}">待收货订单</a></div>
+            <div class="danye_left2_1"><a th:href="@{/orderAction/goOrderState?state=logistics&code=3}">已完成订单</a></div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

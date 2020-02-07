@@ -21,6 +21,15 @@ public interface OrderService {
     List<Order> findAllList();
 
     /**
+     * @Description 根据 user_id 查询订单
+     * @Param [userId]
+     * @Return java.util.List<com.soft.model.Order>
+     * @Author ljy
+     * @Date 2020/2/7 13:05
+     **/
+    List<Order> findListByUserId(Integer userId);
+
+    /**
      * @Description 根据 order_id 查询订单
      * @Param [orderId]
      * @Return com.soft.model.Order
