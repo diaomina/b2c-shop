@@ -151,25 +151,28 @@ public class OrderAction {
      **/
     @RequestMapping("/goOrderState")
     public ModelAndView goOrderState(String state, Integer code, HttpSession session) {
+        System.out.println(code);
+        System.out.println(code.byteValue());
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
         List<Order> orderList = orderService.findListByUserId(user.getUserId());
         Iterator<Order> iterator = orderList.iterator();
         while(iterator.hasNext()) {
+            Order order = iterator.next();
             // 判断订单是否删除，删除则直接跳出本次循环
-            if(iterator.next().getDelState() == 1) {
+            if(order.getDelState() == 1) {
                 continue;
             }
             // 根据支付状态
             if("pay".equals(state)) {
                 // 获取未付款订单 code:1
-                if(iterator.next().getPayState() != code.byteValue()) {
+                if(order.getPayState() != code.byteValue()) {
                     iterator.remove();
                 }
             }
             // 根据物流状态
             if("logistics".equals(state)) {
-                if(iterator.next().getLogisticsState() != code.byteValue()) {
+                if(order.getPayState() != 2 || order.getLogisticsState() != code.byteValue()) {
                     iterator.remove();
                 }
             }
