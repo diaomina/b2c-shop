@@ -3,6 +3,8 @@ package com.soft.action;
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.OrderNumberUtil;
 import com.soft.common.vo.CartVO;
+import com.soft.common.vo.OrderChildVO;
+import com.soft.common.vo.OrderVO;
 import com.soft.model.*;
 import com.soft.service.*;
 import com.sun.org.apache.xpath.internal.operations.Or;
@@ -43,6 +45,9 @@ public class OrderAction {
 
     @Autowired
     private GoodsService goodsService;
+
+    @Autowired
+    private UserService userService;
 
 
 
@@ -96,13 +101,13 @@ public class OrderAction {
 
     /**
      * @Description 订单创建
-     * @Param [cartIds]
-     * @Return com.alibaba.fastjson.JSONObject
+     * @Param [cartIds, order, session]
+     * @Return java.lang.String
      * @Author ljy
-     * @Date 2020/2/3 17:56
+     * @Date 2020/2/7 17:11
      **/
     @RequestMapping("/doOrderAdd")
-    public ModelAndView doOrderAdd(Integer[] cartIds, Order order, HttpSession session) {
+    public String doOrderAdd(Integer[] cartIds, Order order, HttpSession session) {
         // 生成不重复订单号
         String orderNumber = OrderNumberUtil.getOrderNumber();
         order.setOrderNumber(orderNumber);
@@ -138,7 +143,7 @@ public class OrderAction {
 
         int flag = orderService.createOrder(order);
         System.out.println(flag);
-        return new ModelAndView("");
+        return "forward:/orderAction/goOrderState?state=pay&code=1";
     }
 
 
@@ -151,8 +156,6 @@ public class OrderAction {
      **/
     @RequestMapping("/goOrderState")
     public ModelAndView goOrderState(String state, Integer code, HttpSession session) {
-        System.out.println(code);
-        System.out.println(code.byteValue());
         ModelAndView mv = new ModelAndView();
         User user = (User) session.getAttribute("user");
         List<Order> orderList = orderService.findListByUserId(user.getUserId());
@@ -177,9 +180,53 @@ public class OrderAction {
                 }
             }
         }
-        System.out.println("订单列表：");
-        System.out.println(orderList.toString());
-        return null;
+
+        List<OrderVO> orderVOList = new ArrayList<OrderVO>();
+        // 封装OrderVO
+        for(Order order : orderList) {
+            // 获取子订单列表
+            List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
+            List<OrderChildVO> orderChildVOList = new ArrayList<OrderChildVO>();
+            // 获取商品信息
+            for(OrderChild orderChild : orderChildList) {
+                Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
+                // 封装OrderChildVO
+                OrderChildVO orderChildVO = new OrderChildVO();
+                orderChildVO.setOrderChildId(orderChild.getOrderChildId());
+                orderChildVO.setGoods(goods);
+                orderChildVO.setQuantity(orderChild.getQuantity());
+                orderChildVOList.add(orderChildVO);
+            }
+            // 封装OrderVO
+            OrderVO orderVO = new OrderVO();
+            orderVO.setOrderId(order.getOrderId());
+            orderVO.setOrderNumber(order.getOrderNumber());
+            orderVO.setUser(userService.loadByUserId(order.getUserId()));
+            orderVO.setTotalAmount(order.getTotalAmount());
+            orderVO.setUserReceive(userReceiveService.loadById(order.getReceiveId()));
+            orderVO.setOrderChildVOList(orderChildVOList);
+            orderVO.setSendTime(order.getSendTime());
+            orderVO.setLogisticsState(order.getLogisticsState());
+            orderVO.setPayState(order.getPayState());
+            orderVO.setCreateTime(order.getCreateTime());
+            orderVO.setUpdateTime(order.getUpdateTime());
+            orderVOList.add(orderVO);
+        }
+        // 设置跳转的view
+        if("pay".equals(state) && code == 1) {
+            mv.setViewName("user/my_order/order_state_pay_1");
+        }
+        if("logistics".equals(state)) {
+            switch (code) {
+                case 1: mv.setViewName("user/my_order/order_state_logistics_1");
+                case 2: mv.setViewName("user/my_order/order_state_logistics_2");
+                case 3: mv.setViewName("user/my_order/order_state_logistics_3");
+                default:mv.setViewName("user/my_order/order_state_pay_1");
+            }
+
+        }
+        mv.addObject("orderVOList", orderVOList);
+        return mv;
     }
 
 }
