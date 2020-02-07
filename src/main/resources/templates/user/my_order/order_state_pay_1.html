@@ -72,7 +72,9 @@
                             <td th:text="|¥${#numbers.formatDecimal(orderVO.totalAmount/100.0,1,2)}|"></td>
                             <td th:with="createTime=${orderVO.createTime}" th:text="${#dates.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td class="td-manage">
-                                <a title="删除" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                                <a title="账户余额付款" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63a;</i></a>
+                                <a title="支付宝付款" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe71c;</i></a>
+                                <a title="取消订单" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -108,20 +110,20 @@
         layer_show(title,url,w,h);
     }
 
-    /*地址-删除*/
-    function receive_del(obj,receiveId){
-        layer.confirm('确认要删除吗？',function(index){
+    /*订单-取消*/
+    function order_del(obj,orderId){
+        layer.confirm('确认要取消吗？',function(index){
             $.ajax({
                 type: "GET",
                 dateType: "json",
-                url: "/userReceiveAction/doUserReceiveDelete",
-                data:{receiveId:receiveId},
+                url: "/orderAction/doOrderDelete",
+                data:{orderId:orderId},
                 success: function (result) {
                     if(result.flag = "true") {
                         $(obj).parents("tr").remove();
-                        layer.msg('已删除!',{icon:1,time:1000});
+                        layer.msg('已取消!',{icon:1,time:1000});
                     } else {
-                        layer.msg('删除失败!',{icon: 2,time:1000});
+                        layer.msg('取消失败!',{icon: 2,time:1000});
                     }
                 },
                 error: function (err) {
@@ -132,27 +134,6 @@
         });
     }
 
-    /*设为默认地址*/
-    function receive_isdefault(receiveId) {
-        $.ajax({
-            url: "/userReceiveAction/doDefault",
-            cache: false,
-            type: "GET",
-            dateType: "json",
-            async: true,
-            data:{receiveId:receiveId},
-            success: function (result) {
-                if(result.flag = "true") {
-                    layer.msg('设置成功，请刷新!',{icon:1,time:1000});
-                } else {
-                    layer.msg('设置失败!',{icon: 2,time:1000});
-                }
-            },
-            error: function (err) {
-                layer.msg('请求异常!',{icon: 2,time:1000})
-            }
-        });
-    }
 
 </script>
 
