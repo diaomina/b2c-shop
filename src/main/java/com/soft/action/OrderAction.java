@@ -161,8 +161,9 @@ public class OrderAction {
         Iterator<Order> iterator = orderList.iterator();
         while(iterator.hasNext()) {
             Order order = iterator.next();
-            // 判断订单是否删除，删除则直接跳出本次循环
+            // 判断订单是否删除，删除则去除且跳出本次循环
             if(order.getDelState() == 1) {
+                iterator.remove();
                 continue;
             }
             // 根据支付状态
