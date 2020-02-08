@@ -218,9 +218,15 @@ public class OrderAction {
         }
         if("logistics".equals(state)) {
             switch (code) {
-                case 1: mv.setViewName("user/my_order/order_state_logistics_1");
-                case 2: mv.setViewName("user/my_order/order_state_logistics_2");
-                case 3: mv.setViewName("user/my_order/order_state_logistics_3");
+                case 1:     // 待发货订单
+                    mv.setViewName("user/my_order/order_state_logistics_1");
+                    break;
+                case 2:     // 待收货订单
+                    mv.setViewName("user/my_order/order_state_logistics_2");
+                    break;
+                case 3:     // 已完成订单
+                    mv.setViewName("user/my_order/order_state_logistics_3");
+                    break;
                 default:mv.setViewName("user/my_order/order_state_pay_1");
             }
 
