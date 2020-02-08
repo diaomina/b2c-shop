@@ -311,4 +311,44 @@ public class UserAction {
         return new ModelAndView("user/user_center/change_password");
     }
 
+
+    /**
+     * @Description 用户中心-跳转到账户余额界面
+     * @Param [session]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/8 16:25
+     **/
+    @RequestMapping("/goUserAmount")
+    public ModelAndView goUserAmount(HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        User dbUser = userService.loadByUserId(user.getUserId());
+        return new ModelAndView("user/user_center/user_amount", "user", dbUser);
+    }
+
+
+    /**
+     * @Description 账户余额充值
+     * @Param [user]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/8 16:41
+     **/
+    @RequestMapping("/doUserAmount")
+    @ResponseBody
+    public JSONObject doUserAmount(Integer userId, Double userAmount) {
+        JSONObject jsonObject = new JSONObject();
+        // 更新数据
+        User user = userService.loadByUserId(userId);
+        user.setUserAmount(user.getUserAmount() + (int)(userAmount * 100));
+        user.setUpdateTime(new Date());
+        // 判断是否更新成功
+        if(userService.updateUser(user) > 0){
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
 }
