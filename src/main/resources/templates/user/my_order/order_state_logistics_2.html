@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>未付款订单</title>
+<title>待收货订单</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
     <script type="text/javascript" src="../shop-style/js/jquery.js"></script>
@@ -42,7 +42,7 @@
         <div class="danye_right">
             <div class="danye_dqbt">
                 <span class="jj_t"></span>
-                <span class="dq_dy">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 我的订单 >> 待付款订单</span>
+                <span class="dq_dy">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 我的订单 >> 待收货订单</span>
             </div>
             <!--会员中心右侧开始-->
             <div class="hyzx_yc">
@@ -51,10 +51,11 @@
                         <thead>
                         <tr class="text-c">
                             <th>商品</th>
-                            <th width="250">收货地址</th>
+                            <th width="200">收货地址</th>
                             <th width="80">订单总金额</th>
-                            <th width="120">下单时间</th>
-                            <th width="60">操作</th>
+                            <th width="70">下单时间</th>
+                            <th width="70">发货时间</th>
+                            <th width="40">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -71,10 +72,9 @@
                             <td th:text="|${orderVO.userReceive.receiveProvince} ${orderVO.userReceive.receiveCity} ${orderVO.userReceive.receiveCounty} ${orderVO.userReceive.receiveAddress}    (${orderVO.userReceive.contact} 收) ${orderVO.userReceive.tel}|"></td>
                             <td th:text="|¥${#numbers.formatDecimal(orderVO.totalAmount/100.0,1,2)}|"></td>
                             <td th:with="createTime=${orderVO.createTime}" th:text="${#dates.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td th:with="sendTime=${orderVO.sendTime}" th:text="${#dates.format(sendTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td class="td-manage">
-                                <a title="账户余额付款" href="javascript:;" th:onclick="|order_pay(this,'userAmount',${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63a;</i></a>
-                                <a title="支付宝付款" href="javascript:;" th:onclick="|order_pay(this,'alipay',${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe71c;</i></a>
-                                <a title="取消订单" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                                <a title="确认收货" href="javascript:;" th:onclick="|order_logistics_update(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -97,58 +97,21 @@
 <script type="text/javascript" src="../../../lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="../../../h-ui/js/H-ui.js"></script>
 <script type="text/javascript" src="../../../h-ui.admin/js/H-ui.admin.page.js"></script>
-
 <script type="text/javascript">
-    /*地址-添加*/
-    function receive_add(title,url,w,h){
-        layer_show(title,url,w,h);
-    }
-
-    /*订单-支付*/
-    function receive_edit(title,url,receiveId,w,h){
-        url = url + "?receiveId=" + receiveId;
-        layer_show(title,url,w,h);
-    }
-
-    /*订单-支付*/
-    function order_pay(obj,mode,orderId){
-        $.ajax({
-            type: "GET",
-            dateType: "json",
-            url: "/orderAction/doPay",
-            data:{mode:mode, orderId:orderId},
-            success: function (result) {
-                if(result.flag == "true") {
-                    $(obj).parents("tr").remove();
-                    layer.msg('支付成功!',{icon:1,time:1000});
-                } else {
-                    if(result.msg != null) {
-                        layer.msg(result.msg,{icon: 2,time:1000});
-                    } else {
-                        layer.msg('支付失败!',{icon: 2,time:1000});
-                    }
-                }
-            },
-            error: function (err) {
-                layer.msg('请求异常!',{icon: 2,time:1000})
-            }
-        });
-    }
-
-    /*订单-取消*/
-    function order_del(obj,orderId){
-        layer.confirm('确认要取消吗？',function(index){
+    /*确认收货*/
+    function order_logistics_update(obj,orderId){
+        layer.confirm('是否确认收到商品？',function(index){
             $.ajax({
                 type: "GET",
                 dateType: "json",
-                url: "/orderAction/doOrderDelete",
-                data:{orderId:orderId},
+                url: "/orderAction/doOrderLogisticsUpdate",
+                data:{orderId:orderId,logisticsState:3},
                 success: function (result) {
                     if(result.flag == "true") {
                         $(obj).parents("tr").remove();
-                        layer.msg('已取消!',{icon:1,time:1000});
+                        layer.msg('已确认!',{icon:1,time:1000});
                     } else {
-                        layer.msg('取消失败!',{icon: 2,time:1000});
+                        layer.msg('确认失败!',{icon: 2,time:1000});
                     }
                 },
                 error: function (err) {
@@ -158,8 +121,6 @@
 
         });
     }
-
-
 </script>
 
 </body>
