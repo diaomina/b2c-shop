@@ -50,7 +50,7 @@
                     <div class="row cl">
                         <label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>账户余额(元)：</label>
                         <div class="formControls col-xs-8 col-sm-9">
-                            <input type="text" th:value="|${#numbers.formatDecimal(user.userAmount/100.0,1,2)}|" class="input-text" autocomplete="off" disabled>
+                            <input type="text" id="old_userAmount" th:value="|${#numbers.formatDecimal(user.userAmount/100.0,1,2)}|" class="input-text" autocomplete="off" disabled>
                         </div>
                     </div>
                     <div class="row cl">
@@ -124,6 +124,13 @@
             focusCleanup:true,
             success:"valid",
             submitHandler:function(form){
+                // 判断金额是否超出21474836.47的上限
+                var old_userAmount = $("#old_userAmount").val();
+                var userAmount = $("#userAmount").val();
+                if( Number(old_userAmount) + Number(userAmount) > 21474836.47) {
+                    layer.msg("您充值的金额超出限额，无法充值!",{icon: 5,time:1000})
+                    return;
+                }
                 $(form).ajaxSubmit({
                     dateType: "json",
                     success: function (result) {
