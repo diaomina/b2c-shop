@@ -305,4 +305,32 @@ public class OrderAction {
         return jsonObject;
     }
 
+
+    /**
+     * @Description 更新订单配送状态
+     * @Param [orderId, logisticsState (2 确认发货,3 确认收货)]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/8 18:41
+     **/
+    @RequestMapping("/doOrderLogisticsUpdate")
+    @ResponseBody
+    public JSONObject doOrderLogisticsUpdate(Integer orderId,Integer logisticsState) {
+        JSONObject jsonObject = new JSONObject();
+        Order order = orderService.loadByOrderId(orderId);
+        order.setLogisticsState(logisticsState.byteValue());
+        order.setUpdateTime(new Date());
+        // 如果是"确认发货"操作,则添加发货时间
+        if(logisticsState == 2) {
+            order.setSendTime(new Date());
+        }
+        // 判断修改是否成功
+        if(orderService.updateOrder(order) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
 }
