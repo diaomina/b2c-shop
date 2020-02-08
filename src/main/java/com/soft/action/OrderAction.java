@@ -231,6 +231,53 @@ public class OrderAction {
 
 
     /**
+     * @Description 订单支付
+     * @Param [mode, orderId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/8 17:07
+     **/
+    @RequestMapping("/doPay")
+    @ResponseBody
+    public JSONObject doPay(String mode, Integer orderId) {
+        JSONObject jsonObject = new JSONObject();
+        Order order = orderService.loadByOrderId(orderId);
+        // 账户余额支付
+        if("userAmount".equals(mode)) {
+            // 获取用户信息
+            User user = userService.loadByUserId(order.getUserId());
+            // 判断账户余额是否充足
+            Integer number = user.getUserAmount() - order.getTotalAmount();
+            if(number >= 0){
+                // 余额充足,完成支付
+                user.setUserAmount(number);
+                if(userService.updateUser(user) > 0) {
+                    order.setPayState((byte) 2);
+                    order.setUpdateTime(new Date());
+                    if(orderService.updateOrder(order) > 0){
+                        jsonObject.put("flag","true");
+                    }
+                } else {
+                    // 支付失败
+                    jsonObject.put("flag","false");
+                }
+            } else {
+                // 余额不足,支付失败
+                jsonObject.put("msg","您的余额不足，请充值!");
+                jsonObject.put("flag","false");
+            }
+
+        }
+
+        // 支付宝支付
+        if("alipay".equals(mode)) {
+            ////////////// 待完成 ///////////////////
+        }
+        return jsonObject;
+    }
+
+
+    /**
      * @Description 订单取消
      * @Param [orderId]
      * @Return com.alibaba.fastjson.JSONObject
