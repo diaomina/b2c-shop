@@ -262,6 +262,13 @@ public class OrderAction {
                     order.setUpdateTime(new Date());
                     if(orderService.updateOrder(order) > 0){
                         jsonObject.put("flag","true");
+                        // 支付成功，修改商品库存数量
+                        List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
+                        for (OrderChild orderChild : orderChildList) {
+                            Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
+                            goods.setQuantity(goods.getQuantity() - orderChild.getQuantity());
+                            goodsService.updateGoods(goods);
+                        }
                     }
                 } else {
                     // 支付失败
