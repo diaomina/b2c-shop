@@ -74,7 +74,7 @@
                             <td th:with="createTime=${orderVO.createTime}" th:text="${#dates.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td th:with="sendTime=${orderVO.sendTime}" th:text="${#dates.format(sendTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td class="td-manage">
-                                <a title="确认收货" href="javascript:;" th:onclick="|order_logistics_update(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
+                                <a title="确认收货" href="javascript:;" th:onclick="|order_logistics_update(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe676;</i></a>
                             </td>
                         </tr>
                         </tbody>
