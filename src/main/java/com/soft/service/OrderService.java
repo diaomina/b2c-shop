@@ -1,5 +1,6 @@
 package com.soft.service;
 
+import com.soft.common.vo.OrderVO;
 import com.soft.model.Order;
 
 import java.util.List;
@@ -64,4 +65,6 @@ public interface OrderService {
      * @Date 2020/1/11 20:53
      **/
     int updateOrder(Order order);
+
+
 }

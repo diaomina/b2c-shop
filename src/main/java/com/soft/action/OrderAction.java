@@ -50,10 +50,71 @@ public class OrderAction {
 
 
 
+    /**
+     * @Description 将orderList封装成orderVOList
+     * @Param [orderList]
+     * @Return java.util.List<com.soft.common.vo.OrderVO>
+     * @Author ljy
+     * @Date 2020/2/9 18:00
+     **/
+    public List<OrderVO> getOrderVOList(List<Order> orderList) {
+        List<OrderVO> orderVOList = new ArrayList<OrderVO>();
+        // 封装OrderVO
+        for(Order order : orderList) {
+            // 获取子订单列表
+            List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
+            List<OrderChildVO> orderChildVOList = new ArrayList<OrderChildVO>();
+            // 获取商品信息
+            for(OrderChild orderChild : orderChildList) {
+                Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
+                // 封装OrderChildVO
+                OrderChildVO orderChildVO = new OrderChildVO();
+                orderChildVO.setOrderChildId(orderChild.getOrderChildId());
+                orderChildVO.setGoods(goods);
+                orderChildVO.setQuantity(orderChild.getQuantity());
+                orderChildVOList.add(orderChildVO);
+            }
+            // 封装OrderVO
+            OrderVO orderVO = new OrderVO();
+            orderVO.setOrderId(order.getOrderId());
+            orderVO.setOrderNumber(order.getOrderNumber());
+            orderVO.setUser(userService.loadByUserId(order.getUserId()));
+            orderVO.setTotalAmount(order.getTotalAmount());
+            orderVO.setUserReceive(userReceiveService.loadById(order.getReceiveId()));
+            orderVO.setOrderChildVOList(orderChildVOList);
+            orderVO.setSendTime(order.getSendTime());
+            orderVO.setLogisticsState(order.getLogisticsState());
+            orderVO.setPayState(order.getPayState());
+            orderVO.setCreateTime(order.getCreateTime());
+            orderVO.setUpdateTime(order.getUpdateTime());
+            orderVOList.add(orderVO);
+        }
+        return orderVOList;
+    }
+
+
+    /**
+     * @Description 跳转到 订单管理-所有订单 界面
+     * @Param []
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/9 18:09
+     **/
     @RequestMapping("/goOrderMain")
     public ModelAndView goOrderMain() {
-        ModelAndView mv = new ModelAndView();
-        return mv;
+        // 获取所有订单
+        List<Order> orderList = orderService.findAllList();
+        // 去除删除的订单
+        Iterator<Order> iterator = orderList.iterator();
+        while(iterator.hasNext()) {
+            Order order = iterator.next();
+            // 判断订单是否删除，删除则去除且跳出本次循环
+            if(order.getDelState() == 1) {
+                iterator.remove();
+                continue;
+            }
+        }
+        return new ModelAndView("admin/order_manager/order_main", "orderVOList", getOrderVOList(orderList));
     }
 
 
@@ -181,37 +242,9 @@ public class OrderAction {
             }
         }
 
-        List<OrderVO> orderVOList = new ArrayList<OrderVO>();
-        // 封装OrderVO
-        for(Order order : orderList) {
-            // 获取子订单列表
-            List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
-            List<OrderChildVO> orderChildVOList = new ArrayList<OrderChildVO>();
-            // 获取商品信息
-            for(OrderChild orderChild : orderChildList) {
-                Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
-                // 封装OrderChildVO
-                OrderChildVO orderChildVO = new OrderChildVO();
-                orderChildVO.setOrderChildId(orderChild.getOrderChildId());
-                orderChildVO.setGoods(goods);
-                orderChildVO.setQuantity(orderChild.getQuantity());
-                orderChildVOList.add(orderChildVO);
-            }
-            // 封装OrderVO
-            OrderVO orderVO = new OrderVO();
-            orderVO.setOrderId(order.getOrderId());
-            orderVO.setOrderNumber(order.getOrderNumber());
-            orderVO.setUser(userService.loadByUserId(order.getUserId()));
-            orderVO.setTotalAmount(order.getTotalAmount());
-            orderVO.setUserReceive(userReceiveService.loadById(order.getReceiveId()));
-            orderVO.setOrderChildVOList(orderChildVOList);
-            orderVO.setSendTime(order.getSendTime());
-            orderVO.setLogisticsState(order.getLogisticsState());
-            orderVO.setPayState(order.getPayState());
-            orderVO.setCreateTime(order.getCreateTime());
-            orderVO.setUpdateTime(order.getUpdateTime());
-            orderVOList.add(orderVO);
-        }
+        // 获取OrderVO
+        List<OrderVO> orderVOList = getOrderVOList(orderList);
+
         // 设置跳转的view
         if("pay".equals(state) && code == 1) {
             mv.setViewName("user/my_order/order_state_pay_1");
@@ -229,7 +262,6 @@ public class OrderAction {
                     break;
                 default:mv.setViewName("user/my_order/order_state_pay_1");
             }
-
         }
         mv.addObject("orderVOList", orderVOList);
         return mv;

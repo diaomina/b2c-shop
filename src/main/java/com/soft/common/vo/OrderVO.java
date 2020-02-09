@@ -29,7 +29,7 @@ public class OrderVO implements Serializable {
     private List<OrderChildVO> orderChildVOList;
     // 发货时间
     private Date sendTime;
-    // 订单状态
+    // 物流状态
     private Byte logisticsState;
     // 支付状态
     private Byte payState;
