@@ -35,7 +35,7 @@
 							<th width="25"><input type="checkbox" ></th>
 							<th width="40">序号</th>
 							<th width="80">用户名</th>
-							<th width="100">账户余额（单位/分）</th>
+							<th width="100">账户余额</th>
 							<th width="40">性别</th>
 							<th width="90">手机</th>
 							<th width="180">注册地址</th>
@@ -50,7 +50,7 @@
 							<td><input type="checkbox" th:value="${user.userId}" name="userId"></td>
 							<td th:text="${var.count}"></td>
 							<td th:text="${user.userName}"></td>
-							<td th:text="${user.userAmount}"></td>
+							<td th:text="|${#numbers.formatDecimal(user.userAmount/100.0,1,2)}元|"></td>
 							<td th:text="${user.sex}"></td>
 							<td th:text="${user.phone}"></td>
 							<td th:text="|${user.province} - ${user.city} - ${user.country}|"></td>

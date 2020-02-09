@@ -112,12 +112,12 @@ public class UserAction {
      **/
     @RequestMapping("/doUserEdit")
     @ResponseBody
-    public JSONObject doUserEdit(User user){
+    public JSONObject doUserEdit(User user, Double form_userAmount){
         JSONObject jsonObject = new JSONObject();
         // 更新状态
         User dbUser = userService.loadByUserId(user.getUserId());
         dbUser.setUserName(user.getUserName());
-        dbUser.setUserAmount(user.getUserAmount());
+        dbUser.setUserAmount((int)(form_userAmount*100));
         dbUser.setSex(user.getSex());
         dbUser.setPhone(user.getPhone());
         dbUser.setProvince(user.getProvince());
