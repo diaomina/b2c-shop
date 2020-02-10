@@ -58,7 +58,7 @@
 								<span class="label label-defaunt radius" th:if="${orderVO.payState == 1}">未付款</span>
 								<span class="label label-success radius" th:if="${orderVO.payState == 2}">已付款</span>
 							</td>
-							<td class="td-status">
+							<td class="td-status1">
 								<span class="label label-warning radius" th:if="${orderVO.logisticsState == 1}">待配送</span>
 								<span class="label label-secondary radius" th:if="${orderVO.logisticsState == 2}">已配送</span>
 								<span class="label label-success radius" th:if="${orderVO.logisticsState == 3}">已确认收货</span>
@@ -156,7 +156,7 @@
 				data: {orderId:orderId, logisticsState:2},
 				success: function (result) {
 					if(result.flag = "true") {
-						$(obj).parents("tr").find(".td-status").html('<span class="label label-secondary radius">已配送</span>');
+						$(obj).parents("tr").find(".td-status1").html('<span class="label label-secondary radius">已配送</span>');
 						$(obj).remove();
 						layer.msg('已确认,请刷新!',{icon: 6,time:1000});
 					} else {
