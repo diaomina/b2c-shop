@@ -1,5 +1,6 @@
-package com.soft.common.util;
+package com.soft.test;
 
+import com.soft.common.util.OrderNumberUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

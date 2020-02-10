@@ -2,6 +2,7 @@ package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.OrderNumberUtil;
+import com.soft.common.util.RandomNumUtil;
 import com.soft.common.vo.CartVO;
 import com.soft.common.vo.OrderChildVO;
 import com.soft.common.vo.OrderVO;
@@ -153,17 +154,29 @@ public class OrderAction {
         Order order = orderService.loadByOrderId(orderId);
         order.setTotalAmount((int)(totalAmount*100));
         order.setUpdateTime(new Date());
-        // 用户地址簿也会更新(这样使用该地址的订单地址都会变化，需要要改进)
+        // 地址如有更新，则创建一个新地址给此订单使用，该地址不属于用户，只属于该订单
         UserReceive dbUserReceive = userReceiveService.loadById(userReceive.getReceiveId());
-        dbUserReceive.setContact(userReceive.getContact());
-        dbUserReceive.setTel(userReceive.getTel());
-        dbUserReceive.setReceiveProvince(userReceive.getReceiveProvince());
-        dbUserReceive.setReceiveCity(userReceive.getReceiveCity());
-        dbUserReceive.setReceiveCounty(userReceive.getReceiveCounty());
-        dbUserReceive.setReceiveAddress(userReceive.getReceiveAddress());
-        dbUserReceive.setUpdateTime(new Date());
+        if(dbUserReceive.getContact().equals(userReceive.getContact()) &&
+                dbUserReceive.getTel().equals(userReceive.getTel()) &&
+                dbUserReceive.getReceiveProvince().equals(userReceive.getReceiveProvince()) &&
+                dbUserReceive.getReceiveCity().equals(userReceive.getReceiveCity()) &&
+                dbUserReceive.getReceiveCounty().equals(userReceive.getReceiveCounty()) &&
+                dbUserReceive.getReceiveAddress().equals(userReceive.getReceiveAddress())){
+            // 无更新
+        } else {
+            // 有更新
+            // 生成地址id,创建新地址
+            Integer receiveId = RandomNumUtil.getRandomNum();
+            userReceive.setReceiveId(receiveId);
+            userReceive.setCreateTime(new Date());
+            userReceive.setUpdateTime(new Date());
+            if(userReceiveService.createUserReceive(userReceive) >= 0) {
+                order.setReceiveId(receiveId);
+            }
+        }
+        
         // 判断更新结果
-        if(orderService.updateOrder(order) + userReceiveService.updateUserReceive(dbUserReceive) >= 2) {
+        if(orderService.updateOrder(order) >= 0) {
             jsonObject.put("flag", "true");
         } else {
             jsonObject.put("flag", "false");
