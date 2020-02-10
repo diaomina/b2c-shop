@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<!-- 插入公共模板 _meta -->
+<head th:insert="../templates/admin/common/_meta :: common_meta"></head>
+<body>
+
+<article class="cl pd-20">
+	<form th:action="@{doOrderEdit}" method="post" class="form form-horizontal" id="form-order-edit" enctype="multipart/form-data">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">订单号：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" th:value="${order.orderNumber}" placeholder="" id="orderNumber" name="orderNumber"  class="input-text" disabled>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>订单总金额(元)：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="|${#numbers.formatDecimal(order.totalAmount/100.0,1,2)}|" placeholder="请输入合法的数字" id="totalAmount" name="totalAmount">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>收货人姓名：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="${userReceive.contact}" placeholder="输入不得超过8个字符" id="contact" name="contact">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机号码：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" th:value="${userReceive.tel}" placeholder="请输入11位手机号码" id="tel" name="tel">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>所在地区：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box">
+					<select class="select" size="1" id="province" name="receiveProvince" style="width:180px"></select>
+					<select class="select" size="1" id="city" name="receiveCity" style="width:180px"></select>
+					<select class="select" size="1" id="country" name="receiveCounty" style="width:180px"></select>
+				</span>
+				<div id="show"></div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>详细地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea th:text="${userReceive.receiveAddress}" id="receiveAddress" name="receiveAddress" cols="" rows="" class="textarea"  placeholder="建议您如实填写详细收货地址，例如街道 名称，门牌号码，楼层和房间号等信息"></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input type="hidden" name="orderId" th:value="${order.orderId}">
+				<input type="hidden" name="receiveId" th:value="${userReceive.receiveId}"/>
+				<input type="hidden" id="old_province" th:value="${userReceive.receiveProvince}">
+				<input type="hidden" id="old_city" th:value="${userReceive.receiveCity}">
+				<input type="hidden" id="old_country" th:value="${userReceive.receiveCounty}">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+
+<!-- 插入公共模版 _footer -->
+<div th:replace="../templates/admin/common/_footer :: common_footer"></div>
+
+
+<!-- 引入城市三级联动js -->
+<script type="text/javascript" src="../../my/area.js"></script>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="../../h-ui.admin/js/H-ui.admin.page.js"></script>
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+
+	//自定义validate验证输入的数字小数点位数不能大于两位
+	jQuery.validator.addMethod("minNumber",function(value, element){
+		var returnVal = true;
+		inputZ=value;
+		var ArrMen= inputZ.split(".");    //截取字符串
+		if(ArrMen.length==2){
+			if(ArrMen[1].length>2){    //判断小数点后面的字符串长度
+				returnVal = false;
+				return false;
+			}
+		}
+		return returnVal;
+	},"小数点后最多为两位");         //验证错误信息
+
+	/**
+	 * 表单校验
+	 */
+	$("#form-order-edit").validate({
+		rules:{
+			totalAmount:{
+				required:true,
+				number:true,
+				min: 0.01,          //输入的数字最小值为0.01，不能为0或者负数
+				minNumber: $("#totalAmount").val()    //调用自定义验证
+			},
+			receiveProvince:{
+				required:true
+			},
+			city:{
+				required:true
+			},
+			country:{
+				required:true
+			},
+			receiveAddress:{
+				required:true
+			},
+			contact:{
+				required:true,
+				maxlength:8
+			},
+			tel:{
+				required:true,
+				isMobile:true,
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			// 判断金额是否超出21474836.47的上限
+			var totalAmount = $("#totalAmount").val();
+			if(Number(totalAmount) > 21474836.47) {
+				layer.msg("您编辑的金额超出限额，无法提交!",{icon: 5,time:1000})
+				return;
+			}
+			$(form).ajaxSubmit({
+				dateType: "json",
+				success: function (result) {
+					if(result.flag == "true"){
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.msg("编辑成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.close(index);
+					}
+					if(result.flag == "false"){
+						layer.msg("编辑失败!",{icon: 2,time:1000});
+					}
+				},
+				error: function (err) {
+					layer.msg('请求异常!',{icon: 2,time:1000})
+				}
+			});
+		}
+	});
+
+
+	/**
+	 * 城市三级联动
+	 * */
+			// 获取用户原始数据
+	var old_province = $("#old_province").val();
+	var old_city = $("#old_city").val();
+	var old_country = $("#old_country").val();
+	// 默认值初始化
+	opt0 = [old_province,old_city,old_country];//初始值
+	_init_area();
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

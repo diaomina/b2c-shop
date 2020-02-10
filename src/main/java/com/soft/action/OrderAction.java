@@ -118,6 +118,60 @@ public class OrderAction {
     }
 
 
+
+    /**
+     * @Description 跳转到 订单管理-订单编辑 界面
+     * @Param [orderId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/10 14:50
+     **/
+    @RequestMapping("/goOrderEdit")
+    public ModelAndView goOrderEdit(Integer orderId) {
+        ModelAndView mv = new ModelAndView();
+        Order order = orderService.loadByOrderId(orderId);
+        mv.setViewName("admin/order_manager/order_edit");
+        mv.addObject("order", order);
+        mv.addObject("userReceive", userReceiveService.loadById(order.getReceiveId()));
+        return mv;
+    }
+
+
+
+    /**
+     * @Description 订单管理-订单编辑
+     * @Param [orderId, totalAmount, userReceive]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/10 15:27
+     **/
+    @RequestMapping("/doOrderEdit")
+    @ResponseBody
+    public JSONObject doOrderEdit(Integer orderId, Double totalAmount ,UserReceive userReceive) {
+        JSONObject jsonObject = new JSONObject();
+        // 更新订单
+        Order order = orderService.loadByOrderId(orderId);
+        order.setTotalAmount((int)(totalAmount*100));
+        order.setUpdateTime(new Date());
+        // 用户地址簿也会更新(这样使用该地址的订单地址都会变化，需要要改进)
+        UserReceive dbUserReceive = userReceiveService.loadById(userReceive.getReceiveId());
+        dbUserReceive.setContact(userReceive.getContact());
+        dbUserReceive.setTel(userReceive.getTel());
+        dbUserReceive.setReceiveProvince(userReceive.getReceiveProvince());
+        dbUserReceive.setReceiveCity(userReceive.getReceiveCity());
+        dbUserReceive.setReceiveCounty(userReceive.getReceiveCounty());
+        dbUserReceive.setReceiveAddress(userReceive.getReceiveAddress());
+        dbUserReceive.setUpdateTime(new Date());
+        // 判断更新结果
+        if(orderService.updateOrder(order) + userReceiveService.updateUserReceive(dbUserReceive) >= 2) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
     /**
      * @Description 跳转到订单创建界面(结算界面)
      * @Param [cartIds, session]
