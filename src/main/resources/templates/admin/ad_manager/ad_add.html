@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<!-- 插入公共模板 _meta -->
+<head th:insert="../templates/admin/common/_meta :: common_meta"></head>
+<body>
+
+<article class="cl pd-20">
+	<form th:action="@{doAdAdd}" method="post" class="form form-horizontal" id="form-ad-add" enctype="multipart/form-data">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>广告链接：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="/goodsAction/goGoodsDetail?goodsId=商品ID" placeholder="/goodsAction/goGoodsDetail?goodsId=商品ID" id="url" name="url">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>广告描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea id="description" name="description" cols="" rows="" class="textarea"  placeholder="说点什么..."></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>广告图像：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="btn-upload form-group">
+					<a href="#" class="btn btn-primary radius upload-btn"><i class="Hui-iconfont">&#xe642;</i> 添加图片</a>
+					<input type="file" id="adImage" multiple name="adImage" class="input-file">
+				</span>
+				<div>
+					<!-- 显示图像预览 -->
+					<img style="width: 562px;height: 146px;" id="ad-img">
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;提交&nbsp;&nbsp;</button>
+				<button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+
+<!-- 插入公共模版 _footer -->
+<div th:replace="../templates/admin/common/_footer :: common_footer"></div>
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+	/**
+	 * 表单校验
+	 */
+	$("#form-ad-add").validate({
+		rules:{
+			url:{
+				required:true
+			},
+			adImage:{
+				required:true
+			},
+			description:{
+				required:true
+			}
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		submitHandler:function(form){
+			$(form).ajaxSubmit({
+				dateType: "json",
+				success: function (result) {
+					if(result.flag == "true"){
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.msg("添加成功,请刷新!",{icon: 6,time:1000});
+						parent.layer.close(index);
+					}
+					if(result.flag == "false"){
+						layer.msg("添加失败!",{icon: 2,time:1000});
+					}
+				},
+				error: function (err) {
+					layer.msg('请求异常!',{icon: 2,time:1000})
+				}
+			});
+		}
+	});
+
+	$(function(){
+		//上传图像预览
+		$('#adImage').on('change',function() {
+			$('#ad-img').attr('src', window.URL.createObjectURL(this.files[0]));
+		});
+	});
+
+});
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

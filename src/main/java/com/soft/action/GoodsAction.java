@@ -113,8 +113,6 @@ public class GoodsAction {
         String goodsImageName = name + "." + ext;
         //设置图片上传路径
         String url = request.getSession().getServletContext().getRealPath("/static/upload");
-        System.out.println("图片名称：" + goodsImageName);
-        System.out.println("上传路径：" + url);
         FileUtil.uploadFile(goodsImage.getBytes(), url, goodsImageName);
 
         //把图片存储路径保存到数据库

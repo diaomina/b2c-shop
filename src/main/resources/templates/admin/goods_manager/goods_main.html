@@ -26,7 +26,7 @@
 					<thead>
 						<tr class="text-c">
 							<th width="25"><input type="checkbox" ></th>
-							<th width="40">序号</th>
+							<th width="40">ID</th>
 							<th width="80">商品名称</th>
 							<th width="80">所属种类</th>
 							<th width="100">商品图片</th>
@@ -43,7 +43,7 @@
 					<tbody>
 						<tr class="text-c" th:each="goodsVO,var : ${goodsVOList}">
 							<td><input type="checkbox" th:value="${goodsVO.goodsId}" name="goodsId"></td>
-							<td th:text="${var.count}"></td>
+							<td th:text="${goodsVO.goodsId}"></td>
 							<td th:text="${goodsVO.goodsName}"></td>
 							<td th:text="${goodsVO.categoryName}"></td>
 							<td>

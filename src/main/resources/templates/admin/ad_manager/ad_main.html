@@ -19,7 +19,7 @@
 					<a href="javascript:;" onclick="ad_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量关闭</a>
 					<a href="javascript:;" onclick="ad_add('添加广告','goAdAdd','','650')" class="btn btn-primary radius"><i class="Hui-iconfont">&#xe600;</i> 添加广告</a>
 				</span>
-				<span class="r">共有数据：<strong th:text="${adList.size()}"></strong> 条</span>
+				<span class="r">共有数据：<strong th:text="${adVOList.size()}"></strong> 条</span>
 			</div>
 			<div class="mt-20">
 				<table class="table table-border table-bordered table-hover table-bg table-sort">
@@ -27,21 +27,21 @@
 						<tr class="text-c">
 							<th width="25"><input type="checkbox" ></th>
 							<th width="40">序号</th>
-							<th width="200">广告图像</th>
-							<th width="120">广告描述</th>
-							<th width="100">广告链接</th>
-							<th width="90">创建者</th>
-							<th width="100">创建时间</th>
-							<th width="100">更新时间</th>
-							<th width="50">状态</th>
-							<th width="100">操作</th>
+							<th width="300">广告图像</th>
+							<th width="150">广告描述</th>
+							<th width="160">广告链接</th>
+							<th width="60">创建者</th>
+							<th width="80">创建时间</th>
+							<th width="80">更新时间</th>
+							<th width="40">状态</th>
+							<th width="50">操作</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr class="text-c" th:each="adVO,var : ${adVOList}">
 							<td><input type="checkbox" th:value="${adVO.adId}" name="adId"></td>
 							<td th:text="${var.count}"></td>
-							<td><img style="width: 160px;height: 180px;" th:src="|@{'' + ${adVO.image} + ''}|"></td>
+							<td><img style="width: 300px;height: 78px;" th:src="|@{'' + ${adVO.image} + ''}|"></td>
 							<td th:text="${adVO.description}"></td>
 							<td th:text="${adVO.url}"></td>
 							<td th:text="${adVO.adminName}"></td>
@@ -49,11 +49,11 @@
 							<td th:with="updateTime=${adVO.updateTime}" th:text="${#dates.format(updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 							<td class="td-status">
 								<span class="label label-success radius" th:if="${adVO.state == 1}">开启</span>
-								<span class="label label-defaunt radius" th:if="${adVO.state == 0}">关闭</span>
+								<span class="label label-defaunt radius" th:if="${adVO.state == 2}">关闭</span>
 							</td>
 							<td class="td-manage">
 								<a th:if="${adVO.state == 1}" style="text-decoration:none" th:onClick="|goods_stop(this,${adVO.adId},'stop')|" href="javascript:;" title="关闭"><i class="Hui-iconfont">&#xe631;</i></a>
-								<a th:if="${adVO.state == 0}" style="text-decoration:none" th:onClick="|goods_start(this,${adVO.adId},'start')|" href="javascript:;" title="开启"><i class="Hui-iconfont">&#xe6e1;</i></a>
+								<a th:if="${adVO.state == 2}" style="text-decoration:none" th:onClick="|goods_start(this,${adVO.adId},'start')|" href="javascript:;" title="开启"><i class="Hui-iconfont">&#xe6e1;</i></a>
 								<a style="text-decoration:none" class="ml-5" th:onclick="|ad_edit('编辑','goAdEdit',${adVO.adId},'','650')|" title="编辑" href="javascript:;" ><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除" href="javascript:;" th:onclick="|ad_del(this,${adVO.adId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
@@ -103,7 +103,7 @@
 		});
 	}
 
-	/*商品-批量下架*/
+	/*广告-批量关闭*/
 	function ad_stopBatch() {
 		var obj = document.getElementsByName("adId");
 		var adIds = [];
@@ -132,9 +132,9 @@
 		});
 	}
 
-	/*商品-下架*/
+	/*广告-关闭*/
 	function ad_stop(obj,adId,state){
-		layer.confirm('确认要下架吗？',function(index){
+		layer.confirm('确认要关闭吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
@@ -156,9 +156,9 @@
 		});
 	}
 
-	/*商品-上架*/
+	/*广告-开启*/
 	function goods_start(obj,goodsId,state){
-		layer.confirm('确认要上架吗？',function(index){
+		layer.confirm('确认要开启吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
@@ -180,9 +180,9 @@
 		});
 	}
 
-	/*商品-编辑*/
-	function goods_edit(title,url,goodsId,w,h){
-		url = url + "?goodsId=" + goodsId;
+	/*广告-编辑*/
+	function ad_edit(title,url,adId,w,h){
+		url = url + "?adId=" + adId;
 		layer_show(title,url,w,h);
 	}
 

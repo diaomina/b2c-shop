@@ -1,18 +1,26 @@
 package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
+import com.soft.common.util.FileUtil;
 import com.soft.common.vo.AdVO;
 import com.soft.model.Ad;
+import com.soft.model.Admin;
 import com.soft.service.AdService;
 import com.soft.service.AdminService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @ClassName AdAction
@@ -85,9 +93,31 @@ public class AdAction {
      **/
     @RequestMapping("/doAdAdd")
     @ResponseBody
-    public JSONObject doAdAdd(Ad ad) {
+    public JSONObject doAdAdd(Ad ad, MultipartFile adImage, HttpServletRequest request) throws Exception {
         JSONObject jsonObject = new JSONObject();
+        HttpSession session = request.getSession();
+        //使用UUID给图片重命名，并去掉四个“-”
+        String name = UUID.randomUUID().toString().replaceAll("-", "");
+        //获取文件的扩展名
+        String ext = FilenameUtils.getExtension(adImage.getOriginalFilename());
+        // 商品图片名称
+        String adImageName = name + "." + ext;
+        //设置图片上传路径
+        String url = session.getServletContext().getRealPath("/static/upload");
+        // 上传图片
+        FileUtil.uploadFile(adImage.getBytes(), url, adImageName);
 
+        Admin admin = (Admin) session.getAttribute("admin");
+        ad.setImage("/static/upload/" + adImageName);
+        ad.setAdminId(admin.getAdminId());
+        ad.setCreateTime(new Date());
+        ad.setUpdateTime(new Date());
+        // 判断添加是否成功
+        if(adService.createAd(ad) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
         return jsonObject;
     }
 
