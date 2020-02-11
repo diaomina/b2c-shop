@@ -57,4 +57,13 @@ public interface AdService {
      * @Date 2020/1/11 19:36
      **/
     int updateAd(Ad ad);
+
+    /**
+     * @Description 批量关闭
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/11 21:26
+     **/
+    int stopBatchAd(List<Integer> list);
 }

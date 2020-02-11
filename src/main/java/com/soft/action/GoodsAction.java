@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.FileUtil;
 import com.soft.common.vo.CategoryVO;
 import com.soft.common.vo.GoodsVO;
-import com.soft.model.Admin;
-import com.soft.model.Goods;
-import com.soft.model.GoodsCategory;
-import com.soft.model.User;
+import com.soft.model.*;
+import com.soft.service.AdService;
 import com.soft.service.AdminService;
 import com.soft.service.GoodsCategoryService;
 import com.soft.service.GoodsService;
@@ -46,6 +44,9 @@ public class GoodsAction {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private AdService adService;
 
     /**
      * @Description 跳转到商品管理主页
@@ -327,12 +328,26 @@ public class GoodsAction {
             }
         }
 
+        // 获取广告
+        List<Ad> adList = adService.findAllListAd();
+        Iterator<Ad> iterator = adList.iterator();
+        while(iterator.hasNext()) {
+            Ad ad = iterator.next();
+            // 去除已删除和关闭的广告
+            if(ad.getDelState() == 1 || ad.getState() == 2) {
+                iterator.remove();
+            }
+        }
+
         // 将商品种类导航信息保存到session，以供其他界面调用
         session.setAttribute("categoryVOList", categoryVOList);
+        // 将广告保存到session，以供其他界面调用
+        session.setAttribute("adList", adList);
 
         ModelAndView mv = new ModelAndView();
         mv.setViewName("user/index");
         mv.addObject("goodsList", goodsList);
+        mv.addObject("adList", adList);
         return mv;
     }
 

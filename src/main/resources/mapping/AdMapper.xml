@@ -272,4 +272,19 @@
       admin_id = #{adminId,jdbcType=INTEGER}
     where ad_id = #{adId,jdbcType=INTEGER}
   </update>
+  <!-- 批量关闭 -->
+  <update id="stopBatchByPrimaryKey" parameterType="java.util.List">
+    UPDATE t_ad
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="state = case" suffix="end,">
+        <foreach collection="list" item="adId" index="index">
+          when ad_id=#{adId,jdbcType=INTEGER} then 2
+        </foreach>
+      </trim>
+    </trim>
+    where ad_id in
+    <foreach collection="list" item="adId" index="index" open="(" close=")" separator=",">
+      #{adId,jdbcType=INTEGER}
+    </foreach>
+  </update>
 </mapper>

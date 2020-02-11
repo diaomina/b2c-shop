@@ -79,6 +79,12 @@
 		layer_show(title,url,w,h);
 	}
 
+	/*广告-编辑*/
+	function ad_edit(title,url,adId,w,h){
+		url = url + "?adId=" + adId;
+		layer_show(title,url,w,h);
+	}
+
 	/*广告-删除*/
 	function ad_del(obj,adId){
 		layer.confirm('确认要删除吗？',function(index){
@@ -113,16 +119,17 @@
 			}
 		}
 		console.log(adIds);
-		layer.confirm('确认要下架吗？',function(index){
+		layer.confirm('确认要关闭吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "doStopBatchGoods"+"?adIds="+adIds,
+				url: "doStopBatchAd",
+				data: {adIds:adIds},
 				success: function (result) {
 					if(result.flag = "true") {
-						layer.msg('下架成功,请刷新!',{icon: 6,time:1000});
+						layer.msg('关闭成功,请刷新!',{icon: 6,time:1000});
 					} else {
-						layer.msg('失败,含有'+result.number+'个下架失败!',{icon: 2,time:1000});
+						layer.msg('失败,含有'+result.number+'个关闭失败!',{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {
@@ -180,12 +187,6 @@
 				}
 			});
 		});
-	}
-
-	/*广告-编辑*/
-	function ad_edit(title,url,adId,w,h){
-		url = url + "?adId=" + adId;
-		layer_show(title,url,w,h);
 	}
 
 

@@ -27,4 +27,13 @@ public interface AdMapper {
     int updateByPrimaryKeySelective(Ad record);
 
     int updateByPrimaryKey(Ad record);
+
+    /**
+     * @Description 批量关闭
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/11 22:30
+     **/
+    int stopBatchByPrimaryKey(List<Integer> list);
 }

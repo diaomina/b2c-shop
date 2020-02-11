@@ -86,4 +86,17 @@ public class AdServiceImpl implements AdService {
     public int updateAd(Ad ad) {
         return adMapper.updateByPrimaryKeySelective(ad);
     }
+
+    /**
+     * @param list
+     * @Description 批量关闭
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/11 21:26
+     */
+    @Override
+    public int stopBatchAd(List<Integer> list) {
+        return adMapper.stopBatchByPrimaryKey(list);
+    }
 }

@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -224,6 +225,32 @@ public class AdAction {
             jsonObject.put("flag", "true");
         } else {
             jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 广告管理-批量关闭
+     * @Param [adIds]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/11 21:24
+     **/
+    @RequestMapping("/doStopBatchAd")
+    @ResponseBody
+    public JSONObject doStopBatchAd(@RequestParam("adIds[]") Integer[] adIds) {
+        JSONObject jsonObject = new JSONObject();
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer adId : adIds) {
+            list.add(adId);
+        }
+        int recordNumber = adService.stopBatchAd(list);
+        if(recordNumber == list.size()){
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+            jsonObject.put("number", list.size() - recordNumber);
         }
         return jsonObject;
     }
