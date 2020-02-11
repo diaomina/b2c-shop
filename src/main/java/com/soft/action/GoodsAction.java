@@ -283,21 +283,26 @@ public class GoodsAction {
     public ModelAndView goIndex(HttpSession session) {
         // 所有种类
         List<GoodsCategory> goodsCategoryList = goodsCategoryService.findAllListGoodsCategory();
+        // 过滤已删除和未启用的种类
+        Iterator<GoodsCategory> goodsCategoryListIterator = goodsCategoryList.iterator();
+        while(goodsCategoryListIterator.hasNext()) {
+            GoodsCategory goodsCategory = goodsCategoryListIterator.next();
+            if(goodsCategory.getState() != 1) {
+                goodsCategoryListIterator.remove();
+            }
+        }
+
         // 顶层种类
         List<GoodsCategory> parentCategoryList = new ArrayList<GoodsCategory>();
         // 获取所有顶层种类
         for(GoodsCategory g : goodsCategoryList) {
-            // 判断是否启用
-            if(g.getState() != 1) {
-                // 已启用
-                continue;
-            }
             // 判断是否为顶层种类
             if(g.getParentId() == 0) {
                 // 是
                 parentCategoryList.add(g);
             }
         }
+
         // 获取所有非顶层种类,此时goodsCategoryList内是所有非顶层种类
         goodsCategoryList.removeAll(parentCategoryList);
 
