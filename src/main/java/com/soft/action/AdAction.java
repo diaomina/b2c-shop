@@ -145,9 +145,33 @@ public class AdAction {
      **/
     @RequestMapping("/doAdEdit")
     @ResponseBody
-    public JSONObject doAdEdit(Ad ad) {
+    public JSONObject doAdEdit(Ad ad, MultipartFile adImage, HttpServletRequest request) throws Exception {
         JSONObject jsonObject = new JSONObject();
-
+        Ad dbAd = adService.loadByAdId(ad.getAdId());
+        // 判断是否更新了图片
+        if (adImage != null) {
+            //使用UUID给图片重命名，并去掉四个“-”
+            String name = UUID.randomUUID().toString().replaceAll("-", "");
+            //获取文件的扩展名
+            String ext = FilenameUtils.getExtension(adImage.getOriginalFilename());
+            // 商品图片名称
+            String adImageName = name + "." + ext;
+            //设置图片上传路径
+            String url = request.getSession().getServletContext().getRealPath("/static/upload");
+            // 上传图片
+            FileUtil.uploadFile(adImage.getBytes(), url, adImageName);
+            dbAd.setImage("/static/upload/" + adImageName);
+        }
+        // 更新广告
+        dbAd.setUrl(ad.getUrl());
+        dbAd.setDescription(ad.getDescription());
+        dbAd.setUpdateTime(new Date());
+        // 判断更新是否成功
+        if(adService.updateAd(dbAd) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
         return jsonObject;
     }
 
