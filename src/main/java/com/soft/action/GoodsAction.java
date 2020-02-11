@@ -254,9 +254,9 @@ public class GoodsAction {
      * @Author ljy
      * @Date 2020/1/27 19:55
      **/
-    @RequestMapping("/stopBatchGoods")
+    @RequestMapping("/doStopBatchGoods")
     @ResponseBody
-    public JSONObject stopBatchGoods(Integer[] goodsIds) {
+    public JSONObject doStopBatchGoods(Integer[] goodsIds) {
         JSONObject jsonObject = new JSONObject();
         List<Integer> list = new ArrayList<Integer>();
         for (Integer goodsId : goodsIds) {

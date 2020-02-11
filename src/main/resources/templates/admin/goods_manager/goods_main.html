@@ -124,7 +124,7 @@
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "stopBatchGoods"+"?goodsIds="+goodsIds,
+				url: "doStopBatchGoods"+"?goodsIds="+goodsIds,
 				success: function (result) {
 					if(result.flag = "true") {
 						layer.msg('下架成功,请刷新!',{icon: 6,time:1000});
