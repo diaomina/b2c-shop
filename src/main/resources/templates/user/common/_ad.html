@@ -10,17 +10,15 @@
         <div class="mainbanner">
             <div class="mainbanner_window">
                 <ul id="slideContainer">
-                    <li><a href="#"><img src="../../shop-style/images/1.jpg" width="1920" height="500"  /></a></li>
-                    <li><a href="#"><img src="../../shop-style/images/2.jpg" width="1920" height="500"  /></a></li>
-                    <li><a href="#"><img src="../../shop-style/images/3.jpg" width="1920" height="500"  /></a></li>
-                    <li><a href="#"><img src="../../shop-style/images/4.jpg" width="1920" height="500" /></a></li>
+                    <li th:each="ad : ${session.adList}">
+                        <a th:href="@{${ad.url}}"><img th:title="${ad.description}" th:src="|@{'' + ${ad.image} + ''}|" width="1920" height="500"  /></a>
+                    </li>
                 </ul>
             </div>
             <ul class="mainbanner_list">
-                <li><a href="javascript:void(0);">1</a></li>
-                <li><a href="javascript:void(0);">2</a></li>
-                <li><a href="javascript:void(0);">3</a></li>
-                <li><a href="javascript:void(0);">4</a></li>
+                <li th:each="ad,var : ${session.adList}">
+                    <a href="javascript:void(0);" th:text="${var.index + 1}"></a>
+                </li>
             </ul>
         </div>
         <!--banner结束-->
