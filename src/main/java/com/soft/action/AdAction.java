@@ -5,6 +5,7 @@ import com.soft.common.util.FileUtil;
 import com.soft.common.vo.AdVO;
 import com.soft.model.Ad;
 import com.soft.model.Admin;
+import com.soft.model.Goods;
 import com.soft.service.AdService;
 import com.soft.service.AdminService;
 import org.apache.commons.io.FilenameUtils;
@@ -149,4 +150,30 @@ public class AdAction {
 
         return jsonObject;
     }
+
+
+    /**
+     * @Description 广告删除
+     * @Param [adId]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/11 19:38
+     **/
+    @RequestMapping("/doAdDelete")
+    @ResponseBody
+    public JSONObject doAdDelete(Integer adId) {
+        JSONObject jsonObject = new JSONObject();
+        Ad ad = adService.loadByAdId(adId);
+        ad.setDelState((byte) 1);
+        // 判断删除是否成功
+        if(adService.updateAd(ad) > 0) {
+            jsonObject.put("flag","true");
+        } else {
+            jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
+
+
 }
