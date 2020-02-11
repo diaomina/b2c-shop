@@ -10,6 +10,9 @@
         <div class="mainbanner">
             <div class="mainbanner_window">
                 <ul id="slideContainer">
+                    <th:block th:if="${session.adList.size() == 0}">
+                        <li><a href="#"><img title="暂无广告,如需投递请与我们联系~" src="../../shop-style/images/1.jpg" width="1920" height="500"/></a></li>
+                    </th:block>
                     <li th:each="ad : ${session.adList}">
                         <a th:href="@{${ad.url}}"><img th:title="${ad.description}" th:src="|@{'' + ${ad.image} + ''}|" width="1920" height="500"  /></a>
                     </li>
