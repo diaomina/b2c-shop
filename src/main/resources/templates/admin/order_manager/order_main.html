@@ -117,26 +117,27 @@
 	}
 
 
-	/*商品-批量下架*/
-	function goods_stopBatch() {
-		var obj = document.getElementsByName("goodsId");
-		var goodsIds = [];
+	/*订单-批量删除*/
+	function order_delBatch() {
+		var obj = document.getElementsByName("orderId");
+		var orderIds = [];
 		for(i in obj) {
 			if(obj[i].checked){
-				goodsIds.push(obj[i].value);
+				orderIds.push(obj[i].value);
 			}
 		}
-		console.log(goodsIds);
-		layer.confirm('确认要下架吗？',function(index){
+		console.log(orderIds);
+		layer.confirm('确认要删除吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "stopBatchGoods"+"?goodsIds="+goodsIds,
+				url: "doDelBatchOrder",
+				data: {orderIds:orderIds},
 				success: function (result) {
 					if(result.flag = "true") {
-						layer.msg('下架成功,请刷新!',{icon: 6,time:1000});
+						layer.msg('删除成功,请刷新!',{icon: 6,time:1000});
 					} else {
-						layer.msg('失败,含有'+result.number+'个下架失败!',{icon: 2,time:1000});
+						layer.msg('失败,含有'+result.number+'个删除失败!',{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {
@@ -170,29 +171,6 @@
 		});
 	}
 
-	/*商品-上架*/
-	function goods_start(obj,goodsId,state){
-		layer.confirm('确认要上架吗？',function(index){
-			$.ajax({
-				type: "GET",
-				dateType: "json",
-				url: "doGoodsIsMarketable" + "?goodsId=" + goodsId + "&state=" + state,
-				success: function (result) {
-					if(result.flag = "true") {
-						$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="goods_stop(this,'+goodsId+',\'stop\')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe631;</i></a>');
-						$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已上架</span>');
-						$(obj).remove();
-						layer.msg('已上架!',{icon: 6,time:1000});
-					} else {
-						layer.msg('上架失败!',{icon: 2,time:1000});
-					}
-				},
-				error: function (err) {
-					layer.msg('请求异常!',{icon: 2,time:1000})
-				}
-			});
-		});
-	}
 
 
 	/* 表格配置 */

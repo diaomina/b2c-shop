@@ -11,6 +11,7 @@ import com.soft.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -407,6 +408,32 @@ public class OrderAction {
             jsonObject.put("flag","true");
         } else {
             jsonObject.put("flag","false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
+     * @Description 订单管理-批量删除
+     * @Param [orderIds]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/11 17:00
+     **/
+    @RequestMapping("/doDelBatchOrder")
+    @ResponseBody
+    public JSONObject doDelBatchOrder(@RequestParam(value="orderIds[]")Integer[] orderIds) {
+        JSONObject jsonObject = new JSONObject();
+        List<Integer> list = new ArrayList<Integer>();
+        for (Integer orderId : orderIds) {
+            list.add(orderId);
+        }
+        int recordNumber = orderService.delBatchOrder(list);
+        if(recordNumber == list.size()){
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+            jsonObject.put("number", list.size() - recordNumber);
         }
         return jsonObject;
     }

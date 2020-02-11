@@ -67,4 +67,12 @@ public interface OrderService {
     int updateOrder(Order order);
 
 
+    /**
+     * @Description 订单-批量删除
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/11 16:59
+     **/
+    int delBatchOrder(List<Integer> list);
 }

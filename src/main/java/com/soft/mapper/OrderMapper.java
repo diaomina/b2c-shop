@@ -27,4 +27,13 @@ public interface OrderMapper {
     int updateByPrimaryKeySelective(Order record);
 
     int updateByPrimaryKey(Order record);
+
+    /**
+     * @Description 订单管理-批量删除
+     * @Param [list]
+     * @Return int
+     * @Author ljy
+     * @Date 2020/2/11 17:01
+     **/
+    int delBatchByPrimaryKey(@Param("list") List<Integer> list);
 }
