@@ -199,5 +199,33 @@ public class AdAction {
     }
 
 
+    /**
+     * @Description 广告管理 开启/关闭
+     * @Param [adId, state]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/11 20:33
+     **/
+    @RequestMapping("/doAdState")
+    @ResponseBody
+    public JSONObject doAdState(Integer adId, String state) {
+        JSONObject jsonObject = new JSONObject();
+        Ad ad = adService.loadByAdId(adId);
+        // 开启
+        if("start".equals(state)) {
+            ad.setState((byte) 1);
+        }
+        // 关闭
+        if("stop".equals(state)) {
+            ad.setState((byte) 2);
+        }
+        // 判断更新结果
+        if (adService.updateAd(ad) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
 
 }

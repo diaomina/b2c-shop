@@ -52,8 +52,8 @@
 								<span class="label label-defaunt radius" th:if="${adVO.state == 2}">关闭</span>
 							</td>
 							<td class="td-manage">
-								<a th:if="${adVO.state == 1}" style="text-decoration:none" th:onClick="|goods_stop(this,${adVO.adId},'stop')|" href="javascript:;" title="关闭"><i class="Hui-iconfont">&#xe631;</i></a>
-								<a th:if="${adVO.state == 2}" style="text-decoration:none" th:onClick="|goods_start(this,${adVO.adId},'start')|" href="javascript:;" title="开启"><i class="Hui-iconfont">&#xe6e1;</i></a>
+								<a th:if="${adVO.state == 1}" style="text-decoration:none" th:onClick="|ad_stop(this,${adVO.adId},'stop')|" href="javascript:;" title="关闭"><i class="Hui-iconfont">&#xe631;</i></a>
+								<a th:if="${adVO.state == 2}" style="text-decoration:none" th:onClick="|ad_start(this,${adVO.adId},'start')|" href="javascript:;" title="开启"><i class="Hui-iconfont">&#xe6e1;</i></a>
 								<a style="text-decoration:none" class="ml-5" th:onclick="|ad_edit('编辑','goAdEdit',${adVO.adId},'','650')|" title="编辑" href="javascript:;" ><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除" href="javascript:;" th:onclick="|ad_del(this,${adVO.adId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
@@ -138,15 +138,16 @@
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "doGoodsIsMarketable"+"?goodsId="+goodsId + "&state=" + state,
+				url: "doAdState",
+				data: {adId:adId, state:state},
 				success: function (result) {
 					if(result.flag = "true") {
-						$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="goods_start(this,'+goodsId+',\'start\')" href="javascript:;" title="上架"><i class="Hui-iconfont">&#xe6e1;</i></a>');
-						$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已停用</span>');
+						$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="ad_start(this,'+adId+',\'start\')" href="javascript:;" title="开启"><i class="Hui-iconfont">&#xe6e1;</i></a>');
+						$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">关闭</span>');
 						$(obj).remove();
-						layer.msg('已下架!',{icon: 5,time:1000});
+						layer.msg('已关闭!',{icon: 5,time:1000});
 					} else {
-						layer.msg('下架失败!',{icon: 2,time:1000});
+						layer.msg('关闭失败!',{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {
@@ -157,20 +158,21 @@
 	}
 
 	/*广告-开启*/
-	function goods_start(obj,goodsId,state){
+	function ad_start(obj,adId,state){
 		layer.confirm('确认要开启吗？',function(index){
 			$.ajax({
 				type: "GET",
 				dateType: "json",
-				url: "doGoodsIsMarketable" + "?goodsId=" + goodsId + "&state=" + state,
+				url: "doAdState",
+				data: {adId:adId, state:state},
 				success: function (result) {
 					if(result.flag = "true") {
-						$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="goods_stop(this,'+goodsId+',\'stop\')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe631;</i></a>');
-						$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已上架</span>');
+						$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="ad_stop(this,'+adId+',\'stop\')" href="javascript:;" title="关闭"><i class="Hui-iconfont">&#xe631;</i></a>');
+						$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">开启</span>');
 						$(obj).remove();
-						layer.msg('已上架!',{icon: 6,time:1000});
+						layer.msg('已开启!',{icon: 6,time:1000});
 					} else {
-						layer.msg('上架失败!',{icon: 2,time:1000});
+						layer.msg('开启失败!',{icon: 2,time:1000});
 					}
 				},
 				error: function (err) {
