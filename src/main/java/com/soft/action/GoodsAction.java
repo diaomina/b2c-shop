@@ -357,6 +357,29 @@ public class GoodsAction {
     }
 
 
+
+    /**
+     * @Description 根据商品名称模糊查询商品
+     * @Param [goodsName]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/13 0:02
+     **/
+    @RequestMapping("/doFindGoodsByGoodsName")
+    public ModelAndView doFindGoodsByGoodsName(String goodsName) {
+        List<Goods> goodsList = goodsService.findListByGoodsName(goodsName);
+        Iterator<Goods> iterator = goodsList.iterator();
+        // 过滤已删除和下架的商品
+        while(iterator.hasNext()) {
+            Goods goods = iterator.next();
+            if(goods.getDelState() == 1 || goods.getIsMarketable() == 0){
+                iterator.remove();
+            }
+        }
+        return new ModelAndView("user/index", "goodsList", goodsList);
+    }
+
+
     /**
      * @Description 跳转到商品详情
      * @Param [goodsId]
