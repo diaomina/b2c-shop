@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +37,7 @@ public class MessageUtil {
         String result = "";
         BufferedReader in = null;
         try {
-            String urlNameString = SERVER_URL + SCKEY + ".send?text="+ text +"&desp=" + desp;
+            String urlNameString = SERVER_URL + SCKEY + ".send?text="+ URLEncoder.encode(text,"utf-8") +"&desp=" + URLEncoder.encode(desp,"utf-8");
             URL realUrl = new URL(urlNameString);
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
