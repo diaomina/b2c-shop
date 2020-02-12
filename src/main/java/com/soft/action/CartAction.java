@@ -100,6 +100,30 @@ public class CartAction {
 
 
     /**
+     * @Description 购物车更新
+     * @Param [cart]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/12 18:07
+     **/
+    @RequestMapping("/doCartUpdate")
+    @ResponseBody
+    public JSONObject doCartUpdate(Cart cart) {
+        JSONObject jsonObject = new JSONObject();
+        Cart dbCart = cartService.loadByCartId(cart.getCartId());
+        dbCart.setQuantity(cart.getQuantity());
+        dbCart.setUpdateTime(new Date());
+        // 判断更新结果
+        if (cartService.updateCart(dbCart) > 0) {
+            jsonObject.put("flag", "true");
+        } else {
+            jsonObject.put("flag", "false");
+        }
+        return jsonObject;
+    }
+
+
+    /**
      * @Description 删除
      * @Param [cartId]
      * @Return com.alibaba.fastjson.JSONObject

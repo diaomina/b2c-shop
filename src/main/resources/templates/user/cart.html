@@ -55,9 +55,9 @@
                 </td>
                 <td class="price" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
                 <td class="count">
-                    <span class="reduce">-</span>
+                    <span class="reduce" th:onclick="|cart_update(this, ${cartVO.cartId}, 'reduce')|">-</span>
                     <input class="count-input" type="text" th:value="${cartVO.quantity}">
-                    <span class="add">+</span>
+                    <span class="add" th:onclick="|cart_update(this, ${cartVO.cartId}, 'add')|">+</span>
                 </td>
                 <td class="subtotal" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
                 <td class="operation">
@@ -92,6 +92,39 @@
 <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
 <script type="text/javascript" src="../shop-style/js/jq.js"></script>
 <script type="text/javascript">
+
+    /* 同步购物车内商品数量到服务器 */
+    function cart_update(obj, cartId, state) {
+        var quantity = $(obj).parents("td").children("input").val();
+        if(state == "reduce"){
+            if(quantity > 1) {
+                quantity = Number(quantity) - 1;
+            } else {
+                return;
+            }
+        }
+        if(state == "add"){
+            quantity = Number(quantity) + 1;
+        }
+        $.ajax({
+            url: "/cartAction/doCartUpdate",
+            cache: false,
+            type: "GET",
+            dateType: "json",
+            async: true,
+            data:{cartId:cartId, quantity:quantity},
+            success: function (result) {
+                if(result.flag = "true") {
+                    console.log("已同步至服务器！");
+                } else {
+                    console.log("同步至服务器失败！");
+                }
+            },
+            error: function (err) {
+                console.log("请求异常！");
+            }
+        });
+    }
 
     /* 删除 */
     function cart_del(obj,cartId){

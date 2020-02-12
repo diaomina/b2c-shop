@@ -156,7 +156,6 @@ window.onload = function () {
 			}
 			getTotal(); //更新总数
 		}
-		console.log("\u767e\u5ea6\u641c\u7d22\u3010\u7d20\u6750\u5bb6\u56ed\u3011\u4e0b\u8f7d\u66f4\u591aJS\u7279\u6548\u4ee3\u7801");
 		// 默认全选
 		checkAllInputs[0].checked = true;
 		checkAllInputs[0].onclick();
