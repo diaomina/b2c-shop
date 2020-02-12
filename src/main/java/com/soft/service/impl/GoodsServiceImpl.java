@@ -50,7 +50,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     /**
-     * @Description 根据 category_id 查询商品
+     * @Description 根据 非顶层种类id 查询商品
      * @Param [categoryId]
      * @Return java.util.List<com.soft.model.Goods>
      * @Author ljy
@@ -63,6 +63,7 @@ public class GoodsServiceImpl implements GoodsService {
         criteria.andCategoryIdEqualTo(categoryId);
         return goodsMapper.selectByExample(goodsExample);
     }
+
 
     /**
      * @Description 根据 goods_id 查询商品

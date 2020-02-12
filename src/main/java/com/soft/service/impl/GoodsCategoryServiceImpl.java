@@ -35,6 +35,21 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
     }
 
     /**
+     * @Description 根据父种类id查询其子种类
+     * @Param []
+     * @Return java.util.List<com.soft.model.GoodsCategory>
+     * @Author ljy
+     * @Date 2020/2/13 0:39
+     */
+    @Override
+    public List<GoodsCategory> findListGoodsCategoryByParentId(Integer parentId) {
+        GoodsCategoryExample goodsCategoryExample = new GoodsCategoryExample();
+        GoodsCategoryExample.Criteria criteria = goodsCategoryExample.createCriteria();
+        criteria.andParentIdEqualTo(parentId);
+        return goodsCategoryMapper.selectByExample(goodsCategoryExample);
+    }
+
+    /**
      * @Description 根据 category_id 查找商品种类
      * @Param [categoryId]
      * @Return com.soft.model.GoodsCategory

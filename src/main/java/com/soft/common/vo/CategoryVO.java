@@ -15,11 +15,15 @@ import java.util.Objects;
  **/
 public class CategoryVO implements Serializable {
 
+
+    // 父种类id
+    private Integer parentCategoryId;
+
     // 父种类名称
-    String parentCategoryName;
+    private String parentCategoryName;
 
     // 子种类
-    List<GoodsCategory> categoryList;
+    private List<GoodsCategory> categoryList;
 
     private static final long serialVersionUID = 1L;
 
@@ -44,6 +48,14 @@ public class CategoryVO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(parentCategoryName, categoryList);
+    }
+
+    public Integer getParentCategoryId() {
+        return parentCategoryId;
+    }
+
+    public void setParentCategoryId(Integer parentCategoryId) {
+        this.parentCategoryId = parentCategoryId;
     }
 
     public String getParentCategoryName() {

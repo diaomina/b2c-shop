@@ -317,6 +317,7 @@ public class GoodsAction {
                     categoryList.add(cg);
                 }
             }
+            categoryVO.setParentCategoryId(pg.getCategoryId());
             categoryVO.setParentCategoryName(pg.getCategoryName());
             categoryVO.setCategoryList(categoryList);
             categoryVOList.add(categoryVO);
@@ -368,6 +369,66 @@ public class GoodsAction {
     @RequestMapping("/doFindGoodsByGoodsName")
     public ModelAndView doFindGoodsByGoodsName(String goodsName) {
         List<Goods> goodsList = goodsService.findListByGoodsName(goodsName);
+        Iterator<Goods> iterator = goodsList.iterator();
+        // 过滤已删除和下架的商品
+        while(iterator.hasNext()) {
+            Goods goods = iterator.next();
+            if(goods.getDelState() == 1 || goods.getIsMarketable() == 0){
+                iterator.remove();
+            }
+        }
+        return new ModelAndView("user/index", "goodsList", goodsList);
+    }
+
+
+
+    /**
+     * @Description 根据商品种类id查询商品
+     * @Param [state, categoryId]
+     * @Return org.springframework.web.servlet.ModelAndView
+     * @Author ljy
+     * @Date 2020/2/13 0:29
+     **/
+    @RequestMapping("/doFindGoodsByGoodsCategory")
+    public ModelAndView doFindGoodsByGoodsCategory(String state, Integer categoryId){
+        List<Goods> goodsList = new ArrayList<Goods>();
+        // 种类id是顶层种类
+        if("parentCategory".equals(state)){
+            // 1.获取该种类包含商品
+            goodsList = goodsService.findListByCategoryId(categoryId);
+
+            // 2.获取该种类的子种类
+            List<GoodsCategory> goodsCategoryList = goodsCategoryService.findListGoodsCategoryByParentId(categoryId);
+            // 过滤未启用和删除的种类
+            Iterator<GoodsCategory> iterator = goodsCategoryList.iterator();
+            while(iterator.hasNext()){
+                GoodsCategory goodsCategory = iterator.next();
+                if (goodsCategory.getState() != 1) {
+                    iterator.remove();
+                }
+            }
+            // 获取其子种类包含商品
+            for(GoodsCategory goodsCategory : goodsCategoryList) {
+                List<Goods> list = goodsService.findListByCategoryId(goodsCategory.getCategoryId());
+                Iterator<Goods> iterator1 = list.iterator();
+                // 过滤下架和已删除的商品
+                while(iterator1.hasNext()){
+                    Goods goods = iterator1.next();
+                    if(goods.getDelState() == 1 || goods.getIsMarketable() == 0){
+                        iterator1.remove();
+                    }
+                }
+                // 去重：去除总的商品列表中包含的子种类的商品
+                goodsList.removeAll(list);
+                // 将子种类商品添加到总的商品列表中
+                goodsList.addAll(list);
+            }
+        }
+
+        // 种类id是非顶层种类
+        if("category".equals(state)){
+            goodsList = goodsService.findListByCategoryId(categoryId);
+        }
         Iterator<Goods> iterator = goodsList.iterator();
         // 过滤已删除和下架的商品
         while(iterator.hasNext()) {

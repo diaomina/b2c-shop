@@ -22,6 +22,15 @@ public interface GoodsCategoryService {
     List<GoodsCategory> findAllListGoodsCategory();
 
     /**
+     * @Description 根据父种类id查询其子种类
+     * @Param []
+     * @Return java.util.List<com.soft.model.GoodsCategory>
+     * @Author ljy
+     * @Date 2020/2/13 0:39
+     **/
+    List<GoodsCategory> findListGoodsCategoryByParentId(Integer parentId);
+
+    /**
      * @Description 根据 category_id 查找商品种类
      * @Param [categoryId]
      * @Return com.soft.model.GoodsCategory
@@ -65,5 +74,6 @@ public interface GoodsCategoryService {
      * @Date 2020/1/11 19:15
      **/
     int updateGoodsCategory(GoodsCategory goodsCategory);
+
 
 }

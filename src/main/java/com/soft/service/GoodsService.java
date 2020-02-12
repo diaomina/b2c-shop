@@ -32,7 +32,7 @@ public interface GoodsService {
     List<Goods> findListByGoodsName(String goodsName);
 
     /**
-     * @Description 根据 category_id 查询商品
+     * @Description 根据 非顶层种类id 查询商品
      * @Param [categoryId]
      * @Return java.util.List<com.soft.model.Goods>
      * @Author ljy
@@ -84,5 +84,6 @@ public interface GoodsService {
      * @Date 2020/1/27 19:49
      **/
     int stopBatchGoods(List<Integer> list);
+
 
 }

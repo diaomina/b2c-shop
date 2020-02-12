@@ -16,13 +16,19 @@
                 <div class="cateMenu hide">
                     <ul>
                         <li style="border-top: none;" th:each="categoryVO : ${session.categoryVOList}">
-                            <div class="cate-tag"> <strong><a href="#" th:text="${categoryVO.parentCategoryName}"></a></strong></div>
+                            <div class="cate-tag">
+                                <strong>
+                                    <a th:href="|@{'/goodsAction/doFindGoodsByGoodsCategory?state=parentCategory&categoryId=' + ${categoryVO.parentCategoryId} + ''}|"
+                                       th:text="${categoryVO.parentCategoryName}"></a>
+                                </strong>
+                            </div>
                             <div class="list-item hide">
                                 <ul class="itemleft">
                                     <dl>
                                         <dt th:text="${categoryVO.parentCategoryName}"></dt>
                                         <dd th:each="category : ${categoryVO.categoryList}">
-                                            <a href="#" th:text="${category.categoryName}"></a>
+                                            <a th:href="|@{'/goodsAction/doFindGoodsByGoodsCategory?state=category&categoryId='+ ${category.categoryId} + ''}|"
+                                               th:text="${category.categoryName}"></a>
                                         </dd>
                                     </dl>
 
