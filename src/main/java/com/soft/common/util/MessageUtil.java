@@ -2,7 +2,6 @@ package com.soft.common.util;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -59,6 +58,13 @@ public class MessageUtil {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
+            // 判断消息发送结果
+            if(result.endsWith("{\"errno\":0,\"errmsg\":\"success\",\"dataset\":\"done\"}")){
+                System.out.println("消息发送成功！");
+            } else {
+                System.out.println("不妙，消息发送失败了！！！");
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("滴滴滴~~~ 消息发送异常！");
