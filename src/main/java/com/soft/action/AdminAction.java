@@ -5,9 +5,11 @@ import com.soft.common.util.Md5;
 import com.soft.model.Admin;
 import com.soft.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 
@@ -63,6 +65,22 @@ public class AdminAction {
         }
         return jsonObject;
     }
+
+
+    /**
+     * @Description 退出登录
+     * @Param [session]
+     * @Return java.lang.String
+     * @Author ljy
+     * @Date 2020/2/12 16:51
+     **/
+    @RequestMapping("/doLogout")
+    public String doLogout(HttpSession session) {
+        // 销毁session
+        session.invalidate();
+        return "redirect:/adminAction/goLogin";
+    }
+
 
     /**
      * @Description 跳转到后台主页
