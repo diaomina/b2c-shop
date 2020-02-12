@@ -308,7 +308,7 @@ public class GoodsAction {
 
 
         List<CategoryVO> categoryVOList = new ArrayList<CategoryVO>();
-        // 封装CategoryVO
+        // 封装CategoryVO,将顶级种类与子种类匹配
         for(GoodsCategory pg : parentCategoryList) {
             CategoryVO categoryVO = new CategoryVO();
             List<GoodsCategory> categoryList = new ArrayList<GoodsCategory>();
