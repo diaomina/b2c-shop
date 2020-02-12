@@ -271,6 +271,21 @@ public class UserAction {
 
 
     /**
+     * @Description 退出登录
+     * @Param [session]
+     * @Return java.lang.String
+     * @Author ljy
+     * @Date 2020/2/12 16:51
+     **/
+    @RequestMapping("/doLogout")
+    public String doLogout(HttpSession session) {
+        // 销毁session
+        session.invalidate();
+        return "redirect:/goodsAction/goIndex";
+    }
+
+
+    /**
      * @Description 跳转到用户注册界面
      * @Param []
      * @Return org.springframework.web.servlet.ModelAndView
