@@ -95,6 +95,17 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
+        <!-- 支付宝沙箱支付 -->
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk</artifactId>
+            <version>4.8.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk-sources</artifactId>
+            <version>4.8.10</version>
+        </dependency>
 
     </dependencies>
 

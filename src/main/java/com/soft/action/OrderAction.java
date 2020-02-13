@@ -1,6 +1,11 @@
 package com.soft.action;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.soft.common.config.AlipayConfig;
 import com.soft.common.util.MessageUtil;
 import com.soft.common.util.OrderNumberUtil;
 import com.soft.common.util.RandomNumUtil;
@@ -16,7 +21,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -346,7 +355,7 @@ public class OrderAction {
      **/
     @RequestMapping("/doPay")
     @ResponseBody
-    public JSONObject doPay(String mode, Integer orderId) {
+    public JSONObject doPay(String mode, Integer orderId){
         JSONObject jsonObject = new JSONObject();
         Order order = orderService.loadByOrderId(orderId);
         // 账户余额支付
@@ -370,9 +379,6 @@ public class OrderAction {
                             goods.setQuantity(goods.getQuantity() - orderChild.getQuantity());
                             goodsService.updateGoods(goods);
                         }
-
-                        // 发送提醒消息到管理员微信
-                        MessageUtil.send("订单提醒服务", "您有一个新订单,订单号："+order.getOrderNumber()+" ,请注意查看哟~");
                     }
                 } else {
                     // 支付失败
@@ -388,8 +394,12 @@ public class OrderAction {
 
         // 支付宝支付
         if("alipay".equals(mode)) {
-            ////////////// 待完成 ///////////////////
 
+        }
+
+        if(jsonObject.get("flag").equals("true")){
+            // 发送提醒消息到管理员微信
+            MessageUtil.send("订单提醒服务", "您有一个新订单,订单号："+order.getOrderNumber()+" ,请注意查看哟~");
         }
         return jsonObject;
     }
