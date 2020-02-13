@@ -63,6 +63,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
+     * @Description 根据订单号查询订单
+     * @Param [orderNumber]
+     * @Return com.soft.model.Order
+     * @Author ljy
+     * @Date 2020/2/14 0:23
+     */
+    @Override
+    public Order loadByOrderNumber(String orderNumber) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andOrderNumberEqualTo(orderNumber);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        if(orderList != null && orderList.size() > 0){
+            return orderList.get(0);
+        }
+        return null;
+    }
+
+    /**
      * @Description 创建订单
      * @Param [order]
      * @Return int

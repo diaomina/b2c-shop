@@ -72,8 +72,8 @@
                             <td th:text="|¥${#numbers.formatDecimal(orderVO.totalAmount/100.0,1,2)}|"></td>
                             <td th:with="createTime=${orderVO.createTime}" th:text="${#dates.format(createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             <td class="td-manage">
-                                <a title="账户余额付款" href="javascript:;" th:onclick="|order_pay(this,'userAmount',${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63a;</i></a>
-                                <a title="支付宝付款" href="javascript:;" th:onclick="|order_pay(this,'alipay',${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe71c;</i></a>
+                                <a title="账户余额付款" href="javascript:;" th:onclick="|order_pay(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe63a;</i></a>
+                                <a title="支付宝付款" th:href="|@{'/alipayAction/goAlipay?orderId=' + ${orderVO.orderId} + ''}|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe71c;</i></a>
                                 <a title="取消订单" href="javascript:;" th:onclick="|order_del(this,${orderVO.orderId})|" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe6e2;</i></a>
                             </td>
                         </tr>
@@ -110,13 +110,13 @@
         layer_show(title,url,w,h);
     }
 
-    /*订单-支付*/
-    function order_pay(obj,mode,orderId){
+    /*订单-账户余额支付*/
+    function order_pay(obj, orderId){
         $.ajax({
             type: "GET",
             dateType: "json",
             url: "/orderAction/doPay",
-            data:{mode:mode, orderId:orderId},
+            data:{orderId:orderId},
             success: function (result) {
                 if(result.flag == "true") {
                     $(obj).parents("tr").remove();
@@ -133,6 +133,35 @@
                 layer.msg('请求异常!',{icon: 2,time:1000})
             }
         });
+    }
+
+    /*订单-支付宝支付*/
+    function order_alipay(orderId){
+
+        /*
+        $.ajax({
+            type: "GET",
+            dateType: "json",
+            url: "/alipayAction/goAlipay",
+            data:{orderId:orderId},
+            success: function (result) {
+                if(result.flag == "true") {
+                    $(obj).parents("tr").remove();
+                    layer.msg('支付成功!',{icon:1,time:1000});
+                } else {
+                    if(result.msg != null) {
+                        layer.msg(result.msg,{icon: 2,time:1000});
+                    } else {
+                        layer.msg('支付失败!',{icon: 2,time:1000});
+                    }
+                }
+            },
+            error: function (err) {
+                layer.msg('请求异常!',{icon: 2,time:1000})
+            }
+        });
+        */
+
     }
 
     /*订单-取消*/

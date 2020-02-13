@@ -40,6 +40,15 @@ public interface OrderService {
     Order loadByOrderId(Integer orderId);
 
     /**
+     * @Description 根据订单号查询订单
+     * @Param [orderNumber]
+     * @Return com.soft.model.Order
+     * @Author ljy
+     * @Date 2020/2/14 0:23
+     **/
+    Order loadByOrderNumber(String orderNumber);
+
+    /**
      * @Description 创建订单
      * @Param [order]
      * @Return int
