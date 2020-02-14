@@ -47,12 +47,25 @@
                     <li><a th:href="@{/userAction/goUserCenter}">用户中心</a></li>
                     <li><a th:href="@{/cartAction/goCartMain}">购物车</a></li>
                     <li><a th:href="@{/orderAction/goOrderState?state=pay&code=1}">我的订单</a></li>
-                    <li><a href="about.html">广告联系</a></li>
-                    <li><a href="about.html">关于我们</a></li>
+                    <li><a id="ad" href="javascript:;">广告联系</a></li>
+                    <li><a id="info" href="javascript:;">关于我们</a></li>
                 </ul>
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#ad").click(function () {
+                layer.alert("广告合作请拨打热线：400-666-8888");
+            });
+
+            $("#info").click(function () {
+                layer.alert("B2C商城系统又叫网上商城系统，英文是Online Mall system，这个单词最先提出的是英国的Lap公司，该公司在中国大陆设有分公司，1998年，当时英国在线购物刚刚起步,Lap在英国系统开发方面已经小有名气，为规范市场称谓，则提出Online Mall system统一名称，同时还提出了Online Shopping System（网上购物系统）,Online store system（网上商店系统），后被引入中国，亦是网上购物系统。");
+            });
+
+        });
+    </script>
     <!--导航结束-->
 </th:block>
 
