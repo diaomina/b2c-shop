@@ -33,9 +33,9 @@ public class AlipayConfig {
     public static String SIGN_TYPE = "RSA2";
 
     // 服务器异步通知页面路径
-    public static String notify_url = "http://localhost:8085/alipy/return_url.html";
+    //public static String notify_url = "http://localhost:8085/alipy/return_url.html";
 
     // 页面跳转同步通知页面路径
-    public static String return_url ="http://localhost:8085/go/return_url";
+    //public static String return_url ="http://localhost:8085/go/return_url";
 
 }

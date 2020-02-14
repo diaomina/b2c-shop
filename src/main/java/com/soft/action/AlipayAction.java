@@ -69,13 +69,14 @@ public class AlipayAction {
         String out_trade_no = order.getOrderNumber();  // 商户订单号，商户网站订单系统中唯一订单号，必填
         String total_amount = sb.toString();  // 付款金额，必填
         String subject = "B2C商城购物";  // 商品名称
-        String returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/orderAction/goOrderState?state=logistics&code=1";
-        String notifyUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/alipayAction/notify";
+        //String returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/orderAction/goOrderState?state=logistics&code=1";
+        //String notifyUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/alipayAction/notify";
+        String returnUrl = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+"/alipayAction/return";
 
         //设置请求参数
         AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();// 创建API对应的request
         alipayRequest.setReturnUrl(returnUrl);
-        alipayRequest.setNotifyUrl(notifyUrl);// 在公共参数中设置回跳和通知地址
+        //alipayRequest.setNotifyUrl(notifyUrl);// 在公共参数中设置回跳和通知地址
         alipayRequest.setBizContent("{" + "    \"out_trade_no\":\""+out_trade_no+"\","
                 + "    \"product_code\":\"FAST_INSTANT_TRADE_PAY\"," + "    \"total_amount\":"+total_amount+","
                 + "    \"subject\":\""+subject+"\"," + "    \"body\":\""+subject+"\","
@@ -142,7 +143,8 @@ public class AlipayAction {
                 // 发送提醒消息到管理员微信
                 MessageUtil.send("订单提醒服务", "您有一个新订单,订单号："+order.getOrderNumber()+" ,请注意查看哟~");
             }
-            return ("--success--");
+            // 成功:返回我的订单界面
+            return "redirect:/orderAction/goOrderState?state=pay&code=1";
         } else {
             System.out.println("验证失败,不去更新状态");
             return ("--failed--");
@@ -199,7 +201,8 @@ public class AlipayAction {
                 // 发送提醒消息到管理员微信
                 MessageUtil.send("订单提醒服务", "您有一个新订单,订单号："+order.getOrderNumber()+" ,请注意查看哟~");
             }
-            return ("--success--");
+            // 成功:返回我的订单界面
+            return "redirect:/orderAction/goOrderState?state=pay&code=1";
         } else {
             return ("fail");
         }
