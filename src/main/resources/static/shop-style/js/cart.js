@@ -138,11 +138,13 @@ window.onload = function () {
 				getTotal(); //更新总数
 			}
 		}
-		// 点击全部删除
+		// 点击 删除所选商品
 		deleteAll.onclick = function () {
 			if (selectedTotal.innerHTML != 0) {
-				var con = layer.confirm('确定删除所选商品吗？'); //弹出确认框
-				if (con) {
+				//弹出确认框
+				layer.confirm('确定删除所选商品吗？',{
+					shade: false //不显示遮罩
+				}, function (index) {
 					for (var i = 0; i < tr.length; i++) {
 						// 如果被选中，就删除相应的行
 						if (tr[i].getElementsByTagName('input')[0].checked) {
@@ -150,7 +152,7 @@ window.onload = function () {
 							i--; //回退下标位置
 						}
 					}
-				}
+				});
 			} else {
 				layer.alert('请选择商品！');
 			}
