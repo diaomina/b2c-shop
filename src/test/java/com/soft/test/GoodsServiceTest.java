@@ -39,17 +39,21 @@ public class GoodsServiceTest {
 
     @Test
     public void createGoods() {
-        Goods goods = new Goods();
-        goods.setGoodsName("华为Nova5Pro");
-        goods.setPrice(599000);
-        goods.setQuantity(999);
-        goods.setImage("upload/1.jpg");
-        goods.setSimpleDescribe("128g 金色");
-        goods.setAdminId(1);
-        goods.setCreateTime(new Date());
-        goods.setUpdateTime(new Date());
-        int recordNumber = goodsService.createGoods(goods);
-        System.out.println(recordNumber);
+        for(int i = 1 ; i<=100; i++){
+            Goods goods = new Goods();
+            goods.setGoodsName("华为Mate"+i);
+            goods.setPrice(399900);
+            goods.setQuantity(500);
+            goods.setImage("/static/upload/ec5b5719fe0a4a8cb3f0573c5fa5485d.jpg");
+            goods.setSimpleDescribe("64g 绿色");
+            goods.setIsMarketable((byte) 1);
+            goods.setAdminId(1);
+            goods.setCreateTime(new Date());
+            goods.setUpdateTime(new Date());
+            int recordNumber = goodsService.createGoods(goods);
+            System.out.println(recordNumber);
+        }
+
     }
 
     @Test
