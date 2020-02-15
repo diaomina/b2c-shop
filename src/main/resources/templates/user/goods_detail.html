@@ -62,6 +62,7 @@
                 <span class="jrsc_2" style="padding-left:20px;">
                     <div id="submit">
                         <input type="hidden" id="goodsId" th:value="${goods.goodsId}" />
+                        <input th:if="${session.user} ne null" type="hidden" id="login" value="login" />
                         <a href="javascript:;"><img src="../shop-style/images/dinggou.jpg" width="170" height="34" /></a>
                     </div>
                 </span>
@@ -106,6 +107,13 @@
 
         // 立即订购
         $("#submit").click(function () {
+            // 判断用户是否登录
+            if($("#login").val()) {
+
+            } else {
+                layer.msg('请先登录再继续操作!',{icon: 2,time:1000});
+                return;
+            }
             var goodsNum = $("#goodsNum").val();
             var quantity = $("#quantity").val();
             if(goodsNum < 1) {

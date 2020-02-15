@@ -103,6 +103,13 @@ public class UserReceiveAction {
         return new ModelAndView("user/user_center/user_receive/user_receive_edit", "userReceive", userReceiveService.loadById(receiveId));
     }
 
+    /**
+     * @Description 地址编辑
+     * @Param [userReceive]
+     * @Return com.alibaba.fastjson.JSONObject
+     * @Author ljy
+     * @Date 2020/2/15 16:26
+     **/
     @RequestMapping("/doUserReceiveEdit")
     @ResponseBody
     public JSONObject doUserReceiveEdit(UserReceive userReceive) {
