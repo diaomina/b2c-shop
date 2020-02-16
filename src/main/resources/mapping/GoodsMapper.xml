@@ -14,6 +14,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="admin_id" property="adminId" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List" >
     goods_id, category_id, goods_name, image, price, quantity, del_state, simple_describe, 
-    is_marketable, create_time, update_time, admin_id
+    is_marketable, create_time, update_time, admin_id, version
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.soft.model.GoodsExample" >
     select
@@ -111,13 +112,13 @@
     insert into t_goods (goods_id, category_id, goods_name, 
       image, price, quantity, 
       del_state, simple_describe, is_marketable, 
-      create_time, update_time, admin_id
-      )
+      create_time, update_time, admin_id,
+      version)
     values (#{goodsId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{goodsName,jdbcType=VARCHAR}, 
       #{image,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{quantity,jdbcType=INTEGER}, 
       #{delState,jdbcType=TINYINT}, #{simpleDescribe,jdbcType=VARCHAR}, #{isMarketable,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{adminId,jdbcType=INTEGER}
-      )
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{adminId,jdbcType=INTEGER},
+      #{version,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.soft.model.Goods" >
     insert into t_goods
@@ -158,6 +159,9 @@
       <if test="adminId != null" >
         admin_id,
       </if>
+      <if test="version != null" >
+        version,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="goodsId != null" >
@@ -195,6 +199,9 @@
       </if>
       <if test="adminId != null" >
         #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -243,6 +250,9 @@
       <if test="record.adminId != null" >
         admin_id = #{record.adminId,jdbcType=INTEGER},
       </if>
+      <if test="record.version != null" >
+        version = #{record.version,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -261,11 +271,13 @@
       is_marketable = #{record.isMarketable,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      admin_id = #{record.adminId,jdbcType=INTEGER}
+      admin_id = #{record.adminId,jdbcType=INTEGER},
+      version = #{record.version,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <!-- 更新时判断version是否相同，不同则不更新，相同则更新,并且将version+1 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.soft.model.Goods" >
     update t_goods
     <set >
@@ -302,8 +314,11 @@
       <if test="adminId != null" >
         admin_id = #{adminId,jdbcType=INTEGER},
       </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=BIGINT} + 1,
+      </if>
     </set>
-    where goods_id = #{goodsId,jdbcType=INTEGER}
+    where goods_id = #{goodsId,jdbcType=INTEGER} and version = #{version,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.soft.model.Goods" >
     update t_goods
@@ -317,7 +332,8 @@
       is_marketable = #{isMarketable,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      admin_id = #{adminId,jdbcType=INTEGER}
+      admin_id = #{adminId,jdbcType=INTEGER},
+      version = #{version,jdbcType=BIGINT}
     where goods_id = #{goodsId,jdbcType=INTEGER}
   </update>
   <!-- 批量下架 -->

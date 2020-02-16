@@ -348,12 +348,30 @@ public class OrderAction {
     @ResponseBody
     public JSONObject doPay(Integer orderId){
         JSONObject jsonObject = new JSONObject();
+
         Order order = orderService.loadByOrderId(orderId);
+        // 判断订单内商品的库存是否充足
+        List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
+        for (OrderChild orderChild : orderChildList) {
+            Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
+            if(goods.getQuantity() - orderChild.getQuantity() < 0){
+                // 库存不足，无法支付，返回
+                jsonObject.put("msg","很抱歉，库存不足，无法支付!");
+                jsonObject.put("flag","false");
+                return jsonObject;
+            }
+        }
+
         // 获取用户信息
         User user = userService.loadByUserId(order.getUserId());
         // 判断账户余额是否充足
         Integer number = user.getUserAmount() - order.getTotalAmount();
-        if(number >= 0){
+        if(number < 0) {
+            // 余额不足,支付失败,返回
+            jsonObject.put("msg","您的余额不足，请充值!");
+            jsonObject.put("flag","false");
+            return jsonObject;
+        } else {
             // 余额充足,完成支付
             user.setUserAmount(number);
             if(userService.updateUser(user) > 0) {
@@ -362,11 +380,29 @@ public class OrderAction {
                 if(orderService.updateOrder(order) > 0){
                     jsonObject.put("flag","true");
                     // 支付成功，修改商品库存数量
-                    List<OrderChild> orderChildList = orderChildService.findListByOrderNumber(order.getOrderNumber());
                     for (OrderChild orderChild : orderChildList) {
                         Goods goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
-                        goods.setQuantity(goods.getQuantity() - orderChild.getQuantity());
-                        goodsService.updateGoods(goods);
+                        Integer quantity = goods.getQuantity() - orderChild.getQuantity();
+                        goods.setQuantity(quantity);
+                        // 当高并发时会出现version不同情况导致更新失败，返回值为0，所以在这里进行处理
+                        while (goodsService.updateGoods(goods) <= 0) {
+                            // 重新获取商品库存数量后再次进行更新，直到更新成功
+                            goods = goodsService.loadByGoodsId(orderChild.getGoodsId());
+                            quantity = goods.getQuantity() - orderChild.getQuantity();
+                            // 当获取到的最新商品库存数量不足时
+                            if(quantity < 0) {
+                                // 库存不足，退还全款，返回
+                                user.setUserAmount(number + order.getTotalAmount());
+                                if(userService.updateUser(user) > 0) {
+                                    jsonObject.put("msg","很抱歉，库存不足，钱款已退还至您的账户!");
+                                } else {
+                                    jsonObject.put("msg","很抱歉，库存不足，钱款退还失败，请与拨打联系电话联系我们!");
+                                }
+                                jsonObject.put("flag","false");
+                                return jsonObject;
+                            }
+                            goods.setQuantity(quantity);
+                        }
                     }
                     // 发送提醒消息到管理员微信
                     MessageUtil.send("订单提醒服务", "您有一个新订单,订单号："+order.getOrderNumber()+" ,请注意查看哟~");
@@ -375,10 +411,6 @@ public class OrderAction {
                 // 支付失败
                 jsonObject.put("flag","false");
             }
-        } else {
-            // 余额不足,支付失败
-            jsonObject.put("msg","您的余额不足，请充值!");
-            jsonObject.put("flag","false");
         }
         return jsonObject;
     }

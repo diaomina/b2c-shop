@@ -28,6 +28,8 @@ public class Goods implements Serializable {
 
     private Integer adminId;
 
+    private Long version;
+
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -143,5 +145,13 @@ public class Goods implements Serializable {
 
     public void setAdminId(Integer adminId) {
         this.adminId = adminId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
