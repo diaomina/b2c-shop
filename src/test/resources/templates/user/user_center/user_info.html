@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>B2C商城首页</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+    <script type="text/javascript" src="../../shop-style/js/jquery.js"></script>
+    <script type="text/javascript" src="../../shop-style/js/index.js"></script>
+    <script src="../../shop-style/script/global.js" type="text/javascript"></script>
+    <script src="../../shop-style/script/head.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="../../shop-style/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../../shop-style/css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../../shop-style/css/style.css" />
+    <link rel="stylesheet" href="../../shop-style/style/base.css" />
+    <link rel="stylesheet" href="../../shop-style/style/head.css" />
+    <link rel="stylesheet" type="text/css" href="../../h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../../h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../../h-ui.admin/css/style.css" />
+</head>
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <div class="danye">
+        <!-- 左侧导航 start -->
+        <!-- 插入公共模板 _user_center_left -->
+        <div th:replace="../templates/user/common/_user_center_left :: common_user_center_left"></div>
+        <!-- 左侧导航 end -->
+
+        <!--单页详情开始-->
+        <div class="danye_right">
+            <div class="danye_dqbt">
+                <span class="jj_t"></span>
+                <span class="dq_dy">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 用户中心 >> 我的信息</span>
+            </div>
+            <!--会员中心右侧开始-->
+            <div class="hyzx_yc">
+                <div class="hyzx_yck1"></div>
+                <form th:action="@{doUserEdit}" method="post" class="form form-horizontal" id="form-user-edit">
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-3">用户名：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" class="input-text" th:value="${user.userName}" placeholder="" id="userName" name="userName" disabled>
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>性别：</label>
+                        <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                            <div class="radio-box">
+                                <input type="radio" id="sex-1" name="sex" value="男" th:field="${user.sex}">
+                                <label for="sex-1">男</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="sex-2" name="sex" value="女" th:field="${user.sex}">
+                                <label for="sex-2">女</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="sex-3" name="sex" value="保密" th:field="${user.sex}">
+                                <label for="sex-3">保密</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+                            <input type="text" class="input-text" th:value="${user.phone}" placeholder="" id="phone" name="phone">
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>地址：</label>
+                        <div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box" >
+					<select class="select" size="1" id="province" name="province" style="width:180px"></select>
+					<select class="select" size="1" id="city" name="city" style="width:180px"></select>
+					<select class="select" size="1" id="country" name="country" style="width:180px"></select>
+				</span>
+                        </div>
+                    </div>
+                    <div class="row cl">
+                        <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+                            <input type="hidden" id="old_province" th:value="${user.province}">
+                            <input type="hidden" id="old_city" th:value="${user.city}">
+                            <input type="hidden" id="old_country" th:value="${user.country}">
+                            <input type="hidden" name="userId" th:value="${user.userId}">
+                            <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i>&nbsp;&nbsp;保存&nbsp;&nbsp;</button>
+                            <button id="reset" class="btn btn-default radius" type="reset">&nbsp;&nbsp;重置&nbsp;&nbsp;</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="none1"></div>
+
+            </div>
+            <!--会员中心右侧结束-->
+        </div>
+        <!--单页详情结束-->
+    </div>
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _footer -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<!-- 引入城市三级联动js -->
+<script type="text/javascript" src="../../my/area.js"></script>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="../../h-ui.admin/js/H-ui.admin.page.js"></script>
+<script type="text/javascript" src="../../lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.skin-minimal input').click({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        /**
+         * 表单校验
+         */
+        $("#form-user-edit").validate({
+            rules:{
+                userName:{
+                    required:true,
+                    minlength:2,
+                    maxlength:16
+                },
+                userAmount:{
+                    required:true,
+                },
+                sex:{
+                    required:true,
+                },
+                phone:{
+                    required:true,
+                    isMobile:true,
+                },
+                province:{
+                    required:true,
+                },
+                city:{
+                    required:true,
+                },
+                country:{
+                    required:true,
+                },
+            },
+            onkeyup:false,
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                $(form).ajaxSubmit({
+                    cache: false,
+                    dateType: "json",
+                    success: function (result) {
+                        if(result.flag == "true"){
+                            layer.msg("保存成功!",{icon: 6,time:1000});
+                        }
+                        if(result.flag == "false"){
+                            layer.msg("保存失败!",{icon: 2,time:1000});
+                        }
+                    },
+                    error: function (err) {
+                        layer.msg('请求异常!',{icon: 2,time:1000})
+                    }
+                });
+
+
+            }
+        });
+
+
+        /**
+         * 城市三级联动
+         * */
+            // 获取用户原始数据
+        var old_province = $("#old_province").val();
+        var old_city = $("#old_city").val();
+        var old_country = $("#old_country").val();
+        // 默认值初始化
+        opt0 = [old_province,old_city,old_country];//初始值
+        _init_area();
+    });
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+
+
+</body>
+</html>

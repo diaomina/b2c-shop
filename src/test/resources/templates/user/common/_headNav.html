@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>导航栏</title>
+</head>
+<body>
+
+<th:block th:fragment="common_headNav">
+    <!--导航开始-->
+    <div class="headNav">
+        <div class="navCon w1020">
+            <!-- 商品种类 start -->
+            <div class="navCon-cate fl navCon_on">
+                <div class="navCon-cate-title"> <a href="#">全部商品分类</a></div>
+                <div class="cateMenu hide">
+                    <ul>
+                        <li style="border-top: none;" th:each="categoryVO : ${session.categoryVOList}">
+                            <div class="cate-tag">
+                                <strong>
+                                    <a th:href="|@{'/goodsAction/doFindGoodsByGoodsCategory?state=parentCategory&categoryId=' + ${categoryVO.parentCategoryId} + ''}|"
+                                       th:text="${categoryVO.parentCategoryName}"></a>
+                                </strong>
+                            </div>
+                            <div class="list-item hide">
+                                <ul class="itemleft">
+                                    <dl>
+                                        <dt th:text="${categoryVO.parentCategoryName}"></dt>
+                                        <dd th:each="category : ${categoryVO.categoryList}">
+                                            <a th:href="|@{'/goodsAction/doFindGoodsByGoodsCategory?state=category&categoryId='+ ${category.categoryId} + ''}|"
+                                               th:text="${category.categoryName}"></a>
+                                        </dd>
+                                    </dl>
+
+                                </ul>
+                            </div>
+                        </li>
+                        <li><div class="float-list-dnav"></div></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 商品种类 end -->
+
+            <div class="navCon-menu fl">
+                <ul>
+                    <li><a class="curMenu" th:href="@{/goodsAction/goIndex}">商城首页</a></li>
+                    <li><a th:href="@{/userAction/goUserCenter}">用户中心</a></li>
+                    <li><a th:href="@{/cartAction/goCartMain}">购物车</a></li>
+                    <li><a th:href="@{/orderAction/goOrderState?state=pay&code=1}">我的订单</a></li>
+                    <li><a id="ad" href="javascript:;">广告联系</a></li>
+                    <li><a id="info" href="javascript:;">关于我们</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#ad").click(function () {
+                layer.alert("广告合作请拨打热线：400-666-8888");
+            });
+
+            $("#info").click(function () {
+                layer.alert("B2C商城系统又叫网上商城系统，英文是Online Mall system，这个单词最先提出的是英国的Lap公司，该公司在中国大陆设有分公司，1998年，当时英国在线购物刚刚起步,Lap在英国系统开发方面已经小有名气，为规范市场称谓，则提出Online Mall system统一名称，同时还提出了Online Shopping System（网上购物系统）,Online store system（网上商店系统），后被引入中国，亦是网上购物系统。");
+            });
+
+        });
+    </script>
+    <!--导航结束-->
+</th:block>
+
+</body>
+</html>

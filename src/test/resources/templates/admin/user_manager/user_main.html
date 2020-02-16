@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE HTML>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:if="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <!-- 插入公共模板 _meta -->
 <head th:insert="../templates/admin/common/_meta :: common_meta"></head>
 <body>
@@ -14,13 +14,6 @@
 	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户管理 <span class="c-gray en">&gt;</span> 用户列表<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 	<div class="Hui-article">
 		<article class="cl pd-20">
-			<div class="text-c"> 日期范围：
-				<input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}'})" id="datemin" class="input-text Wdate" style="width:120px;">
-				-
-				<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d'})" id="datemax" class="input-text Wdate" style="width:120px;">
-				<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱"  name="">
-				<button type="submit" class="btn btn-success radius" id="" name=""><i class="Hui-iconfont">&#xe665;</i> 搜用户</button>
-			</div>
 			<div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 					<a href="javascript:;" onclick="user_stopBatch()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量停用</a>
@@ -35,7 +28,7 @@
 							<th width="25"><input type="checkbox" ></th>
 							<th width="40">序号</th>
 							<th width="80">用户名</th>
-							<th width="100">账户余额（单位/分）</th>
+							<th width="100">账户余额</th>
 							<th width="40">性别</th>
 							<th width="90">手机</th>
 							<th width="180">注册地址</th>
@@ -49,9 +42,8 @@
 						<tr class="text-c" th:each="user,var : ${users}">
 							<td><input type="checkbox" th:value="${user.userId}" name="userId"></td>
 							<td th:text="${var.count}"></td>
-							<!--<td><u th:text="${user.userName}" style="cursor:pointer" class="text-primary" onclick="member_show('张三','member-show.html','10001','360','400')"></u></td>-->
 							<td th:text="${user.userName}"></td>
-							<td th:text="${user.userAmount}"></td>
+							<td th:text="|${#numbers.formatDecimal(user.userAmount/100.0,1,2)}元|"></td>
 							<td th:text="${user.sex}"></td>
 							<td th:text="${user.phone}"></td>
 							<td th:text="|${user.province} - ${user.city} - ${user.country}|"></td>
@@ -98,7 +90,6 @@
 				userIds.push(obj[i].value);
 			}
 		}
-		console.log(userIds);
 		layer.confirm('确认要停用吗？',function(index){
 			$.ajax({
 				type: "GET",

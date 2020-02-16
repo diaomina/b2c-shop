@@ -13,9 +13,9 @@
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>账户余额（单位/分）：</label>
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>账户余额（元）：</label>
 			<div class="formControls col-xs-8 col-sm-9">
-				<input type="text" class="input-text" th:value="${user.userAmount}" placeholder="" id="userAmount" name="userAmount">
+				<input type="text" class="input-text" th:value=|${#numbers.formatDecimal(user.userAmount/100.0,1,2)}| placeholder="" id="form_userAmount" name="form_userAmount">
 			</div>
 		</div>
 		<div class="row cl">
@@ -84,6 +84,20 @@ $(function(){
 		increaseArea: '20%'
 	});
 
+	//自定义validate验证输入的数字小数点位数不能大于两位
+	jQuery.validator.addMethod("minNumber",function(value, element){
+		var returnVal = true;
+		inputZ=value;
+		var ArrMen= inputZ.split(".");    //截取字符串
+		if(ArrMen.length==2){
+			if(ArrMen[1].length>2){    //判断小数点后面的字符串长度
+				returnVal = false;
+				return false;
+			}
+		}
+		return returnVal;
+	},"小数点后最多为两位");         //验证错误信息
+
 	/**
 	 * 表单校验
 	 */
@@ -94,8 +108,11 @@ $(function(){
 				minlength:2,
 				maxlength:16
 			},
-			userAmount:{
+			form_userAmount:{
 				required:true,
+				number:true,
+				min: 0.01,          //输入的数字最小值为0.01，不能为0或者负数
+				minNumber: $("#form_userAmount").val()    //调用自定义验证
 			},
 			sex:{
 				required:true,
@@ -118,6 +135,12 @@ $(function(){
 		focusCleanup:true,
 		success:"valid",
 		submitHandler:function(form){
+			// 判断金额是否超出21474836.47的上限
+			var form_userAmount = $("#form_userAmount").val();
+			if(Number(form_userAmount) > 21474836.47) {
+				layer.msg("您编辑的金额超出限额，无法充值!",{icon: 5,time:1000})
+				return;
+			}
 			$(form).ajaxSubmit({
 				dateType: "json",
 				success: function (result) {

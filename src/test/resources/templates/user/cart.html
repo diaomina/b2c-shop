@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>购物车</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+</head>
+<script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+<script type="text/javascript" src="../shop-style/js/index.js"></script>
+<script src="../shop-style/script/global.js" type="text/javascript"></script>
+<script src="../shop-style/script/head.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+<link rel="stylesheet" type="text/css" href="../shop-style/css/style.css" />
+<link rel="stylesheet" href="../shop-style/style/base.css" />
+<link rel="stylesheet" href="../shop-style/style/head.css" />
+
+<link rel="stylesheet" type="text/css" href="../shop-style/css/cart/cart-style.css"/>
+<script type="text/javascript" src="../shop-style/js/cart.js"></script>
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <div class="con_dqwz">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 购物车</div>
+    <!-- 购物车 start -->
+    <div class="catbox">
+        <table id="cartTable">
+            <thead>
+            <tr>
+                <th><label><input class="check-all check" type="checkbox">&nbsp;&nbsp;全选</label></th>
+                <th>商品</th>
+                <th>单价</th>
+                <th>数量</th>
+                <th>小计</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="on" th:each="cartVO : ${cartVOList}" th:if="${cartVO.goods} ne null">
+                <td class="checkbox">
+                    <input class="check-one check" type="checkbox" th:value="${cartVO.cartId}" name="cartId">
+                </td>
+                <td class="goods">
+                    <img th:src="|@{'' + ${cartVO.goods.image} + ''}|" alt="">
+                    <span th:text="${cartVO.goods.goodsName}"></span>
+                    <span th:text="${cartVO.goods.simpleDescribe}"></span>
+                </td>
+                <td class="price" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
+                <td class="count">
+                    <span class="reduce" th:onclick="|cart_update(this, ${cartVO.cartId}, 'reduce')|">-</span>
+                    <input class="count-input" type="text" th:value="${cartVO.quantity}" disabled>
+                    <span class="add" th:onclick="|cart_update(this, ${cartVO.cartId}, 'add')|">+</span>
+                </td>
+                <td class="subtotal" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></td>
+                <td class="operation">
+                    <span class="delete"><a href="javascript:;" th:onclick="|cart_del(this,${cartVO.cartId})|">删除</a></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="foot" id="foot">
+            <label class="fl select-all"><input type="checkbox" class="check-all check">&nbsp;&nbsp;全选</label>
+            <!--<a class="fl delete" id="deleteAll" href="javascript:;">删除所选商品</a>-->
+            <div class="fr closing" onclick="order_add()">结 算</div>
+            <input type="hidden" id="cartTotalPrice">
+            <div class="fr total">合计：￥<span id="priceTotal"></span></div>
+            <div class="fr selected" id="selected">已选商品<span id="selectedTotal">4</span>件<span class="arrow up">︽</span><span class="arrow down">︾</span></div>
+            <div class="selected-view">
+                <div id="selectedViewList" class="clearfix">
+
+                </div>
+                <span class="arrow">◆<span>◆</span></span> </div>
+        </div>
+    </div>
+    <!-- 购物车 end -->
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _goods_list -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../shop-style/js/jq.js"></script>
+<script type="text/javascript">
+
+    /* 同步购物车内商品数量到服务器 */
+    function cart_update(obj, cartId, state) {
+        var quantity = $(obj).parents("td").children("input").val();
+        if(state == "reduce"){
+            if(quantity > 1) {
+                quantity = Number(quantity) - 1;
+            } else {
+                return;
+            }
+        }
+        if(state == "add"){
+            quantity = Number(quantity) + 1;
+        }
+        $.ajax({
+            url: "/cartAction/doCartUpdate",
+            cache: false,
+            type: "GET",
+            dateType: "json",
+            async: true,
+            data:{cartId:cartId, quantity:quantity},
+            success: function (result) {
+                if(result.flag = "true") {
+                    console.log("已同步至服务器！");
+                } else {
+                    console.log("同步至服务器失败！");
+                }
+            },
+            error: function (err) {
+                console.log("请求异常！");
+            }
+        });
+    }
+
+    /* 删除 */
+    function cart_del(obj,cartId){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                url: "/cartAction/doCartDelete",
+                cache: false,
+                type: "GET",
+                dateType: "json",
+                async: true,
+                data:{cartId:cartId},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('删除失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+        });
+    }
+
+    /* 结算 */
+    function order_add() {
+        var obj = document.getElementsByName("cartId");
+        var cartIds = [];
+        for(i in obj) {
+            if(obj[i].checked){
+                cartIds.push(obj[i].value);
+            }
+        }
+        window.location.href="/orderAction/goOrderAdd?cartIds=" + cartIds;
+    }
+
+</script>
+
+</body>
+</html>

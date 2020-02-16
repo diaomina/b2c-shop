@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>商品详情</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+    <script type="text/javascript" src="../shop-style/js/index.js"></script>
+    <script src="../shop-style/script/global.js" type="text/javascript"></script>
+    <script src="../shop-style/script/head.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/style.css" />
+    <link rel="stylesheet" href="../shop-style/style/base.css" />
+    <link rel="stylesheet" href="../shop-style/style/head.css" />
+</head>
+
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!-- 插入公共模板 _ad -->
+<div th:replace="../templates/user/common/_ad :: common_ad"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <div class="con_dqwz">您的当前位置：<a th:href="@{/goodsAction/goIndex}">首页</a> >> 商品详情</div>
+    <!--商品详情 start -->
+    <div class="cpxq_ny1">
+        <!--左侧图片 start -->
+        <div class="fdj">
+            <div id=preview>
+                <div class=jqzoom id=spec-n1 onClick="window.open('#')">
+                    <img style="height:306px; width:350px;" th:src="|@{'' + ${goods.image} + ''}|">
+                </div>
+            </div>
+        </div>
+        <!--左侧图片 end -->
+
+        <div class="xjmc_jjsm">
+            <div class="cpxq_mc_1" th:text="${goods.goodsName}"></div>
+            <div class="none" style="height:15px;"></div>
+            <div class="zzl">
+                单     价：<span style="color:#C00; font-weight:600; font-size:18px;" th:text="|¥${#numbers.formatDecimal(goods.price/100.0,1,2)}|"></span>
+                <span style="padding-left:20px;" th:text="|库存：${goods.quantity}件|"></span>
+                <input type="hidden" id="quantity" th:value="${goods.quantity}"/>
+            </div>
+            <div class="zzl" th:text="|简要描述：${goods.simpleDescribe}|"></div>
+
+            <div class="dgsc">
+                <span class="gmsl">购买数量：
+                    <input id="jian" value="-" type="button" style="background: url('../shop-style/images/jia.jpg'); width:19px; height:19px;">
+                    <input id="goodsNum" name="goodsNum" type="text" value="1" style="width:40px; text-align:center; height:18px; border:1px solid #dddddd;" >
+                    <input id="jia" value="+" type="button" style="background: url('../shop-style/images/jia.jpg'); width:19px; height:19px;">
+                </span>
+                <span class="jrsc_2" style="padding-left:20px;">
+                    <div id="submit">
+                        <input type="hidden" id="goodsId" th:value="${goods.goodsId}" />
+                        <input th:if="${session.user} ne null" type="hidden" id="login" value="login" />
+                        <a href="javascript:;"><img src="../shop-style/images/dinggou.jpg" width="170" height="34" /></a>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!--商品详情 end -->
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _footer -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../shop-style/js/jq.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        // 数量- 操作
+        $("#jian").click(function(){
+            var goodsNum = $("#goodsNum").val();
+            if(goodsNum == 1){
+                top.layer.msg('不能在减啦~',{icon: 5,time:1000});
+                return;
+            }
+            $("#goodsNum").val(goodsNum - 1);
+        });
+
+        // 数量+ 操作
+        $("#jia").click(function(){
+            var quantity = $("#quantity").val();
+            var goodsNum = $("#goodsNum").val();
+            if(goodsNum == quantity){
+                layer.msg('已经到顶啦~',{icon: 5,time:1000});
+                return;
+            }
+            $("#goodsNum").val(Number(goodsNum) + 1);
+        });
+
+
+        // 立即订购
+        $("#submit").click(function () {
+            // 判断用户是否登录
+            if($("#login").val()) {
+
+            } else {
+                layer.msg('请先登录再继续操作!',{icon: 2,time:1000});
+                return;
+            }
+            var goodsNum = $("#goodsNum").val();
+            var quantity = $("#quantity").val();
+            if(goodsNum < 1) {
+                layer.msg('订购数量最少为1件!',{icon: 2,time:1000});
+                return;
+            }
+            if(goodsNum > quantity) {
+                layer.msg('订购数量不得超出库存数量!',{icon: 2,time:1000});
+                return;
+            }
+
+            $.ajax({
+                url: "/cartAction/doCartAdd",
+                cache: false,
+                type: "GET",
+                dateType: "json",
+                async: true,
+                data:{goodsId:$("#goodsId").val(), goodsNum:$("#goodsNum").val()},
+                success: function (result) {
+                    if(result.flag = "true") {
+                        layer.msg('已加入购物车!',{icon:1,time:1000});
+                    } else {
+                        layer.msg('订购失败!',{icon: 2,time:1000});
+                    }
+                },
+                error: function (err) {
+                    layer.msg('请求异常!',{icon: 2,time:1000})
+                }
+            });
+        })
+
+
+    });
+</script>
+
+</body>
+</html>

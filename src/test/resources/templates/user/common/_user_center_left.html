@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户中心左侧导航栏</title>
+</head>
+<body>
+<th:block th:fragment="common_user_center_left">
+    <div class="danye_left">
+        <div class="danye_left">
+            <div class="danye_left1">用户中心</div>
+            <div class="danye_left2_1"><a th:href="@{/userAction/goUserCenter}">我的信息</a></div>
+            <div class="danye_left2_1"><a th:href="@{/userAction/goChangePassword}">修改密码</a></div>
+            <div class="danye_left2_1"><a th:href="@{/userReceiveAction/goUserReceiveMain}">地址管理</a></div>
+            <div class="danye_left2_1"><a th:href="@{/userAction/goUserAmount}">账户余额</a></div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

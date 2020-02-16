@@ -1,0 +1,29 @@
+@charset "utf-8";
+/* reset */
+
+body,div,p,span,form,iframe,blockquote,table,td,th,input,textarea,button,label,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6{ margin:0; padding:0; border:none;}
+
+h1,h2,h3,h4,h5,h6{ font-size:100%; font-weight:normal;}
+
+ul,ol,li,dl{ list-style-type:none;}
+em,i,dfn,cite,strong,small{ font-style:normal;} 
+fieldset,img,button,input,select,option{ border:0; vertical-align:middle; font:12px/18px Verdana,tahoma,Lucida,arial,Helvetica,sans-serif;}
+table{ border-collapse:collapse; border-spacing:0;}
+
+
+
+
+
+/* hdpic */
+.hdpic{ width:960px;overflow:hidden; float:left;}
+.picqqtit{ float:left; width:239px; height:312px; display:inline; background:url(img/picbg.png) no-repeat;}
+.picqqtit a{ display:block; width:239px; height:312px; line-height:278px; padding-top:35px; text-align:center; font-family:Microsoft YaHei; font-size:25px;}
+.picqqtit a:link,.picqqtit a:visited{ color:#fff; text-decoration:none;}        .picqqtit a:hover{ color:#fff; text-decoration:none;}
+.hdpic dd{ float:left; width:184px; height:312px; display:inline; line-height:22px; padding-left:7px;}
+.hdpic dd a{ display:block; width:184px; height:312px;  cursor:pointer; position:relative;}
+.hdpic dd a img{ display:block; width:184px; height:312px;}
+.hdpic dd a .pictitle{ z-index:2; position:absolute; bottom:0px; left:-1135px; width:184px; height:312px;  color:#fff; line-height:30px;  background:url(img/imgbg.png) no-repeat; _background:none; text-align:center; font-family:"微软雅黑"; font-size:15px; }
+.hdpic dd a .picshine{ z-index:3; position:absolute; top:0; left:0; width:184px; height:312px; background:url(img/shine.png) no-repeat -160px 0; _background:none;}
+
+
+

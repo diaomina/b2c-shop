@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>顶部</title>
+</head>
+<body>
+    <th:block th:fragment="common_top">
+        <!--抬头开始-->
+        <div class="top">
+            <div class="top1">
+                <div class="top1_main">
+                    <span class="dl">您好，欢迎光临B2C商城！
+                        <th:block th:if="${session.user} eq null">
+                            <a th:href="@{/userAction/goLogin}"> [请登录]</a>
+                            <a th:href="@{/userAction/goRegist}">[免费注册]</a>
+                        </th:block>
+                        <th:block th:if="${session.user} ne null">
+                            <a th:href="@{/userAction/goUserCenter}" th:text="|[ ${session.user.userName} ]|"></a>
+                            <a th:href="@{/userAction/doLogout}" th:text="[退出登录]"></a>
+                        </th:block>
+                    </span>
+                </div>
+            </div>
+            <div class="top_logo">
+                <div class="logo"><a th:href="@{/goodsAction/goIndex}"><img src="../../shop-style/images/logo.png" width="338" height="113" alt="本亲生活的logo标志"></a></div>
+                <div class="top_you">
+                    <div class="ss_1">
+                        <input name="goodsName" type="text" id="goodsName" value="请输入您要搜索的商品" size="30" onclick="if(value==defaultValue){value='';this.style.color='#898b8c'}" onBlur="if(!value){value=defaultValue;this.style.color='#999'}" style="color:#999; line-height:26px;" class="ssk1">
+                        <input id="find" name="" value="搜 索" type="button" class="button1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                /* 根据商品名称模糊查询商品*/
+                $("#find").click(function () {
+                    window.location.href = "/goodsAction/doFindGoodsByGoodsName?goodsName=" + $("#goodsName").val();
+                })
+
+            });
+        </script>
+
+        <!--抬头结束-->
+    </th:block>
+
+
+</body>
+</html>

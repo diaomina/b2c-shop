@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>B2C商城首页</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+    <script type="text/javascript" src="../shop-style/js/index.js"></script>
+    <script src="../shop-style/script/global.js" type="text/javascript"></script>
+    <script src="../shop-style/script/head.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/style.css" />
+    <link rel="stylesheet" href="../shop-style/style/base.css" />
+    <link rel="stylesheet" href="../shop-style/style/head.css" />
+</head>
+
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!-- 插入公共模板 _ad -->
+<div th:replace="../templates/user/common/_ad :: common_ad"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <!-- 商品列表 start -->
+    <div class="tplist1" th:each="goods : ${goodsList}">
+        <div class="tplist1_1"><a th:href="|@{'goGoodsDetail?goodsId=' + ${goods.goodsId}}|"><img th:src="${goods.image}" width="296" height="185" /></a></div>
+        <div class="tplist_yy"></div>
+        <div class="tplist_mc"><a th:href="|@{'goGoodsDetail?goodsId=' + ${goods.goodsId}}|" th:text="${goods.goodsName}"></a></div>
+        <div class="tplist_mcjg">
+            <span class="yuanjia" th:text="|库存：${goods.quantity}件|"></span>
+            <span class="tejia" th:text="|单价：¥${#numbers.formatDecimal(goods.price/100.0,1,2)}|"></span>
+        </div>
+    </div>
+    <!--<div class="fy">首页 上一页 下一页 尾页 页次：1/1页  9个产品/页 转到：</div>-->
+    <!-- 商品列表 end -->
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _footer -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../shop-style/js/jq.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".hdpic dd a").hover(function() {
+                $(this).find(".picshine").stop();
+                $(this).find(".picshine").css("background-position", "-235px 0");
+                $(this).find(".picshine").animate({
+                        backgroundPosition: '235px 0'
+                    },
+                    500);
+                $(this).find(".pictitle").stop().animate({
+                        left: '0px'
+                    },
+                    {
+                        queue: false,
+                        duration: 450
+                    });
+            },
+            function() {
+                $(this).find(".pictitle").stop().animate({
+                        left: '-1135px'
+                    },
+                    {
+                        queue: false,
+                        duration: 200
+                    });
+            });
+    });
+</script>
+
+</body>
+</html>

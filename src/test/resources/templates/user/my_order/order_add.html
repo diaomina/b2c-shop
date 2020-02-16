@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>结算订单</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+    <script type="text/javascript" src="../shop-style/js/index.js"></script>
+    <script src="../shop-style/script/global.js" type="text/javascript"></script>
+    <script src="../shop-style/script/head.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/order/order.css"/>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/order/tasp-style.css"/>
+
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+    <link rel="stylesheet" type="text/css" href="../shop-style/css/style.css"/>
+    <link rel="stylesheet" href="../shop-style/style/base.css"/>
+    <link rel="stylesheet" href="../shop-style/style/head.css"/>
+</head>
+
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<!--中部 start-->
+<div class="con_ny">
+    <!-- 订单确认 start -->
+    <div id="content" class="grid-c">
+        <form id="J_Form" name="J_Form" th:action="@{/orderAction/OrderAdd}" method="post">
+            <div id="address" class="address" style="margin-top: 20px;" data-spm="2">
+                <h3>确认收货地址
+                    <span class="manage-address">
+                        <a th:href="@{/userReceiveAction/goUserReceiveMain}" target="_blank" title="管理我的收货地址"
+                            class="J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.7">管理收货地址</a>
+                    </span>
+                </h3>
+                <ul id="address-list" class="address-list">
+                    <li th:each="userReceive : ${userReceiveList}" class="J_Addr J_MakePoint clearfix  J_DefaultAddr "  data-point-url="http://log.mmstat.com/buy.1.20">
+                        <s class="J_Marker marker"></s>
+                        <span class="marker-tip">寄送至</span>
+                        <div class="address-info">
+                            <input class="J_MakePoint" name="receiveId" type="radio" th:value="${userReceive.receiveId}" th:attr="checked=${userReceive.isdefault == 00000001?true:false}">
+                            <label class="user-address">
+                                <th:block th:text="|${userReceive.receiveProvince} ${userReceive.receiveCity} ${userReceive.receiveCounty}      ${userReceive.receiveAddress} (${userReceive.contact} 收)|"></th:block>
+                                <em th:text="${userReceive.tel}"></em>
+                            </label>
+                            <em class="tip" th:if="${userReceive.isdefault} eq 00000001" th:text="默认地址"></em>
+                        </div>
+                    </li>
+                </ul>
+                <div class="address-bar">
+                    <a href="#" class="new J_MakePoint" id="J_NewAddressBtn">使用新地址</a>
+                </div>
+        </div>
+
+            <div>
+                <h3 class="dib">确认订单信息</h3>
+                <table cellspacing="0" cellpadding="0" class="order-table" id="J_OrderTable" summary="统一下单订单信息区域">
+                    <caption style="display: none">统一下单订单信息区域</caption>
+                    <thead>
+                    <tr>
+                        <th class="s-title">商品详情<hr/></th>
+                        <th class="s-price">单价(元)<hr/></th>
+                        <th class="s-amount">数量<hr/></th>
+                        <th class="s-total">小计(元)<hr/></th>
+                    </tr>
+                    </thead>
+                    <tbody data-spm="3" class="J_Shop" data-tbcbid="0" data-outorderid="47285539868"  data-isb2c="false" data-postMode="2" data-sellerid="1704508670">
+                    <tr class="first"><td colspan="5"></td></tr>
+
+                    <tr th:each="cartVO : ${cartVOList}" class="item" data-lineid="19614514619:31175333266:35612993875" data-pointRate="0">
+                        <td class="s-title">
+                            <a th:href="|@{'/goodsAction/goGoodsDetail?goodsId=' + ${cartVO.goods.goodsId}}|" target="_blank" th:title="${cartVO.goods.goodsName}" class="J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5">
+                                <img th:src="|@{'' + ${cartVO.goods.image} + ''}|" class="itempic">
+                                <span class="title J_MakePoint" data-point-url="http://log.mmstat.com/buy.1.5" th:text="${cartVO.goods.goodsName}"></span>
+                            </a>
+                            <div class="props">
+                                <span th:text="${cartVO.goods.simpleDescribe}"></span>
+                            </div>
+                            <a title="消费者保障服务，卖家承诺商品如实描述" href="#" target="_blank">
+                                <img src="http://img03.taobaocdn.com/tps/i3/T1bnR4XEBhXXcQVo..-14-16.png"/>
+                            </a>
+                        </td>
+                        <td class="s-price">
+                            <span class='price '>
+                                <em class="style-normal-small-black J_ItemPrice" th:text="${#numbers.formatDecimal(cartVO.goods.price/100.0,1,2)}"></em>
+                            </span>
+                        </td>
+                        <td class="s-amount" data-point-url="">
+                            <input type="hidden" class="J_Quantity" th:text="${cartVO.quantity}" name="quantity"/>
+                        </td>
+                        <td class="s-total" style="text-align:center;">
+                            <span class='price'>
+                                <em class="style-normal-bold-red J_ItemTotal " th:text="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"></em>
+                            </span>
+                            <input type="hidden" name="subtotal" th:value="${#numbers.formatDecimal(cartVO.goods.price*cartVO.quantity/100.0,1,2)}"/>
+                        </td>
+                        <!-- 提交订单时需要 -->
+                        <input type="hidden" th:value="${cartVO.cartId}" name="cartId">
+                    </tr>
+                    <tr class="item-service">
+                        <td colspan="5" class="servicearea" style="display: none"></td>
+                    </tr>
+                    <tr class="blue-line" style="height: 2px;"><td colspan="5"></td></tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="order-go" data-spm="4">
+                                <div class="J_AddressConfirm address-confirm">
+                                    <div class="kd-popup pop-back" style="margin-bottom: 40px;">
+                                        <div class="box" style="font-size: 20px;">
+                                            <div class="bd">
+                                                <div class="point-in">
+                                                    <em class="t">实付款：</em>
+                                                    <span class='price g_price '>
+                                                        <span>&yen;</span>
+                                                        <em class="style-large-bold-red"  id="J_ActualFee"  ></em>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a th:href="@{/cartAction/goCartMain}" class="back J_MakePoint" target="_top" data-point-url="">返回购物车</a>
+                                        <a id="J_Go" class=" btn-go"  data-point-url=""  tabindex="0" title="点击此按钮，提交订单。">提交订单<b class="dpl-button"></b></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    </div>
+    <!-- 订单确认 end -->
+</div>
+<!--中部 end-->
+
+<div class="none" style="height:20px;"></div>
+
+<!-- 插入公共模板 _footer -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../shop-style/js/jq.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        /* 计算实付款 */
+        var obj = document.getElementsByName("subtotal");
+        var price = 0.00;
+        for(var i=0; i<obj.length; i++) {
+            price = parseFloat(price) + parseFloat(obj[i].value);
+        }
+        $("#J_ActualFee").text(price);
+
+        /* 提交订单 */
+        $("#J_Go").click(function () {
+            // 获取订单商品信息
+            var obj = document.getElementsByName("cartId");
+            var cartIds = [];
+            for(i in obj) {
+                cartIds.push(obj[i].value);
+            }
+            // 获取收货地址
+            var receiveId;
+            var obj1 = document.getElementsByName("receiveId");
+            for(var i=0; i<obj1.length; i++) {
+                if(obj1[i].checked) {
+                    receiveId = obj1[i].value;
+                }
+            }
+            // 获取订单总金额(以分为单位)
+            var totalAmount = (parseFloat(price)*100);
+            // 提交
+            window.location.href="/orderAction/doOrderAdd?receiveId=" + receiveId + "&cartIds=" + cartIds + "&totalAmount=" + parseInt(totalAmount);
+        })
+
+    });
+</script>
+
+</body>
+</html>

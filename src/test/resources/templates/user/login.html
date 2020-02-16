@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>登录</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+</head>
+<script type="text/javascript" src="../shop-style/js/jquery.js"></script>
+<script type="text/javascript" src="../shop-style/js/index.js"></script>
+<script src="../shop-style/script/global.js" type="text/javascript"></script>
+<script src="../shop-style/script/head.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/main.css"/>
+<link rel="stylesheet" type="text/css" href="../shop-style/css/basic.css">
+<link rel="stylesheet" type="text/css" href="../shop-style/css/style.css" />
+<link rel="stylesheet" href="../shop-style/style/base.css" />
+<link rel="stylesheet" href="../shop-style/style/head.css" />
+
+<body>
+
+<!-- 插入公共模板 _top -->
+<div th:replace="../templates/user/common/_top :: common_top"></div>
+
+<!-- 插入公共模板 _headNav -->
+<div th:replace="../templates/user/common/_headNav :: common_headNav"></div>
+
+<div class="con_dlbj">
+<div class="con_dlbj_main">
+<div class="denglu_bj2">
+<div class="denglu_nr2">
+<div class="denglu_bt4">用户登录</div>
+<div class="dl_yhm">
+  用户名：<input id="userName" name="userName" type="text" value="" size="30"
+             onclick="if(value==defaultValue){value='';this.style.color='#3d4245'}"
+          onBlur="if(!value){value=defaultValue;this.style.color='#ccc'}" style="width:170px; height:24px; line-height:24px; padding-left:5px;color:#ccc; border:1px solid #e4e4e4;" />
+</div>
+<div class="dl_yhm">&nbsp;&nbsp;&nbsp;密码：
+  <input id="password" name="password" type="password" style="width:170px; height:24px; line-height:24px; padding-left:5px;color:#3d4245; border:1px solid #e4e4e4;">
+</div>
+
+<div class="dl_dl">
+  <input id="submit" name="" type="button" value="登 录" onmousedown="this.style.left='1px';this.style.top='1px';" onmouseup="this.style.left='0px';this.style.top='0px';" style="width:135px; height:39px; border:none; background:url('../shop-style/images/dl_dl.jpg'); color:#FFF; font-size:14px; font-family:'微软雅黑'; position:relative;">
+  <a href="#">忘记密码？</a>
+</div>
+
+<div class="denglu_sm">
+  <span style="color:#529014; font-weight:600;">如果您还不是B2C商城的会员?</span><br />
+  <span>30秒轻松注册，就可方便购物，赶紧点击下方注册</span>
+</div>
+<div class="denglu_hmzc"><a th:href="@{/userAction/goRegist}">立即注册</a></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 插入公共模板 _footer -->
+<div th:replace="../templates/user/common/_footer :: common_footer"></div>
+
+<script type="text/javascript" src="../lib/layer/2.4/layer.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $("#submit").click(function () {
+      $.ajax({
+        url: "doLogin",
+        cache: false,
+        type: "GET",
+        dataType: "json",
+        async: true,
+        data: {userName:$("#userName").val(), password:$("#password").val()},
+        success: function (result) {
+          if(result.flag == "true"){
+            location.href="/goodsAction/goIndex";
+          }
+          if(result.flag == "falseByUserName"){
+            layer.msg("用户不存在!",{icon: 2,time:1000});
+          }
+          if(result.flag == "falseByPassword"){
+            layer.msg("密码错误!",{icon: 2,time:1000});
+          }
+        },
+        error: function (err) {
+          layer.msg('请求异常!',{icon: 2,time:1000})
+        }
+
+      });
+    })
+
+  });
+
+</script>
+
+
+</body>
+</html>

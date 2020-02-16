@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>广告部分</title>
+</head>
+<body>
+    <th:block th:fragment="common_ad">
+        <!--banner开始-->
+        <div class="mainbanner">
+            <div class="mainbanner_window">
+                <ul id="slideContainer">
+                    <th:block th:if="${session.adList.size() == 0}">
+                        <li><a href="#"><img title="暂无广告,如需投递请与我们联系~" src="../../shop-style/images/1.jpg" width="1920" height="500"/></a></li>
+                    </th:block>
+                    <li th:each="ad : ${session.adList}">
+                        <a th:href="@{${ad.url}}"><img th:title="${ad.description}" th:src="|@{'' + ${ad.image} + ''}|" width="1920" height="500"  /></a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="mainbanner_list">
+                <li th:each="ad,var : ${session.adList}">
+                    <a href="javascript:void(0);" th:text="${var.index + 1}"></a>
+                </li>
+            </ul>
+        </div>
+        <!--banner结束-->
+
+    </th:block>
+
+</body>
+</html>
