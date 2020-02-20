@@ -8,7 +8,7 @@ JDK1.8、MySQL5.6、Tomcat8、IDEA2019、Maven3.6、Git
 
 ## 二、使用技术
 
-​	前端：html、css、js、jquery、layer、bootstrap
+​	前端：thymyleaf 、html、css、js、jquery、layer、bootstrap
 
 ​	后端：SpringBoot、Mybatis
 
