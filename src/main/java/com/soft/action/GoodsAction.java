@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.soft.common.util.FileUtil;
 import com.soft.common.vo.CategoryVO;
 import com.soft.common.vo.GoodsVO;
-import com.soft.model.*;
+import com.soft.model.Ad;
+import com.soft.model.Admin;
+import com.soft.model.Goods;
+import com.soft.model.GoodsCategory;
 import com.soft.service.AdService;
 import com.soft.service.AdminService;
 import com.soft.service.GoodsCategoryService;
@@ -12,7 +15,6 @@ import com.soft.service.GoodsService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @ClassName GoodsAction
