@@ -17,6 +17,11 @@ public class B2cShopApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(B2cShopApplication.class, args);
+        System.out.println("---------------------------------");
+        System.out.println("            B2C商城 =====>       ");
+        System.out.println("    启动成功 ///(^v^)\\\\~~~     ");
+        System.out.println("                                 ");
+        System.out.println("---------------------------------");
     }
 
 }
