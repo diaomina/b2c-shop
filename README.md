@@ -76,19 +76,3 @@ git clone https://github.com/diaomina/b2c-shop.git
 
 ​	管理员登录： http://localhost:8081/adminAction/goLogin 
 
-## 五、业务介绍
-
-### 5.1 功能模块图
-
-（1）总体功能模块图
-
-（2） 前台功能模块图
-
-（3） 后台功能模块图
-
-### 5.2 系统流程图
-
-（1） 用户购物流程图
-
-（2） 管理员操作流程图
-
