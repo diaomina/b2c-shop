@@ -1,6 +1,8 @@
 # B2C网上购物系统 
 
+觉得对你有帮助的话请作者喝杯咖啡趴~Thanks♪(･ω･)ﾉ
 
+![微信收款码](https://cdn.jsdelivr.net/gh/diaomina/project-images@master/%E6%94%B6%E6%AC%BE%E7%A0%81/wx.jpg)
 
 ## 一、开发环境
 
@@ -20,7 +22,7 @@ JDK1.8、MySQL5.6、Tomcat8、IDEA2019、Maven3.6、Git
 
 ​	后台：管理员登录模块、订单管理模块、商品管理模块、用户管理模块、广告管理模块、管理员权限管理模块；
 
-演示地址（服务器没有做安全，请不要恶意攻击）：
+演示地址（服务器没有做安全，请不要恶意攻击）（已失效）：
 
 ​	a. 前台首页：http://39.108.5.98:8081/goodsAction/goIndex
 
