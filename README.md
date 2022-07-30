@@ -22,11 +22,11 @@ JDK1.8、MySQL5.6、Tomcat8、IDEA2019、Maven3.6、Git
 
 ​	后台：管理员登录模块、订单管理模块、商品管理模块、用户管理模块、广告管理模块、管理员权限管理模块；
 
-演示地址（服务器没有做安全，请不要恶意攻击）（已失效）：
+演示地址（服务器没有做安全，请不要恶意攻击）：
 
-​	a. 前台首页：http://39.108.5.98:8081/goodsAction/goIndex
+​	a. 前台首页：http://www.b2c-shop.diaomina.xyz/goodsAction/goIndex  
 
-​	b. 管理员登录： http://39.108.5.98:8081/adminAction/goLogin 
+​	b. 管理员登录： http://www.b2c-shop.diaomina.xyz/adminAction/goLogin  
 
 用户账户：user	123456
 
