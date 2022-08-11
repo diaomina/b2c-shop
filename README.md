@@ -24,6 +24,8 @@ JDK1.8、MySQL5.6、Tomcat8、IDEA2019、Maven3.6、Git
 
 演示地址（服务器没有做安全，请不要恶意攻击）：
 
+​	0. 导航页：http://www.diaomina.xyz/
+
 ​	a. 前台首页：http://www.b2c-shop.diaomina.xyz/goodsAction/goIndex  
 
 ​	b. 管理员登录： http://www.b2c-shop.diaomina.xyz/adminAction/goLogin  
